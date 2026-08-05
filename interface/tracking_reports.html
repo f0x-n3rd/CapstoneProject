@@ -72,30 +72,28 @@
                     </div>
                     <div class="form_group">
                         <label for="attachment" class="label">Attach Photo</label>
-                        <div style="display:flex; align-items:center; gap:12px; justify-content:flex-start; flex-wrap:wrap;">
-                            <button type="button" aria-label="Open camera" title="Open camera"
-                                onclick="document.getElementById('camera_capture').click()"
-                                style="border:0; background:transparent; padding:4px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                                <img src="assets/photo-camera.png" alt="Take a photo" style="width:28px; height:28px; display:block; object-fit:contain;">
+                        <div class="attachment_buttons">
+                            <button type="button" class="btn_camera" aria-label="Open camera" title="Open camera"
+                                onclick="document.getElementById('camera_capture').click()">
+                                <img src="assets/photo-camera.png" alt="Take a photo" class="upload_img" >
                             </button>
                             <input id="camera_capture" type="file" accept="image/*" capture="environment" multiple
                                 data-fb-storage="attachments/" hidden onchange="showSelectedImage(this)">
 
-                            <button type="button" onclick="document.getElementById('attachment').click()"
-                                style="display:flex; align-items:center; gap:8px; border:1px solid #cbd5e1; border-radius:6px; background:#fff; padding:8px 12px; color:#334155; cursor:pointer;">
-                                <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;">
-                                    <img src="assets/image.png" alt="Choose file" style="width: 25px; height: 25px; display:block; object-fit:contain;">
+                            <button type="button" class="btn_secondary" onclick="document.getElementById('attachment').click()">
+                                <span class="for_icon">
+                                    <img src="assets/image.png" alt="Choose file" class="upload_img" >
                                 </span>
                                 <span>Choose File</span>
                             </button>
                             <input id="attachment" type="file" accept="image/*" multiple data-fb-storage="attachments/"
                                 hidden onchange="showSelectedImage(this)">
                         </div>
-                        <div id="selected_attachment" style="margin-top:10px; color:#64748b; font-size:12px;"></div>
+                        <div id="selected_attachment" ></div>
                         <div id="attachment_preview" aria-live="polite"
                             style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
-                        <div style="display:flex; justify-content:center; margin-top:16px;">
-                            <button type="submit" style="padding:8px 16px; border:none; background:#3b82f6; color:white; border-radius:6px; cursor:pointer; font-weight:500;">Submit Report</button>
+                        <div class="btn_submit_container" >
+                            <button class="btn_submit" type="submit" >Submit Report</button>
                         </div>
                     </div>
                 </form>
