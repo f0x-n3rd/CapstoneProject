@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>register</title>
+    <link rel="stylesheet" href="register/register.css">
+</head>
+<body>
+
+<div class="register-card">
+    <p class="logo-box">LOGO</p>
+    <p class="system-title">SYSTEM TITLE</p>
+    <p class="subtitle">Create Account</p> 
+
+    <form id="registerForm"> 
+<div class="input-group">
+            <input type="fullName" id="fullName" name="fullName" placeholder="Full Name" required>
+        </div>
+
+        <div class="input-group">
+            <input type="email" id="email" name="email" placeholder="Email@gmail.com" required>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="password" class="password-input" placeholder="Password" required>
+            <button
+                type="button" class="toggle-password" id="togglePassword">
+                <img src="register/assets_reg/hides.png" id="eyeIcon" alt="Toggle Password">
+            </button>
+        </div>
+
+        <div class="input-group">
+            <input type="password" id="confirmPassword" name="confirmPassword" class="password-input" placeholder="Confirm Password" required>
+        <button type="button" class="toggle-password" id="toggleConfirmPassword"> <img src="register/assets_reg/hides.png" id="confirmEyeIcon" alt="Toggle Password">
+        </button>
+</div>                                                              
+
+<div class="input-group">
+        <input list="barangay" id="barangayInput" name="barangayInput" placeholder="Select your barangay" required>
+        <datalist id = "barangay">
+         <option value="Amatong">Amatong</option>
+         <option value="Anahao">Anahao</option>
+         <option value="Bangon">Bangon</option>
+         <option value="Batiano">Batiano</option>
+         <option value="Budiong">Budiong</option>
+         <option value="Canduyong">Canduyong</option>
+         <option value="Dapawan">Dapawan</option>
+         <option value="Gabawan">Gabawan</option>
+         <option value="Libertad">Libertad</option>
+         <option value="Ligaya">Ligaya</option>
+         <option value="Liwanag">Liwanag</option>
+         <option value="Liwayway">Liwayway</option>
+         <option value="Malilico">Malilico</option>
+         <option value="Mayha">Mayha</option>
+         <option value="Panique">Panique</option>
+         <option value="Pato-o">Pato-o</option>
+         <option value="Poctoy">Poctoy</option>
+         <option value="Progreso Este">Progreso Este</option>
+         <option value="Progreso Weste">Progreso Weste</option>
+         <option value="Rizal">Rizal</option>
+         <option value="Tabing Dagat">Tabing Dagat</option>
+         <option value="Tabobo-an">Tabobo-an</option>
+         <option value="Tuburan">Tuburan</option>
+         <option value="Tumingad">Tumingad</option>
+         <option value="Tulay">Tulay</option>
+        </datalist>
+</div>
+
+        <button type="submit" class="signin-btn">Create account</button>
+    </form>
+
+    <div class="footer-text">Already have an account? <a href="index.html">Sign In</a></div>
+</div>
+
+
+<script src="register/register.js"></script>
+</body>
+</html>

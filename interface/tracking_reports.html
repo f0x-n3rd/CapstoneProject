@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Municipal Gov - Track Report</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app_container">
+        <!-- APP HEADER -->
+        <header class="app_header">
+            <div class="app_logo_placeholder">Logo</div>
+            <div class="header_title_block">
+                <h1>System Title</h1>
+                <p>Odiongan, Romblon</p>
+            </div>
+        </header>
+
+        <main class="main_content_hotline">
+            <!-- CONTAINER 1: HISTORY BLOCK -->
+            <div id="history_panel">
+                <h3 class="section_heading">Report History</h3>
+                <div class="data_card" data-fb-document="rep_000001">
+                    <div class="card_header_flex">
+                        <div class="card_info">
+                            <h4 class="card_title">Streetlight Malfunction</h4>
+                    
+                            <p class="card_meta">Damage Road</p>
+                            <p class="card_meta">Brgy. Amatong</p>
+                            <div class="card_date">Date: 2026-04-12</div>
+                        </div>
+                        <div class="detail_status">
+                            <span class="badge badge_received">Received</span>
+                        <button class="btn_text" onclick="alert('Viewing Details...')">View Details</button>
+                        
+                        </div>
+                        </div>
+                    </div>
+
+                <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+            </div>
+
+
+            <!-- CONTAINER 2: SUBMIT REPORT CREATION BLOCK -->
+            <div id="form_panel" class="form_view">
+                <h3 class="section_heading">
+                    <button type="button" class="back_button" aria-label="Back to report history" onclick="toggleFormView(false)"><img src="assets/undo.png" alt=""></button>
+                    <span>Submit Report</span>
+                </h3>
+                <form onsubmit="processForm(event)">
+                    <div class="form_group">
+                        <label for="category" class="label">Category</label>
+                        <select id="category" class="form_control" required data-fb-field="category">
+                            <option value="" disabled selected>Select Category</option>
+                            <option value="Waste Management">Infrastructures</option>
+                            <option value="Road Hazard">Waste Management</option>
+                            <option value="Infrastructure">Drainage and Flooding</option>
+                            <option value="Infrastructure">Public Facilities</option>
+                            <option value="Infrastructure">Electrical and Streetlight</option>  
+                        </select>
+                    </div>
+                    <div class="form_group">
+                        <label for="location" class="label">Location</label>
+                        <input id="location" type="text" class="form_control" placeholder="Location" required data-fb-field="location">
+                    </div>
+                    <div class="form_group">
+                        <label for="description" class="label">Description</label>
+                        <textarea id="description" class="form_control" rows="4" placeholder="Describe the issue in detail....." style="resize:none;" required data-fb-field="description"></textarea>
+                    </div>
+                    <div class="form_group">
+                        <label for="attachment" class="label">Attach Photo</label>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <button type="button" aria-label="Open camera" title="Open camera"
+                                onclick="document.getElementById('camera_capture').click()"
+                                style="border:0; background:transparent; padding:4px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                                <img src="assets/photo-camera.png" alt="Take a photo" style="width:28px; height:28px; display:block; object-fit:contain;">
+                            </button>
+                            <input id="camera_capture" type="file" accept="image/*" capture="environment" multiple
+                                data-fb-storage="attachments/" hidden onchange="showSelectedImage(this)">
+
+                            <button type="button" onclick="document.getElementById('attachment').click()"
+                                style="display:flex; align-items:center; gap:8px; border:1px solid #cbd5e1; border-radius:6px; background:#fff; padding:8px 12px; color:#334155; cursor:pointer;">
+                                <span style="display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px;">
+                                    <img src="assets/image.png" alt="Choose file" style="width: 25px; height: 25px; display:block; object-fit:contain;">
+                                </span>
+                                <span>Choose File</span>
+                            </button>
+                            <input id="attachment" type="file" accept="image/*" multiple data-fb-storage="attachments/"
+                                hidden onchange="showSelectedImage(this)">
+                        </div>
+                        <div id="selected_attachment" style="margin-top:10px; color:#64748b; font-size:12px;"></div>
+                        <div id="attachment_preview" aria-live="polite"
+                            style="display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;"></div>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- SYSTEM NAVIGATION FOOTERBAR -->
+        <nav id="app_navigation" class="app_nav">
+            <a href="home.html" class="nav_item">
+                <span class="nav_icon"><img src="assets/home_icon.jpeg" alt="home img" class="icon"></span>
+                <span>Home</span>
+            </a>
+            <a href="announcement.html" class="nav_item">
+                <span class="nav_icon"><img src="assets/announcement_gray.jpeg" alt="ann img" class="icon" ></span>
+                <span>Announcement</span>
+            </a>
+            <a href="tracking_reports.html" class="nav_item active">
+                <span class="nav_icon"><img src="assets/real-time-tracking.png" alt="ann img" id="center_nav_icon" class="icon" ></span>
+                <span>Track Reports</span>
+            </a>
+            <a href="hotlines.html" class="nav_item">
+                <span class="nav_icon"><img src="assets/helpline_gray.jpeg" alt="helpline img" class="icon" ></span>
+                <span>Hotline</span>
+            </a>
+            <a href="profile.html" class="nav_item">
+                <span class="nav_icon"><img src="assets/account_gray.jpeg" alt="helpline img" class="icon" ></span>
+                <span>Account</span>
+            </a>
+        </nav>
+    </div>
+
+
+    <script src="form_panel.js"></script>
+</body>
+</html>
