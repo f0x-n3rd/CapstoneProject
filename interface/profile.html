@@ -1,59 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Municipal Gov - Profile</title> 
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-   
-</head>
-<body>
-
-    <div class="app_container">
-        <header class="app_header">
-            <div class="app_logo_placeholder">Logo</div>
-            <div class="header_title_block">
-                <h1>System Title</h1>
-                <p>Odiongan, Romblon</p>
-            </div>
-        </header>
-
-        <main class="main_content">
-            <h3 class="section_heading">Profile</h3>
-
-            <div class="profile_card" data-fb-collection="users">
-                <div class="profile_avatar">JU</div>
-                <h3 class="profile-name" data-fb-field="fullName">Jerome Urbano</h3>
-                <p class="profile-email" data-fb-field="email">jerome.urbano@rsu.edu.ph</p>
-                <div class="badge-brgy" data-fb-field="barangay">Brgy. Amatong</div>
-             </div>
-        </main>
-
-        <!-- SYSTEM NAVIGATION FOOTERBAR -->
-        <nav class="app_nav">
-            <a href="home.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/home_icon.jpeg" alt="home img" class="icon" ></span>
-                <span>Home</span>
-            </a>
-            <a href="announcement.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/announcement_gray.jpeg" alt="ann img" class="icon" ></span>
-                <span>Announcement</span>
-            </a>
-            <a href="tracking_reports.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/real-time-tracking_gray.jpeg" alt="ann img" id="center_nav_icon" class="icon" ></span>
-                <span>Track Reports</span>
-            </a>
-            <a href="hotlines.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/helpline_gray.jpeg" alt="helpline img" class="icon" ></span>
-                <span>Hotline</span>
-            </a>
-            <a href="profile.html" class="nav_item active">
-                <span class="nav_icon"><img src="assets/account.png" alt="helpline img" class="icon" ></span>
-                <span>Account</span>
-            </a>
-        </nav>
-    </div>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Municipal Gov - Profile</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="app_container">
+            <header class="app_header">
+                <div class="app_logo_placeholder">Logo</div>
+                <div class="header_title_block">
+                    <h1>System Title</h1>
+                    <p>Odiongan, Romblon</p>
+                </div>
+            </header>
+            <main class="main_content">
+                <div class="profile_card" data-fb-collection="users">
+                    <div class="profile_avatar">JU</div>
+                    <h3 class="profile-name" data-fb-field="fullName">Jerome Urbano</h3>
+                    <p class="profile-email" data-fb-field="email">jerome.urbano@rsu.edu.ph</p>
+                    <div class="badge-brgy" data-fb-field="barangay">Brgy. Amatong</div>
+                </div>
+                <div >
+                    <p class="profile_menu">
+                        Feedback
+                    </p>
+                    <p class="profile_menu">
+                        Log-out
+                    </p>
+                </div>
+            </main>
+            
+            <!-- SYSTEM NAVIGATION FOOTERBAR -->
+            <nav class="app_nav">
+                <a href="home.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/home_icon.jpeg" alt="home img" class="icon">
+                    </span>
+                    <span>Home</span>
+                </a>
+                <a href="announcement.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/announcement_gray.jpeg" alt="ann img" class="icon">
+                    </span>
+                    <span>Announcement</span>
+                </a>
+                <a href="tracking_reports.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img
+                            src="assets/real-time-tracking_gray.jpeg"
+                            alt="ann img"
+                            id="center_nav_icon"
+                            class="icon"
+                        >
+                    </span>
+                    <span>Track Reports</span>
+                </a>
+                <a href="hotlines.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/helpline_gray.jpeg" alt="helpline img" class="icon">
+                    </span>
+                    <span>Hotline</span>
+                </a>
+                <a href="profile.html" class="nav_item active">
+                    <span class="nav_icon">
+                        <img src="assets/account.png" alt="helpline img" class="icon">
+                    </span>
+                    <span>Account</span>
+                </a>
+            </nav>
+        </div>
+    </body>
 </html>

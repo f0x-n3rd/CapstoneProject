@@ -15,7 +15,6 @@ body {
   color: #1e293b;
 }
 
-/* Android UI Wrapper Frame */
 .app_container {
   width: 100%;
   max-width: 450px;
@@ -73,7 +72,6 @@ body {
   font-weight: 500;
 }
 
-/* Main Content Area Scrollable */
 .main_content {
   flex: 1;
   overflow-y: auto;
@@ -157,7 +155,6 @@ body {
 }
 /* ====================================================================== */
 
-/* Navigation Layout */
 .app_nav {
   width: 100%;
   height: 65px;
@@ -199,7 +196,6 @@ body {
   gap: 18px;
 }
 
-/* CARD */
 .announcement_card {
   position: relative;
   background: #fff;
@@ -213,7 +209,6 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-/* HEADER */
 .announcement_header {
   display: flex;
   align-items: center;
@@ -239,7 +234,6 @@ body {
   color: #333;
 }
 
-/* CONTENT */
 .announcement_content {
   margin: 0;
   font-size: 12px;
@@ -247,7 +241,6 @@ body {
   line-height: 1.5;
 }
 
-/* PREVIEW BOX */
 .announcement_image {
   width: 130px;
   height: 70px;
@@ -299,7 +292,7 @@ body {
   border-radius: 16px;
   border: none;
   background: linear-gradient(135deg, #e5a546, #ff7424);
-  color: #fff;
+  color: #ffffff;
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
@@ -421,8 +414,8 @@ body {
   gap: 8px;
   padding: 8px 16px;
   border: none;
-  background: #f68f3b;
-  color: white;
+  background: linear-gradient(135deg, #f68f3b 0%, #ff6b35 100%);
+  color: rgb(255, 255, 255);
   border-radius: 10px;
   cursor: pointer;
   font-weight: 500;
@@ -509,21 +502,19 @@ body {
   border-radius: 10px;
 }
 
-/* Hotline Card Container */
 .hotline_card {
   position: relative;
   width: 100%;
   max-width: 380px;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 40px 12px 20px 12px; /* Increased top padding so badge doesn't overlap text */
+  padding: 40px 12px 20px 12px; 
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
-  overflow: visible; /* allow absolute badge to remain visible */
+  overflow: visible; 
 }
 
-/* Fixed Top Left Badge Visibility */
 .top_badge {
   position: absolute;
   top: 0px;
@@ -533,16 +524,15 @@ body {
   font-weight: 800;
   font-size: 11px;
   padding: 10px 16px;
-  border-top-left-radius: 20px; /* Matches card's corner radius */
+  border-top-left-radius: 20px; 
   border-bottom-right-radius: 18px;
   letter-spacing: 0.5px;
-  z-index: 20; /* Ensures badge stays on top */
+  z-index: 20; 
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Header Section */
 .emergency_header {
   display: flex;
   align-items: center;
@@ -697,4 +687,16 @@ body {
   font-weight: 500;
   cursor: pointer;
   margin-top: 20px;
+}
+.profile_menu{
+  font-size: 19px;
+  text-shadow: #111111;
+  font-weight: bold;
+  cursor: pointer;
+}
+.profile_menu:hover{
+  font-size: 19px;
+  text-shadow: #111111;
+  font-weight: bold;
+  color: #e5a546;
 }
