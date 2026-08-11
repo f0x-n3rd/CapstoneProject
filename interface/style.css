@@ -97,27 +97,103 @@ body {
   max-width: 500px;
   overflow: hidden;
   border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.09);
+  background:linear-gradient(135deg, #ebbe7c, #16161636);
 }
 .card_slider {
   display: flex;
-  width: 500%;
+  width: 500%; 
   animation: slideLoop 25s infinite ease-in-out;
   gap: 5px;
 }
 
 .empty_card {
   width: 100%;
-  min-height: 150px;
-  background-color: #cecece;
+  min-height: 165px;
   border-radius: 8px;
   box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  gap: 12px;
+  overflow: hidden;
 }
+
 .card {
   width: 100%;
   min-height: 150px;
   background-color: #cecece;
   border-radius: 8px;
   margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.image_announcement {
+  width: 50%;
+  height: 100%;
+  min-height: 150px;
+  object-position: center;
+  border-radius: 18px;
+  padding: 8px 8px 8px 8px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  display: block;
+  
+}
+
+.announcement_preview_link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+
+
+.card .announcement_text,
+.card > div:last-child {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+  padding: 12px 12px 12px 0;
+  box-sizing: border-box;
+}
+.text_title {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: left;
+  width: 100%;
+}
+.text_description {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: #4b5563;
+  text-align: left;
+  width: 100%;
+  padding-right: 8px;
+}
+
+.announcement_text_block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.announcement_title {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: left;
+  width: 100%;
 }
 
 /* 
@@ -508,11 +584,11 @@ body {
   max-width: 380px;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 40px 12px 20px 12px; 
+  padding: 40px 12px 20px 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
-  overflow: visible; 
+  overflow: visible;
 }
 
 .top_badge {
@@ -524,10 +600,10 @@ body {
   font-weight: 800;
   font-size: 11px;
   padding: 10px 16px;
-  border-top-left-radius: 20px; 
+  border-top-left-radius: 20px;
   border-bottom-right-radius: 18px;
   letter-spacing: 0.5px;
-  z-index: 20; 
+  z-index: 20;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -688,13 +764,17 @@ body {
   cursor: pointer;
   margin-top: 20px;
 }
-.profile_menu{
+.profile_menu {
   font-size: 19px;
   text-shadow: #111111;
   font-weight: bold;
   cursor: pointer;
+  background-color: transparent;
+  border: transparent;
+  display: flex;
+  padding-bottom: 8px;
 }
-.profile_menu:hover{
+.profile_menu:hover {
   font-size: 19px;
   text-shadow: #111111;
   font-weight: bold;
