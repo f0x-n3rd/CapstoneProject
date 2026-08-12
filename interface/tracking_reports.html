@@ -179,5 +179,10 @@
             </nav>
         </div>
         <script src="form_panel.js"></script>
+        <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js');
+      }
+    </script>
     </body>
 </html>

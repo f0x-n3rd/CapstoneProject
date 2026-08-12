@@ -75,7 +75,7 @@ body {
 .main_content {
   flex: 1;
   overflow-y: auto;
-  padding: 15px;
+  padding: 15px 15px 90px;
   gap: 16px;
   display: flex;
   flex-direction: column;
@@ -102,8 +102,11 @@ body {
 }
 .card_slider {
   display: flex;
-  width: 500%; 
-  animation: slideLoop 25s infinite ease-in-out;
+  width: 500%;
+  transform: translateX(0);
+  animation: slideLoop 25s infinite linear;
+  animation-fill-mode: both;
+  will-change: transform;
   gap: 5px;
 }
 
@@ -232,7 +235,12 @@ body {
 /* ====================================================================== */
 
 .app_nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  max-width: 450px;
   height: 65px;
   background-color: #ffffff;
   border-top: 1px solid #e2e8f0;
@@ -240,28 +248,31 @@ body {
   justify-content: space-around;
   align-items: center;
   text-align: center;
+  z-index: 20;
 }
 .nav_item {
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #64748b;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 500;
   text-decoration: none;
   flex: 1;
   padding: 8px 0;
   cursor: pointer;
 }
-.nav_item.active {
-  color: rgb(255, 72, 0);
-}
 .nav_icon {
-  font-size: 20px;
-  margin-bottom: 2px;
+  width: 27px;
+  height: 27px;
+  margin-bottom: 4px;
+
 }
 .icon {
-  width: 27px;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
 }
 
 /* ====================================================================== */
