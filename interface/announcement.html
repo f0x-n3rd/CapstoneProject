@@ -1,76 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Municipal Gov - Announcement</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    
-</head>
-<body>
-
-    <div class="app_container">
-        <!-- APP HEADER -->
-        <header class="app_header">
-            <div class="app_logo_placeholder">Logo</div>
-            <div class="header_title_block">
-                <h1>System Title</h1>
-                <p>Odiongan, Romblon</p>
-            </div>
-        </header>
-
-        <main class="main_content">
-    <h3 class="section_heading">Announcement</h3>
-
-    <div id="announcements_container" data-fb-collection="announcements">
-        <div class="announcement_card" data-fb-document="ann_01">
-            <div class="announcement_header">
-                <div class="announcement_icon">📢</div>
-                <div class="announcement_title">
-                    <h4 data-fb-field="title">Announcement Title</h4>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Municipal Gov - Announcement</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="app_container">
+            <!-- APP HEADER -->
+            <header class="app_header">
+                <div class="app_logo_placeholder">Logo</div>
+                <div class="header_title_block">
+                    <h1>System Title</h1>
+                    <p>Odiongan, Romblon</p>
                 </div>
-            </div>
+            </header>
+            <main class="main_content">
+                <h3 class="section_heading">Announcements</h3>
+                <div id="announcements_container" data-fb-collection="announcements">
+                    <article class="announcement_card" data-fb-document="ann_01">
+                        <!-- LEFT SIDE -->
+                        <div class="announcement_details">
+                            <div class="announcement_header">
+                                <div class="announcement_icon">📢</div>
+                                <div class="announcement_title">
+                                    <h4 data-fb-field="title">
+                                        Drainage Clearing Activity
+                                    </h4>
+                                </div>
+                            </div>
+                            <p class="announcement_content" data-fb-field="content">📢 LGU Odiongan, Romblon Announcement
+                            
+The Local Government Unit (LGU) of Odiongan, Romblon will conduct a
+<strong>Drainage Clearing Activity</strong> to remove leaves, litter, and other debris that obstruct drainage systems.
 
-            <p class="announcement_content" data-fb-field="content"> Content preview......</p>
-            <div class="announcement_image"></div>
-            <div class="announcement_date">
-                Date: 2026-04-12
-            </div>
+This initiative aims to improve water flow, reduce the risk of flooding, and promote a cleaner and healthier environment for everyone.
+
+🗓 <strong>Date:</strong> August 20, 2026
+📍<strong>Location:</strong> Selected roads and drainage areas throughout the Municipality of Odiongan.
+                           
+We encourage all residents, barangay officials, volunteers, and community organizations to participate and support this activity.
+
+Together, we can help maintain a safe, clean, and flood-resilient community.
+"Clean Drainage, Safer Community."</p>
+                        </div>
+                        <!-- RIGHT SIDE -->
+                        <div class="announcement_media">
+                            <div class="swiper announcementSwiper">
+                                <div class="swiper-wrapper">
+                                    <div class="swiper-slide">
+                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                                    </div>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                                 <div class="announcement_date">
+                                Published: April 12, 2026
+                            </div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </main>
+
+
+            <!-- SYSTEM NAVIGATION FOOTERBAR -->
+            <nav class="app_nav">
+                <a href="home.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/home_icon.jpeg" alt="home img" class="icon">
+                    </span>
+                    <span>Home</span>
+                </a>
+                <a href="announcement.html" class="nav_item active">
+                    <span class="nav_icon">
+                        <img src="assets/announcement.png" alt="ann img" class="icon">
+                    </span>
+                    <span>Announcement</span>
+                </a>
+                <a href="tracking_reports.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img
+                            src="assets/real-time-tracking_gray.jpeg"
+                            alt="track img"
+                            id="center_nav_icon"
+                            class="icon"
+                        >
+                    </span>
+                    <span>Track Reports</span>
+                </a>
+                <a href="hotlines.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/helpline_gray.jpeg" alt="helpline img" class="icon">
+                    </span>
+                    <span>Hotline</span>
+                </a>
+                <a href="profile.html" class="nav_item">
+                    <span class="nav_icon">
+                        <img src="assets/account_gray.jpeg" alt="helpline img" class="icon">
+                    </span>
+                    <span>Account</span>
+                </a>
+            </nav>
         </div>
-    </div>
-</main>
-
-        <!-- SYSTEM NAVIGATION FOOTERBAR -->
-        <nav class="app_nav">
-            <a href="home.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/home_icon.jpeg" alt="home img" class="icon"></span>
-                <span>Home</span>
-            </a>
-            <a href="announcement.html" class="nav_item active">
-                <span class="nav_icon"><img src="assets/announcement.png" alt="ann img" class="icon" ></span>
-                <span>Announcement</span>
-            </a>
-            <a href="tracking_reports.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/real-time-tracking_gray.jpeg" alt="track img"  id="center_nav_icon" class="icon" ></span>
-                <span>Track Reports</span>
-            </a>
-            <a href="hotlines.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/helpline_gray.jpeg" alt="helpline img" class="icon" ></span>
-                <span>Hotline</span>
-            </a>
-            <a href="profile.html" class="nav_item">
-                <span class="nav_icon"><img src="assets/account_gray.jpeg" alt="helpline img" class="icon" ></span>
-                <span>Account</span>
-            </a>
-        </nav>
-    </div>
-
-    <script>
+        <script>
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js');
       }
-    </script>
-    
-</body>
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script>
+
+new Swiper(".announcementSwiper",{
+
+loop:true,
+
+spaceBetween:10,
+
+pagination:{
+el:".swiper-pagination",
+clickable:true,
+},
+
+autoplay:{
+delay:4000,
+disableOnInteraction:false,
+},
+
+});
+        </script>
+    </body>
 </html>

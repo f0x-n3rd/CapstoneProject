@@ -12,7 +12,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  color: #1e293b;
+  color: #1e293b; 
 }
 
 .app_container {
@@ -34,7 +34,6 @@ body {
 @media (min-width: 451px) {
   .app_container {
     border-radius: 12px;
-    border: 2px solid #1e293b;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 }
@@ -100,6 +99,7 @@ body {
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.09);
   background:linear-gradient(135deg, #ebbe7c, #16161636);
 }
+
 .card_slider {
   display: flex;
   width: 500%;
@@ -151,20 +151,9 @@ body {
 
 
 
-.card .announcement_text,
-.card > div:last-child {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 6px;
-  padding: 12px 12px 12px 0;
-  box-sizing: border-box;
-}
 .text_title {
   margin: 0;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   line-height: 1.4;
   font-weight: 700;
   color: #1f2937;
@@ -175,10 +164,19 @@ body {
   margin: 0;
   font-size: 0.72rem;
   line-height: 1.2;
-  color: #4b5563;
+  color: black;
   text-align: left;
   width: 100%;
+  display: block;
   padding-right: 8px;
+  /* Preserve user-entered line breaks and spaces */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-height: 120px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .announcement_text_block {
@@ -189,24 +187,7 @@ body {
   margin-top: 8px;
 }
 
-.announcement_title {
-  margin: 0;
-  font-size: 0.8rem;
-  line-height: 1.4;
-  font-weight: 700;
-  color: #1f2937;
-  text-align: left;
-  width: 100%;
-}
 
-/* 
-  CSS Animation Keyframes:
-  - 0% to 16%: Card 1
-  - 20% to 36%: Card 2
-  - 40% to 56%: Card 3
-  - 60% to 76%: Card 4
-  - 80% to 96%: Card 5
-*/
 @keyframes slideLoop {
   0%,
   16% {
@@ -287,12 +268,11 @@ body {
   position: relative;
   background: #fff;
   border-radius: 28px;
-  padding: 18px;
+  padding: 6px;
+  padding-top: 10px;
   overflow: hidden;
-
   border-left: 8px solid #8d97ff;
   border-bottom: 4px solid #3b2fff;
-
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
@@ -324,17 +304,65 @@ body {
 .announcement_content {
   margin: 0;
   font-size: 12px;
-  color: #888;
+  color: black;
   line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 .announcement_image {
-  width: 130px;
-  height: 70px;
-  margin-top: 16px;
+  width: 200px;
+  height: 150px;
   border-radius: 14px;
+  padding: 0;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+.announcement_images_container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
 
-  background: linear-gradient(to bottom, #cfcfcf, #bdbdbd);
+}
+
+.announcementSwiper{
+    width:100%;
+    margin-top:15px;
+}
+
+.swiper-slide{
+    display:flex;
+    justify-content:center;
+}
+
+.swiper-slide img{
+    width:100%;
+    height:220px;
+    object-fit:contain;
+    border-radius:12px;
+}
+
+.swiper-pagination{
+    margin-top:8px;
+    position:relative;
+}
+
+.swiper-pagination-bullet{
+    width:10px;
+    height:10px;
+    background:#c5c5c57c;
+    opacity:1;
+}
+
+.swiper-pagination-bullet-active{
+    width:26px;
+    border-radius:20px;
+    background:#ff5c2b;
 }
 
 /* DATE */
@@ -342,7 +370,8 @@ body {
   margin-top: 12px;
   font-size: 11px;
   font-weight: 600;
-  color: #555;
+  color: #5555558c;
+  text-align: center;
 }
 
 /* ====================================================================== */
@@ -790,4 +819,248 @@ body {
   text-shadow: #111111;
   font-weight: bold;
   color: #e5a546;
+}
+
+
+
+/* screen for desktop and larger devices */
+@media (min-width: 1024px) {
+  body {
+    background-color: #cbd5e1;
+  }
+
+    .main_content{
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+  .announcement_card{
+        display:flex;
+        gap:35px;
+        align-items:flex-start;
+    }
+
+    /* RIGHT SIDE */
+    .announcementSwiper{
+        flex: 0 0 420px;
+        width: 420px;
+        margin-top: 0;
+    }
+
+    .swiper-slide img{
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    .announcement_date{
+        margin-top: 20px;
+        align-self:flex-end;
+        text-align: right;
+    }
+
+  /* 1. Dashboard Grid Layout */
+  .app_container {
+    border-radius: 0px;
+    max-width: 100%;
+    max-height: 100%;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    grid-template-rows: 70px 1fr;
+    grid-template-areas:
+      "header header"
+      "nav    main";
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .app_header {
+    grid-area: header;
+    padding: 16px 32px;
+  }
+
+  .header_title_block h1 {
+    font-size: 16px;
+  }
+
+  /* 2. Zero-Flicker Left Sidebar */
+  .app_nav {
+    grid-area: nav;
+    position: static;
+    transform: none;
+    width: 260px;
+    height: 100%;
+    max-width: none;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 24px 16px;
+    gap: 8px;
+    border-top: none;
+    border-right: 1px solid #e2e8f0;
+    box-sizing: border-box;
+
+    contain: strict;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transition: none !important;
+  }
+
+  .nav_item {
+    flex-direction: row;
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    gap: 12px;
+    justify-content: flex-start;
+    align-items: center;
+    box-sizing: border-box;
+    flex: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .nav_item:hover,
+  .nav_item.active {
+    background-color: #f1f5f9;
+    color: #0f172a;
+  }
+
+  .nav_icon {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 0;
+  }
+
+  /* 3. Main Content Grids */
+  .main_content,
+  .main_content_hotline {
+    grid-area: main;
+    padding: 20px;
+  }
+
+  .hotline_card {
+    max-width: 100%;
+    padding: 36px 24px 24px;
+  }
+
+  .hotline_list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .text_title {
+    font-size: 2rem;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+.text_description {
+  margin: 0;
+  font-size: 1.2rem;
+  line-height: 1.5;
+   display: block;
+  padding-right: 8px;
+  /* Preserve user-entered line breaks and spaces */
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.text_description::-webkit-scrollbar {
+  display: none;
+}
+.image_announcement {
+  max-width: 100%;
+  width: 50%;
+  height: 300px;
+  display: block;
+}
+  #announcements_container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card_slider_wrapper {
+    max-width: 100%;
+    width: 100%;
+    height: 300px;
+  }
+
+  #history_panel {
+    position: relative;
+  }
+
+  .btn_primary {
+    position: static;
+    margin-top: 20px;
+    display: inline-block;
+  }
+
+  #form_panel {
+    max-width: 650px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  .profile_card {
+    max-width: 480px;
+    margin: 0 auto 24px;
+  }
+
+  .announcement_icon{
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+ .announcement_title h4 {
+  font-size: 16px;
+}
+
+  .announcement_content{
+white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  }
+  .announcement_image{
+    max-width: 100%;
+    width: 50%;
+    height: 300px;
+  }
+  
+}
+
+
+/* screen for extra-large desktops */
+@media (min-width: 1440px) {
+  .app_container {
+    grid-template-columns: 320px 1fr;
+  }
+
+  .app_nav {
+    width: 320px;
+    padding: 32px 20px;
+  }
+
+  .main_content,
+  .main_content_hotline {
+    padding: 40px;
+  }
+
+  .hotline_card {
+    padding: 44px 32px 32px;
+  }
+
+  .image_announcement {
+    max-width: 50%;
+    width: 40%;
+    height: 300px;
+  }
 }
