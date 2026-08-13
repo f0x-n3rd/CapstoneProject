@@ -6,6 +6,7 @@
         <title>Municipal Gov - Announcement</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="desktop.css">
     </head>
     <body>
         <div class="app_container">
@@ -18,21 +19,21 @@
                 </div>
             </header>
             <main class="main_content">
-                <h3 class="section_heading">Announcements</h3>
-                <div id="announcements_container" data-fb-collection="announcements">
-                    <article class="announcement_card" data-fb-document="ann_01">
-                        <!-- LEFT SIDE -->
-                        <div class="announcement_details">
-                            <div class="announcement_header">
-                                <div class="announcement_icon">📢</div>
-                                <div class="announcement_title">
-                                    <h4 data-fb-field="title">
-                                        Drainage Clearing Activity
-                                    </h4>
-                                </div>
-                            </div>
-                            <p class="announcement_content" data-fb-field="content">📢 LGU Odiongan, Romblon Announcement
-                            
+    <h3 class="section_heading">Announcements</h3>
+    <div id="announcements_container" data-fb-collection="announcements">
+        <article class="announcement_card" data-fb-document="ann_01">
+            <!-- LEFT SIDE -->
+            <div class="announcement_details">
+                <div class="announcement_header">
+                    <div class="announcement_icon"><img src="assets/megaphone.png" alt=""></div>
+                    <div class="announcement_title">
+                        <h4 data-fb-field="title">
+                            Drainage Clearing Activity
+                        </h4>
+                    </div>
+                </div>
+                <p class="announcement_content" data-fb-field="content">📢 LGU Odiongan, Romblon Announcement
+                
 The Local Government Unit (LGU) of Odiongan, Romblon will conduct a
 <strong>Drainage Clearing Activity</strong> to remove leaves, litter, and other debris that obstruct drainage systems.
 
@@ -40,36 +41,36 @@ This initiative aims to improve water flow, reduce the risk of flooding, and pro
 
 🗓 <strong>Date:</strong> August 20, 2026
 📍<strong>Location:</strong> Selected roads and drainage areas throughout the Municipality of Odiongan.
-                           
+                
 We encourage all residents, barangay officials, volunteers, and community organizations to participate and support this activity.
 
 Together, we can help maintain a safe, clean, and flood-resilient community.
 "Clean Drainage, Safer Community."</p>
-                        </div>
-                        <!-- RIGHT SIDE -->
-                        <div class="announcement_media">
-                            <div class="swiper announcementSwiper">
-                                <div class="swiper-wrapper">
-                                    <div class="swiper-slide">
-                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
-                                    </div>
-                                </div>
-                                <div class="swiper-pagination"></div>
-                                 <div class="announcement_date">
-                                Published: April 12, 2026
-                            </div>
-                            </div>
-                        </div>
-                    </article>
-                </div>
-            </main>
+            </div>
 
+            <!-- RIGHT SIDE -->
+            <div class="announcement_media">
+                <div class="swiper announcementSwiper">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="assets/sample_img/sam1.png" alt="Announcement Image" class="announcement_image">
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+                <div class="announcement_date">
+                    Published: August 10, 2026
+                </div>
+            </div>
+        </article>
+    </div>
+</main>
 
             <!-- SYSTEM NAVIGATION FOOTERBAR -->
             <nav class="app_nav">
@@ -110,31 +111,31 @@ Together, we can help maintain a safe, clean, and flood-resilient community.
                 </a>
             </nav>
         </div>
-        <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-        <script>
+        
+    
+       <!-- Swiper JS CDN -->
+<!-- Swiper JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js');
+  }
 
-new Swiper(".announcementSwiper",{
-
-loop:true,
-
-spaceBetween:10,
-
-pagination:{
-el:".swiper-pagination",
-clickable:true,
-},
-
-autoplay:{
-delay:4000,
-disableOnInteraction:false,
-},
-
-});
-        </script>
+  // Hintayin munang ma-load ang lahat ng CSS at Images (kasama pag Ctrl+F5)
+  window.addEventListener('load', function() {
+    const announcementSwiper = new Swiper('.announcementSwiper', {
+      slidesPerView: 1,
+      spaceBetween: 10,
+      loop: true,
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      // Nagse-secure na magre-calculate kapag nag-load ang images
+      observer: true,
+      observeParents: true,
+    });
+  });
+</script>
     </body>
 </html>

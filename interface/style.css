@@ -96,8 +96,8 @@ body {
   max-width: 500px;
   overflow: hidden;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.09);
-  background:linear-gradient(135deg, #ebbe7c, #16161636);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.61);
+  background: linear-gradient(135deg, #1e40af 0%, #f59e0b 100%);
 }
 
 .card_slider {
@@ -124,11 +124,85 @@ body {
 .card {
   width: 100%;
   min-height: 150px;
-  background-color: #cecece;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  background:linear-gradient(135deg, #070707e1, #1616168f);
+  border-radius: 5px;
+  margin-bottom: 5px;
   overflow: hidden;
 }
+  .card_post{
+  width: 100%;
+  height: 180px;
+  padding: 3px;
+}
+.text_alignment{
+  padding:10px;
+}
+.title_reports{
+  color: white  ;
+  font-size: large;
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+.date_reports{
+  color: #fffcfce5;
+  font-size: 0.7rem;
+}
+.details{
+  color: rgb(255, 253, 253);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  padding-bottom: 5px;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.snap_scroll {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+
+    /* Ipakita ang horizontal scrollbar */
+    scrollbar-width: auto;
+}
+
+.snap_scroll::-webkit-scrollbar {
+    height: 4px;
+}
+
+.snap_scroll::-webkit-scrollbar-track {
+    background: #1616168f;
+    border-radius: 10px;
+}
+
+.snap_scroll::-webkit-scrollbar-thumb {
+    background: #fcf3f3ec;
+    border-radius: 10px;
+}
+
+.snap_scroll::-webkit-scrollbar-thumb:hover {
+    background: #226efc;
+}
+
+.snap_scroll > div {
+    flex: 0 0 100%;
+    scroll-snap-align: center;
+}
+
+.card_post {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    border-radius: 5px;
+}
+
 
 .image_announcement {
   width: 50%;
@@ -136,7 +210,7 @@ body {
   min-height: 150px;
   object-position: center;
   border-radius: 18px;
-  padding: 8px 8px 8px 8px;
+  padding: 6px 0px 6px 6px;
   box-sizing: border-box;
   flex-shrink: 0;
   display: block;
@@ -156,7 +230,7 @@ body {
   font-size: 0.8rem;
   line-height: 1.4;
   font-weight: 700;
-  color: #1f2937;
+  color: #ffffff;
   text-align: left;
   width: 100%;
 }
@@ -164,11 +238,11 @@ body {
   margin: 0;
   font-size: 0.72rem;
   line-height: 1.2;
-  color: black;
+  color: rgb(241, 241, 241);
   text-align: left;
   width: 100%;
   display: block;
-  padding-right: 8px;
+  padding-right: 1px;
   /* Preserve user-entered line breaks and spaces */
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -291,7 +365,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 15px;
+  overflow: hidden;
+}
+
+.announcement_icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .announcement_title h4 {
@@ -309,6 +389,21 @@ body {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: anywhere;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* IMAGE CONTAINER */
+.announcement_images_container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .announcement_image {
@@ -320,60 +415,76 @@ body {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
-.announcement_images_container {
+/* Swiper CSS Dependencies */
+@import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+
+/* SWIPER CONFIGURATION */
+.announcementSwiper {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 24px; /* Space para sa swiper-pagination dots sa ibaba */
+}
+
+.swiper-slide {
   display: flex;
-  gap: 10px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 8px;
-
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
 }
 
-.announcementSwiper{
-    width:100%;
-    margin-top:15px;
+.swiper-slide img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: 220px;
+  object-fit: contain;
+  border-radius: 12px;
 }
 
-.swiper-slide{
-    display:flex;
-    justify-content:center;
+/* PAGINATION */
+.swiper-pagination {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
 }
 
-.swiper-slide img{
-    width:100%;
-    height:220px;
-    object-fit:contain;
-    border-radius:12px;
+.swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: rgba(197, 197, 197, 0.48);
+  opacity: 1;
+  margin: 0 4px;
+  border-radius: 10px;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
-.swiper-pagination{
-    margin-top:8px;
-    position:relative;
+.swiper-pagination-bullet-active {
+  width: 26px;
+  border-radius: 20px;
+  background: #ff5c2b;
 }
 
-.swiper-pagination-bullet{
-    width:10px;
-    height:10px;
-    background:#c5c5c57c;
-    opacity:1;
-}
-
-.swiper-pagination-bullet-active{
-    width:26px;
-    border-radius:20px;
-    background:#ff5c2b;
-}
-
-/* DATE */
+/* DATE (CENTERED) */
 .announcement_date {
   margin-top: 12px;
   font-size: 11px;
   font-weight: 600;
   color: #5555558c;
-  text-align: center;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center; /* Inilagay sa gitna */
+  text-align: center;      /* Sigurado sa gitna */
+  width: 100%;
 }
-
 /* ====================================================================== */
 /* .card_header_flex { display: flex; justify-content: space-between; align-items: flex-start; }*/
 .badge {
@@ -822,245 +933,3 @@ body {
 }
 
 
-
-/* screen for desktop and larger devices */
-@media (min-width: 1024px) {
-  body {
-    background-color: #cbd5e1;
-  }
-
-    .main_content{
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-
-  .announcement_card{
-        display:flex;
-        gap:35px;
-        align-items:flex-start;
-    }
-
-    /* RIGHT SIDE */
-    .announcementSwiper{
-        flex: 0 0 420px;
-        width: 420px;
-        margin-top: 0;
-    }
-
-    .swiper-slide img{
-        width: 100%;
-        height: 280px;
-        object-fit: cover;
-        border-radius: 12px;
-    }
-
-    .announcement_date{
-        margin-top: 20px;
-        align-self:flex-end;
-        text-align: right;
-    }
-
-  /* 1. Dashboard Grid Layout */
-  .app_container {
-    border-radius: 0px;
-    max-width: 100%;
-    max-height: 100%;
-    display: grid;
-    grid-template-columns: 260px 1fr;
-    grid-template-rows: 70px 1fr;
-    grid-template-areas:
-      "header header"
-      "nav    main";
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  }
-
-  .app_header {
-    grid-area: header;
-    padding: 16px 32px;
-  }
-
-  .header_title_block h1 {
-    font-size: 16px;
-  }
-
-  /* 2. Zero-Flicker Left Sidebar */
-  .app_nav {
-    grid-area: nav;
-    position: static;
-    transform: none;
-    width: 260px;
-    height: 100%;
-    max-width: none;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 24px 16px;
-    gap: 8px;
-    border-top: none;
-    border-right: 1px solid #e2e8f0;
-    box-sizing: border-box;
-
-    contain: strict;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transition: none !important;
-  }
-
-  .nav_item {
-    flex-direction: row;
-    width: 100%;
-    height: 48px;
-    padding: 0 16px;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 600;
-    gap: 12px;
-    justify-content: flex-start;
-    align-items: center;
-    box-sizing: border-box;
-    flex: none;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
-
-  .nav_item:hover,
-  .nav_item.active {
-    background-color: #f1f5f9;
-    color: #0f172a;
-  }
-
-  .nav_icon {
-    width: 22px;
-    height: 22px;
-    margin-bottom: 0;
-  }
-
-  /* 3. Main Content Grids */
-  .main_content,
-  .main_content_hotline {
-    grid-area: main;
-    padding: 20px;
-  }
-
-  .hotline_card {
-    max-width: 100%;
-    padding: 36px 24px 24px;
-  }
-
-  .hotline_list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
-  }
-  .text_title {
-    font-size: 2rem;
-    line-height: 1.4;
-    font-weight: 700;
-  }
-.text_description {
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.5;
-   display: block;
-  padding-right: 8px;
-  /* Preserve user-entered line breaks and spaces */
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
-  max-height: 300px;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-.text_description::-webkit-scrollbar {
-  display: none;
-}
-.image_announcement {
-  max-width: 100%;
-  width: 50%;
-  height: 300px;
-  display: block;
-}
-  #announcements_container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
-  }
-
-  .card_slider_wrapper {
-    max-width: 100%;
-    width: 100%;
-    height: 300px;
-  }
-
-  #history_panel {
-    position: relative;
-  }
-
-  .btn_primary {
-    position: static;
-    margin-top: 20px;
-    display: inline-block;
-  }
-
-  #form_panel {
-    max-width: 650px;
-    margin: 0 auto;
-    background: #ffffff;
-    padding: 28px;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
-
-  .profile_card {
-    max-width: 480px;
-    margin: 0 auto 24px;
-  }
-
-  .announcement_icon{
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-  }
- .announcement_title h4 {
-  font-size: 16px;
-}
-
-  .announcement_content{
-white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
-  }
-  .announcement_image{
-    max-width: 100%;
-    width: 50%;
-    height: 300px;
-  }
-  
-}
-
-
-/* screen for extra-large desktops */
-@media (min-width: 1440px) {
-  .app_container {
-    grid-template-columns: 320px 1fr;
-  }
-
-  .app_nav {
-    width: 320px;
-    padding: 32px 20px;
-  }
-
-  .main_content,
-  .main_content_hotline {
-    padding: 40px;
-  }
-
-  .hotline_card {
-    padding: 44px 32px 32px;
-  }
-
-  .image_announcement {
-    max-width: 50%;
-    width: 40%;
-    height: 300px;
-  }
-}
