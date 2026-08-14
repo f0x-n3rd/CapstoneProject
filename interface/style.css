@@ -1,3 +1,9 @@
+/* Swiper CSS Dependencies (Dapat laging nasa pinakataas) */
+@import url("https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css");
+
+/* ====================================================================== */
+/* GLOBAL & BASE STYLES */
+/* ====================================================================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -18,17 +24,22 @@ body {
 .app_container {
   width: 100%;
   max-width: 450px;
-  min-height: 100vh;
-  background: #f8fafc;
+  height: 100vh;
+  max-height: 850px;
+  background-color: #f8fafc;
+  position: relative;
   display: flex;
   flex-direction: column;
-  position: relative;
+  overflow: hidden;
 }
+
+/* Responsive Container Adjustments */
 @media (max-width: 450px) {
   .app_container {
     max-height: 100vh;
   }
 }
+
 @media (min-width: 451px) {
   .app_container {
     border-radius: 12px;
@@ -36,6 +47,9 @@ body {
   }
 }
 
+/* ====================================================================== */
+/* APP HEADER & NAVIGATION */
+/* ====================================================================== */
 .app_header {
   background-color: #ffffff;
   padding: 16px;
@@ -44,6 +58,7 @@ body {
   gap: 12px;
   border-bottom: 1px solid #e2e8f0;
 }
+
 .app_logo_placeholder {
   width: 40px;
   height: 40px;
@@ -58,37 +73,173 @@ body {
   color: #64748b;
   text-transform: uppercase;
 }
+
 .header_title_block h1 {
   font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .header_title_block p {
   font-size: 11px;
   color: #64748b;
   font-weight: 500;
 }
 
+.app_nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 450px;
+  height: 65px;
+  background-color: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  z-index: 20;
+}
+
+.nav_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #64748b;
+  font-size: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  flex: 1;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.nav_icon {
+  width: 27px;
+  height: 27px;
+  margin-bottom: 4px;
+}
+
+.icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+/* ====================================================================== */
+/* MAIN CONTENT AREA & LAYOUT */
+/* ====================================================================== */
 .main_content {
   flex: 1;
   overflow-y: auto;
-  padding: 15px 15px 90px;
-  gap: 16px;
+  padding: 15px 8px 90px;
+  gap: 5px;
   display: flex;
   flex-direction: column;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.main_content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.main_content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
 .section_heading {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-size: 1.17rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+.section_heading_report {
+  font-size: 1.17rem;
+  font-weight: 700;
+  padding-left: 10px;
+  padding-top: 15px;
+}
+/* ====================================================================== */
+/* CARD HEADER FLEX & INFO STYLES */
+/* ====================================================================== */
+.card_header_flex {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 15px;
+  overflow: hidden;
+  border-left: 8px solid #8d97ff;
+  border-bottom: 4px solid #3b2fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+.data_card {
+  margin: 8px;
+}
+
+.alignment_icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.nav_icon1 {
+  display: none;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.card_category {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.card_location {
+  margin: 0;
+  font-size: 12px;
+  color: #444444;
+}
+
+.card_desc {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+  padding-bottom: 40px;
+}
+.card_desc::-webkit-scrollbar {
+  display: none;
+}
+
+.card_date {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  font-size: 11px;
+  color: #888888;
+  margin: 0;
+  padding-top: 0;
+  z-index: 2;
 }
 
 /* ====================================================================== */
-/* loop announcement */
+/* LOOP ANNOUNCEMENTS & CAROUSEL */
+/* ====================================================================== */
 .card_slider_wrapper {
   width: 100%;
   max-width: 500px;
@@ -122,51 +273,60 @@ body {
 .card {
   width: 100%;
   min-height: 150px;
-  background: linear-gradient(135deg, #070707e1, #1616168f);
+  background: linear-gradient(
+    135deg,
+    rgba(7, 7, 7, 0.88),
+    rgba(22, 22, 22, 0.56)
+  );
   border-radius: 5px;
   margin-bottom: 5px;
   overflow: hidden;
 }
+
 .card_post {
   width: 100%;
-  height: 180px;
+  height: 200px;
   padding: 3px;
+  object-fit: cover;
+  display: block;
+  border-radius: 5px;
 }
+
 .text_alignment {
   padding: 10px;
 }
+
 .title_reports {
-  color: white;
+  color: #ffffff;
   font-size: large;
   font-weight: bold;
   padding-bottom: 10px;
 }
+
 .date_reports {
-  color: #fffcfce5;
+  color: rgba(255, 252, 252, 0.9);
   font-size: 0.7rem;
 }
+
 .details {
-  color: rgb(255, 253, 253);
-  word-wrap: break-word;
-  overflow-wrap: anywhere;
+  color: #ffffff;
   white-space: pre-wrap;
   word-wrap: break-word;
+  overflow-wrap: anywhere;
   padding-bottom: 5px;
   max-height: 300px;
   overflow-y: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 .snap_scroll {
   display: flex;
   gap: 2px;
   overflow-x: auto;
   overflow-y: hidden;
-
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-
-  /* Ipakita ang horizontal scrollbar */
   scrollbar-width: auto;
 }
 
@@ -175,12 +335,12 @@ body {
 }
 
 .snap_scroll::-webkit-scrollbar-track {
-  background: #1616168f;
+  background: rgba(22, 22, 22, 0.56);
   border-radius: 10px;
 }
 
 .snap_scroll::-webkit-scrollbar-thumb {
-  background: #fcf3f3ec;
+  background: rgba(252, 243, 243, 0.93);
   border-radius: 10px;
 }
 
@@ -193,21 +353,13 @@ body {
   scroll-snap-align: center;
 }
 
-.card_post {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  display: block;
-  border-radius: 5px;
-}
-
 .image_announcement {
   width: 50%;
   height: 100%;
   min-height: 150px;
   object-position: center;
   border-radius: 18px;
-  padding: 6px 0px 6px 6px;
+  padding: 6px 0 6px 6px;
   box-sizing: border-box;
   flex-shrink: 0;
   display: block;
@@ -228,6 +380,7 @@ body {
   text-align: left;
   width: 100%;
 }
+
 .text_description {
   margin: 0;
   font-size: 0.72rem;
@@ -237,7 +390,6 @@ body {
   width: 100%;
   display: block;
   padding-right: 1px;
-  /* Preserve user-entered line breaks and spaces */
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: anywhere;
@@ -280,50 +432,10 @@ body {
     transform: translateX(0%);
   }
 }
-/* ====================================================================== */
-
-.app_nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 450px;
-  height: 65px;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  text-align: center;
-  z-index: 20;
-}
-.nav_item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: #64748b;
-  font-size: 8px;
-  font-weight: 500;
-  text-decoration: none;
-  flex: 1;
-  padding: 8px 0;
-  cursor: pointer;
-}
-.nav_icon {
-  width: 27px;
-  height: 27px;
-  margin-bottom: 4px;
-}
-.icon {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: contain;
-}
 
 /* ====================================================================== */
-
+/* ANNOUNCEMENTS CONTAINER & SWIPER */
+/* ====================================================================== */
 #announcements_container {
   display: flex;
   flex-direction: column;
@@ -332,7 +444,7 @@ body {
 
 .announcement_card {
   position: relative;
-  background: #fff;
+  background: #ffffff;
   border-radius: 28px;
   padding: 6px;
   padding-top: 10px;
@@ -370,13 +482,13 @@ body {
   margin: 0;
   font-size: 14px;
   font-weight: 700;
-  color: #333;
+  color: #333333;
 }
 
 .announcement_content {
   margin: 0;
   font-size: 12px;
-  color: black;
+  color: #111111;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -387,7 +499,6 @@ body {
   -ms-overflow-style: none;
 }
 
-/* IMAGE CONTAINER */
 .announcement_images_container {
   display: flex;
   gap: 10px;
@@ -407,17 +518,14 @@ body {
   scroll-snap-align: center;
   scroll-snap-stop: always;
 }
-/* Swiper CSS Dependencies */
-@import url("https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css");
 
-/* SWIPER CONFIGURATION */
 .announcementSwiper {
   width: 100%;
   margin-top: 15px;
   margin-bottom: 8px;
   position: relative;
   overflow: hidden;
-  padding-bottom: 24px; /* Space para sa swiper-pagination dots sa ibaba */
+  padding-bottom: 24px;
 }
 
 .swiper-slide {
@@ -436,7 +544,6 @@ body {
   border-radius: 12px;
 }
 
-/* PAGINATION */
 .swiper-pagination {
   position: absolute;
   left: 0;
@@ -464,31 +571,55 @@ body {
   background: #ff5c2b;
 }
 
-/* DATE (CENTERED) */
 .announcement_date {
   margin-top: 12px;
   font-size: 11px;
   font-weight: 600;
-  color: #5555558c;
+  color: rgba(85, 85, 85, 0.55);
   display: flex;
   gap: 12px;
   align-items: center;
-  justify-content: center; /* Inilagay sa gitna */
-  text-align: center; /* Sigurado sa gitna */
+  justify-content: center;
+  text-align: center;
   width: 100%;
 }
+
 /* ====================================================================== */
-/* .card_header_flex { display: flex; justify-content: space-between; align-items: flex-start; }*/
+/* BUTTONS & BADGES */
+/* ====================================================================== */
 .badge {
-  font-size: 11px;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  display: inline-block;
+  transition: background-color 0.3s ease;
 }
+
+/* 🟠 Orange para sa Received */
 .badge_received {
-  background-color: #feebcb;
-  color: #c05621;
+  background-color: #fca311;
+}
+
+/* 🔵 Blue para sa Ongoing */
+.badge_ongoing {
+  background-color: #007bff;
+}
+
+/* 🟢 Green para sa Resolved */
+.badge_resolved {
+  background-color: #28a745;
+}
+.details_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.report_id_block {
+  font-size: 15px;
+  color: #444;
 }
 .btn_text {
   color: #ffffff;
@@ -501,13 +632,40 @@ body {
   padding: 12px 16px;
   border-radius: 18px;
 }
+
+/* Base style para sa Status Badge */
+.details_status_badge .badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  display: inline-block;
+  transition: background-color 0.3s ease;
+}
+
+/* 🟠 Orange para sa Received / Submitted */
+.badge_received {
+  background-color: #fca311;
+}
+
+/* 🔵 Blue para sa Ongoing */
+.badge_ongoing {
+  background-color: #007bff;
+}
+
+/* 🟢 Green para sa Resolved */
+.badge_resolved {
+  background-color: #28a745;
+}
+
 .btn_primary {
-  position: absolute;
+  position: fixed;
   right: 20px;
   bottom: 80px;
   width: auto;
   min-width: 140px;
-  padding: 5px 5px;
+  padding: 5px;
   border-radius: 16px;
   border: none;
   background: linear-gradient(135deg, #e5a546, #ff7424);
@@ -519,15 +677,18 @@ body {
   margin-top: 10px;
   z-index: 1000;
 }
-#details_panel{
-  #details_panel
-}
+
+/* ====================================================================== */
+/* FORMS & UPLOADS */
+/* ====================================================================== */
 .form_view {
   display: none;
 }
+
 .form_group {
   margin-bottom: 16px;
 }
+
 .form_control {
   width: 100%;
   padding: 14px;
@@ -537,14 +698,16 @@ body {
   outline: none;
   box-sizing: border-box;
 }
+
 .file_upload_container {
   border: 2px dashed #e2e8f0;
   padding: 20px;
   border-radius: 12px;
   text-align: center;
   position: relative;
-  background: #fff;
+  background: #ffffff;
 }
+
 .file_upload_container input[type="file"] {
   position: absolute;
   top: 0;
@@ -554,53 +717,49 @@ body {
   opacity: 0;
   cursor: pointer;
 }
-.card_header_flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
-  background: #fff;
-  border-radius: 28px;
-  padding: 11px;
-  overflow: hidden;
-  border-left: 8px solid #8d97ff;
-  border-bottom: 4px solid #3b2fff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  font-size: small;
+
+.detail_status .badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 2;
 }
-.detail_status{
-    display:flex;
-    flex-direction:column;
-    align-items:flex-end;
-    gap:12px;
+.detail_status .btn_text {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: blue;
+  border: none;
+  color: #feffff;
+  font-weight: 600;
+  font-size: 11px;
+  cursor: pointer;
+  z-index: 2;
+  padding: 6px 12px;
 }
-.card_date{
-    position:static;
-    padding-top:10px;
-    font-size:11px;
-    color:#64748b;
+.detail_status .btn_text:hover {
+  box-shadow: 0 4px 12px rgba(6, 10, 19, 0.425);
 }
-.card_desc{
-    width:100%;
-    font-size:13px;
-    line-height:1.5;
-}
-/*===========================new report==============================================*/
+
 .label {
   display: block;
   color: #64748b;
   margin-bottom: 6px;
 }
+
 .image_preview_wrapper {
   position: relative;
   width: 110px;
   height: 90px;
 }
-.image_preview{
-    width:100%;
-    height:120px;
-    object-fit:cover;
+
+.image_preview {
+  width: 110px;
+  height: 90px;
+  border-radius: 6px;
+  object-fit: cover;
 }
+
 .remove_image_button {
   position: absolute;
   top: 3px;
@@ -610,11 +769,12 @@ body {
   border: 0;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.7);
-  color: #fff;
+  color: #ffffff;
   font-size: 18px;
   line-height: 20px;
   cursor: pointer;
 }
+
 .back_button {
   display: inline-flex;
   align-items: center;
@@ -642,38 +802,43 @@ body {
   padding: 8px 16px;
   border: none;
   background: linear-gradient(135deg, #f68f3b 0%, #ff6b35 100%);
-  color: rgb(255, 255, 255);
+  color: #ffffff;
   border-radius: 10px;
   cursor: pointer;
   font-weight: 500;
 }
+
 .btn_submit_container {
   display: flex;
   justify-content: center;
   margin-top: 16px;
 }
+
 #selected_attachment {
   margin-top: 10px;
   color: #64748b;
   font-size: 12px;
 }
+
 .upload_img {
   width: 25px;
   height: 25px;
   display: block;
   object-fit: contain;
 }
+
 .btn_secondary {
   display: flex;
   align-items: center;
   gap: 8px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
-  background: #fff;
+  background: #ffffff;
   padding: 8px 12px;
   color: #334155;
   cursor: pointer;
 }
+
 .for_icon {
   display: inline-flex;
   align-items: center;
@@ -681,6 +846,7 @@ body {
   width: 20px;
   height: 20px;
 }
+
 .attachment_buttons {
   display: flex;
   align-items: center;
@@ -688,12 +854,14 @@ body {
   justify-content: flex-start;
   flex-wrap: wrap;
 }
+
 #attachment_preview {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
 }
+
 .btn_camera {
   border: 0;
   background: transparent;
@@ -703,13 +871,16 @@ body {
   align-items: center;
   justify-content: center;
 }
-/* =============================hotline========================================= */
 
+/* ====================================================================== */
+/* HOTLINE SECTION */
+/* ====================================================================== */
 .main_content_hotline {
   flex: 1;
   padding: 16px;
   overflow-y: auto;
 }
+
 .hotline_icon {
   width: 45px;
   height: 45px;
@@ -719,14 +890,6 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 20px;
-}
-
-.main_content::-webkit-scrollbar {
-  width: 6px;
-}
-.main_content::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
 }
 
 .hotline_card {
@@ -744,8 +907,8 @@ body {
 
 .top_badge {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   background: linear-gradient(180deg, #d32f2f 0%, #b71c1c 100%);
   color: #ffffff;
   font-weight: 800;
@@ -782,7 +945,6 @@ body {
   color: #111111;
 }
 
-/* List Styling */
 .hotline_list {
   display: flex;
   flex-direction: column;
@@ -857,20 +1019,24 @@ body {
   object-fit: cover;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+/* ====================================================================== */
+/* PROFILE SECTION */
 /* ====================================================================== */
 .profile_card {
-  background: white;
+  background: #ffffff;
   border-radius: 16px;
   padding: 24px 16px;
   text-align: center;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
 }
+
 .profile_avatar {
   width: 80px;
   height: 80px;
   background: linear-gradient(135deg, #e58e46, #f6c43b);
-  color: white;
+  color: #ffffff;
   font-size: 28px;
   font-weight: bold;
   border-radius: 50%;
@@ -880,16 +1046,19 @@ body {
   margin: 0 auto 16px auto;
   box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
 }
+
 .profile_name {
   font-size: 18px;
   font-weight: 700;
   margin: 0 0 4px 0;
 }
+
 .profile_email {
   font-size: 13px;
   color: #64748b;
   margin: 0;
 }
+
 .badge_brgy {
   display: inline-block;
   background-color: #fef8e0;
@@ -901,6 +1070,7 @@ body {
   margin-top: 10px;
   text-transform: uppercase;
 }
+
 .action_link {
   display: block;
   width: 100%;
@@ -915,9 +1085,9 @@ body {
   cursor: pointer;
   margin-top: 20px;
 }
+
 .profile_menu {
   font-size: 19px;
-  text-shadow: #111111;
   font-weight: bold;
   cursor: pointer;
   background-color: transparent;
@@ -925,31 +1095,342 @@ body {
   display: flex;
   padding-bottom: 8px;
 }
+
 .profile_menu:hover {
-  font-size: 19px;
-  text-shadow: #111111;
-  font-weight: bold;
   color: #e5a546;
 }
-#history_panel{
-    flex:1;
-    overflow-y:auto;
-    padding:16px;
-    padding-bottom:90px;
-}
-#form_panel{
-    padding:16px;
+
+/* =======================✔️=============================================== */
+/* MODALS, PANELS & OVERLAY (Para sa JS Toggle) */
+/* ====================================================================== */
+
+/* Dark Overlay sa likod ng Modal */
+#form_overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-#details_panel{
-    padding:16px;
+#form_overlay.show {
+  opacity: 1;
 }
-.card_header_flex{
-    padding:16px;
-    border-radius:20px;
+
+#details_panel {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 72px; /* taas ng app header */
+  bottom: 0;
+  transform: translate(-50%, 100%);
+  width: 100%;
+  max-width: 450px;
+  height: calc(100vh - 72px);
+  max-height: calc(100vh - 72px);
+  background: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.2);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1000;
 }
-.main_content_tracking{
-    flex:1;
-    overflow-y:auto;
-    padding-bottom:80px;
+
+#details_panel.show {
+  transform: translate(-50%, 0);
+}
+
+#details_panel::-webkit-scrollbar {
+  display: none;
+}
+
+#details_panel {
+  scrollbar-width: none;
+}
+
+#form_panel {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 100%); /* Naka-tago sa ibaba bago lumabas */
+  width: 100%;
+  max-width: 450px;
+  max-height: 85vh;
+  background-color: #ffffff;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  overflow-y: auto;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+/* Kapag pino-trigger ng JS ang .show class */
+#details_panel.show,
+#form_panel.show {
+  transform: translate(-50%, 0%); /* Aangat pataas sa mobile screen */
+}
+/* ====================================================================== */
+/* MOBILE VIEW (<= 768px) - Scrollable Form Panel */
+/* ====================================================================== */
+@media (max-width: 768px) {
+  #history_panel {
+    position: relative;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    transform: none !important;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+
+  #form_panel {
+    position: relative;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    transform: none !important;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    background-color: #f8fafc;
+    padding: 16px 16px 80px 16px;
+    box-shadow: none;
+    border-radius: 0;
+    box-sizing: border-box;
+  }
+
+  #form_panel::-webkit-scrollbar {
+    width: 5px;
+  }
+  #form_panel::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+  }
+  #details_panel {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+    max-height: 87vh;
+    border-radius: 0;
+    padding: 18px;
+  }
+  .app_header {
+    position: relative;
+    z-index: 2001;
+  }
+}
+
+/* ====================================================================== */
+/* STATUS BADGES (Inilalagay ng JS sa card at modal) */
+/* ====================================================================== */
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+  /* 🟠 Orange para sa Received */
+  .badge_received {
+    background-color: #fca311;
+  }
+
+  /* 🔵 Blue para sa Ongoing */
+  .badge_ongoing {
+    background-color: #007bff;
+  }
+
+  /* 🟢 Green para sa Resolved */
+  .badge_resolved {
+    background-color: #28a745;
+  }
+
+/* ====================================================================== */
+/* TIMELINE STYLES (Para sa updateTimelineUI function) */
+/* ====================================================================== */
+.timeline_container {
+  position: relative;
+  padding-left: 10px;
+  margin-bottom: 28px;
+}
+.timeline_container::before {
+  content: "";
+  position: absolute;
+  left: 17px;
+  top: 10px;
+  bottom: 20px;
+  width: 2px;
+  background: #ccc;
+}
+.timeline_item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+.timeline_item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline_node {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #bdc3c7;
+  margin-right: 16px;
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Default Muted Text kapag HINDI pa active */
+.timeline_content h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #a0a0a0; /* Muted gray text */
+}
+
+.timeline_content p {
+  margin: 2px 0 0 0;
+  font-size: 12px;
+  color: #c0c0c0;
+}
+
+/* ================= ACTIVE STATES & 3 DISTINCT COLORS ================= */
+
+/* Kapag Active na: gagawing matingkad ang text */
+.timeline_item.active .timeline_content h4 {
+  color: #111111;
+}
+
+.timeline_item.active .timeline_content p {
+  color: #666666;
+}
+
+/* Kulay 1: Report Submitted (Orange) */
+.timeline_item.step_1.active .timeline_node {
+  background-color: #fca311;
+  box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.2);
+}
+
+/* Kulay 2: Ongoing (Blue) */
+.timeline_item.step_2.active .timeline_node {
+  background-color: #007bff;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Kulay 3: Resolved (Green) */
+.timeline_item.step_3.active .timeline_node {
+  background-color: #28a745;
+  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Active Status (Kapag umabot na ang report sa step na iyon) */
+.timeline_item.active {
+  opacity: 1;
+  font-weight: 600;
+}
+
+.timeline_item .time_stamp {
+  font-size: 11px;
+  color: #64748b;
+}
+/* Sections & Attachments */
+.detail_section {
+  margin-bottom: 20px;
+}
+
+.detail_title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.detail_title_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.edit_actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn_action {
+  background: none;
+  border: none;
+  color: #5d3ebc;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.btn_action:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+.divider {
+  color: #999;
+  font-size: 12px;
+}
+
+.detail_text {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.attachment_grid {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+
+.attachment_img_placeholder {
+  width: 160px;
+  height: 110px;
+  background: linear-gradient(180deg, #d3d3d3 0%, #b3b3b3 100%);
+  border-radius: 16px;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.modal_footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
 }

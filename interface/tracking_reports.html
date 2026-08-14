@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Municipal Gov - Track Report</title>
-       <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
     </head>
     <body>
@@ -18,40 +18,44 @@
                 </div>
             </header>
 
+
+
             <main class="main_content_tracking">
-          <!-- CONTAINER 1: HISTORY BLOCK -->
-<div id="history_panel">
-    <h3 class="section_heading">Report History</h3>
+                
+                
+                
+                 <!-- CONTAINER 1: HISTORY BLOCK -->
+                <div id="history_panel">
+                     <h3 class="section_heading_report">Report History</h3>
+                    <div class="data_card" data-fb-document="rep_000001"><!-- e cut and paste it para gamitin as template sa js usinginnerHTML parakaya mag display ng marami not hard coded -->
+                        <div class="card_header_flex">
+                            <div class="card_info">
+                                <!-- Category -->
+                                <div class="alignment_icon">
+                                    <h4 class="card_category"> value nito don nakuha sa mock data sa js-form_panel</h4>
+                                </div>
+                                <!-- Location (Idinagdag dito) -->
+                                <div class="alignment_icon">
+                                    <img src="assets/location.png" class="nav_icon" alt="Location">
+                                    <p class="card_location">value nito don nakuha sa mock data sa js-form_panel</p>
+                                </div>
+                                <!-- Description -->
+                                <div class="alignment_icon1">
+                                    <img src="assets/description (1).png" class="nav_icon1" alt="Location">
+                                    <p class="card_desc">value nito don nakuha sa mock data sa js-form_panel</p>
+                                </div>
+                                <!-- Date -->
+                                <div class="card_date">value nito don nakuha sa mock data sa js-form_panel</div>
+                            </div>
+                            <div class="detail_status">
+                                <span class="badge badge_received">dito nag babago ang status</span>
+                                <button class="btn_text" onclick="openDetailsModal('rep_000001', event)">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+                </div>
 
-    <div class="data_card" data-fb-document="rep_000001">
-        <div class="card_header_flex">
-            <div class="card_info">
-                <!-- Category -->
-                 <div class="alignment_icon">
-                <h4 class="card_category"> value nito don nakuha sa mock data sa js-form_panel</h4> 
-                </div>
-                <!-- Location (Idinagdag dito) -->
-                <div class="alignment_icon">
-                <img src="assets/location.png" class="nav_icon" alt="Location">
-                <p class="card_location">value nito don nakuha sa mock data sa js-form_panel</p>
-                </div>
-                <!-- Description -->
-                 <div class="alignment_icon1">
-                    <img src="assets/description (1).png" class="nav_icon" alt="Location">
-                <p class="card_desc">value nito don nakuha sa mock data sa js-form_panel</p>
-                </div>
-                <!-- Date -->
-                <div class="card_date">value nito don nakuha sa mock data sa js-form_panel</div>
-            </div>
-            <div class="detail_status">
-                <span class="badge badge_received">--</span>
-                <button class="btn_text" onclick="openDetailsModal('rep_000001', event)">View Details</button>
-            </div>
-        </div>
-    </div>
-
-    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
-</div>
 
 
                 <!-- CONTAINER 2: SUBMIT REPORT CREATION BLOCK -->
@@ -86,14 +90,34 @@
                         </div>
                         <div class="form_group">
                             <label for="location" class="label">Location</label>
-                            <input
-                                id="location"
-                                type="text"
-                                class="form_control"
-                                placeholder="Location"
-                                required
-                                data-fb-field="location"
-                            >
+                            <input list="barangay" id="location" class="form_control" name="barangayInput" placeholder="Barangay/Present Location" required>
+                            <datalist id = "barangay">
+                            <option value="Amatong">Amatong</option>
+                            <option value="Anahao">Anahao</option>
+                            <option value="Bangon">Bangon</option>
+                            <option value="Batiano">Batiano</option>
+                            <option value="Budiong">Budiong</option>
+                            <option value="Canduyong">Canduyong</option>
+                            <option value="Dapawan">Dapawan</option>
+                            <option value="Gabawan">Gabawan</option>
+                            <option value="Libertad">Libertad</option>
+                            <option value="Ligaya">Ligaya</option>
+                            <option value="Liwanag">Liwanag</option>
+                            <option value="Liwayway">Liwayway</option>
+                            <option value="Malilico">Malilico</option>
+                            <option value="Mayha">Mayha</option>
+                            <option value="Panique">Panique</option>
+                            <option value="Pato-o">Pato-o</option>
+                            <option value="Poctoy">Poctoy</option>
+                            <option value="Progreso Este">Progreso Este</option>
+                            <option value="Progreso Weste">Progreso Weste</option>
+                            <option value="Rizal">Rizal</option>
+                            <option value="Tabing Dagat">Tabing Dagat</option>
+                            <option value="Tabobo-an">Tabobo-an</option>
+                            <option value="Tuburan">Tuburan</option>
+                            <option value="Tumingad">Tumingad</option>
+                            <option value="Tulay">Tulay</option>
+                            </datalist>
                         </div>
                         <div class="form_group">
                             <label for="description" class="label">Description</label>
@@ -149,96 +173,105 @@
                             <div id="attachment_preview" aria-live="polite"></div>
                             <div class="btn_submit_container">
                                 <button class="btn_submit" type="submit">
-                                    <img src="assets/arrow.png" alt="arrow" style="width:30px; padding-right:10px;">Submit Report
+                                    <img src="assets/arrow.png" alt="arrow" style="width:30px; padding-right:10px;">
+                                    Submit Report
                                 </button>
                             </div>
                         </div>
                     </form>
                 </div>
-         
 
-<!-- CONTAINER 3: REPORT DETAILS POPUP MODAL -->
-<div id="details_panel" class="details_view" data-fb-document="rep_000001">
-    <h3 class="section_heading">
-        <button
-            type="button"
-            class="back_button"
-            aria-label="Back to report history"
-            onclick="closeDetailsModal()"
-        >
-            <img src="assets/undo.png" alt="Back">
-        </button>
-        <span>Report Details</span>
-    </h3>
 
-    <div class="details_header">
-        <div class="report_id_block">
-            <span>Report ID: </span><strong id="detail_report_id">000001</strong>
-        </div>
-        <div class="details_status_badge">
-            <span id="detail_status" class="badge badge_received">Received</span>
-        </div>
-    </div>
 
-    <!-- TIMELINE SECTION -->
-    <div class="timeline_container">
-        <div class="timeline_item active">
-            <div class="timeline_node"></div>
-            <div class="timeline_content">
-                <h4>Report Submitted</h4>
-                <p id="time_submitted">April 12, 2026 - 02:45 PM</p>
-            </div>
-        </div>
-        <div class="timeline_item">
-            <div class="timeline_node"></div>
-            <div class="timeline_content">
-                <h4>Ongoing</h4>
-                <p id="time_ongoing">April 13, 2026 - 11:40 AM</p>
-            </div>
-        </div>
-        <div class="timeline_item">
-            <div class="timeline_node"></div>
-            <div class="timeline_content">
-                <h4>Resolved</h4>
-                <p id="time_resolved">April 13, 2026 - 02:15 PM</p>
-            </div>
-        </div>
-    </div>
 
-    <!-- ATTACHMENT SECTION -->
-    <div class="detail_section">
-        <h3 class="detail_title">Attachment</h3>
-        <div id="detail_attachments" class="attachment_grid">
-            <div class="attachment_img_placeholder"></div>
-            <div class="attachment_img_placeholder"></div>
-        </div>
-    </div>
-
-    <!-- CATEGORY SECTION -->
-    <div class="detail_section">
-        <h3 class="detail_title">Category</h3>
-        <p id="detail_category" class="detail_text" data-fb-field="category">Electrical and Streetlight</p>
-    </div>
-
-    <!-- DESCRIPTION SECTION -->
-    <div class="detail_section">
-        <div class="detail_title_row">
-            <h3 class="detail_title">Description</h3>
-            <div class="edit_actions">
-                <button type="button" class="btn_action" id="btn_edit_desc" onclick="toggleEditDescription(true)">Edit</button>
-                <span class="divider">|</span>
-                <button type="button" class="btn_action" id="btn_save_desc" onclick="saveDescription()" disabled>Save</button>
-            </div>
-        </div>
-        <div id="detail_desc_container">
-            <p id="detail_description" class="detail_text" data-fb-field="description">Description of the issue in detail.....</p>
-            <textarea id="edit_description_input" class="form_control" style="display: none; resize: none;" rows="4" data-fb-field="description"></textarea>
-        </div>
-    </div>
-</div>
-
-</main>
-            
+                <!-- CONTAINER 3: REPORT DETAILS POPUP MODAL -->
+                <div id="details_panel" class="details_view" data-fb-document="rep_000001">
+                    <h3 class="section_heading">
+                        <button type="button" class="back_button" aria-label="Back to report history" onclick="closeDetailsModal()">
+                            <img src="assets/undo.png" alt="Back">
+                        </button>
+                        <span>Report Details</span>
+                    </h3>
+                    <div class="details_header">
+                        <div class="report_id_block">
+                            <span>Report ID:</span>
+                            <strong id="detail_report_id">000001</strong>
+                        </div>
+                        <div class="details_status_badge">
+                            <span id="detail_status" class="badge badge_received">Received</span>
+                        </div>
+                    </div>
+                    <!-- TIMELINE SECTION -->
+                    <div class="timeline_container">
+                        <div class="timeline_item active">
+                            <div class="timeline_node"></div>
+                            <div class="timeline_content">
+                                <h4>Report Submitted</h4>
+                                <p id="time_submitted">April 12, 2026 - 02:45 PM</p>
+                            </div>
+                        </div>
+                        <div class="timeline_item">
+                            <div class="timeline_node"></div>
+                            <div class="timeline_content">
+                                <h4>Ongoing</h4>
+                                <p id="time_ongoing">April 13, 2026 - 11:40 AM</p>
+                            </div>
+                        </div>
+                        <div class="timeline_item">
+                            <div class="timeline_node"></div>
+                            <div class="timeline_content">
+                                <h4>Resolved</h4>
+                                <p id="time_resolved">April 13, 2026 - 02:15 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ATTACHMENT SECTION -->
+                    <div class="detail_section">
+                        <h3 class="detail_title">Attachment</h3>
+                        <div id="detail_attachments" class="attachment_grid">
+                            <div class="attachment_img_placeholder"></div>
+                            <div class="attachment_img_placeholder"></div>
+                        </div>
+                    </div>
+                    <!-- CATEGORY SECTION -->
+                    <div class="detail_section">
+                        <h3 class="detail_title">Category</h3>
+                        <p id="detail_category" class="detail_text" data-fb-field="category">Electrical and Streetlight</p>
+                    </div>
+                    <!-- DESCRIPTION SECTION -->
+                    <div class="detail_section">
+                        <div class="detail_title_row">
+                            <h3 class="detail_title">Description</h3>
+                            <div class="edit_actions">
+                                <button
+                                    type="button"
+                                    class="btn_action"
+                                    id="btn_edit_desc"
+                                    onclick="toggleEditDescription(true)"
+                                >Edit</button>
+                                <span class="divider">|</span>
+                                <button
+                                    type="button"
+                                    class="btn_action"
+                                    id="btn_save_desc"
+                                    onclick="saveDescription()"
+                                    disabled
+                                >Save</button>
+                            </div>
+                        </div>
+                        <div id="detail_desc_container">
+                            <p id="detail_description" class="detail_text" data-fb-field="description">Description of the issue in detail.....</p>
+                            <textarea
+                                id="edit_description_input"
+                                class="form_control"
+                                style="display: none; resize: none;"
+                                rows="4"
+                                data-fb-field="description"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </main>
             <!-- SYSTEM NAVIGATION FOOTERBAR -->
             <nav id="app_navigation" class="app_nav">
                 <a href="home.html" class="nav_item">
@@ -284,6 +317,6 @@
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js');
       }
-    </script>
+        </script>
     </body>
 </html>
