@@ -138,10 +138,118 @@
     height: 22px;
     margin-bottom: 0;
   }
+  .alignment_icon{
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    font-size: 1rem;
+  }
+  .card_date{
+    font-size: 0.8rem;
+    padding-top: 20px;
+  }
+  .card_category{
+    font-size: 1.5rem;
+  }
+  .card_desc{
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  max-height: 300px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 60%;
+  
+}
 
+.card_desc::-webkit-scrollbar {
+  display: none;
+}
+
+/* Espasyo para sa text sa kaliwa para HINDI matakpan ng Badge sa kanan */
+.card_info {
+    padding-right: 110px;          /* Iiwasan ang Badge sa top-right */
+    padding-bottom: 24px;          /* Iiwasan ang Button sa bottom-right */
+}
+
+/* Alignment para sa Icons at Text */
+.alignment_icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;                      /* Pagitan ng Icon at Text */
+    margin-bottom: 6px;
+}
+.alignment_icon1 {
+    display: flex;
+    align-items:flex-start;
+    gap: 8px;                      /* Pagitan ng Icon at Text */
+    margin-bottom: 6px;
+}
+
+.alignment_icon .nav_icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.card_category {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.card_location, 
+.card_desc {
+    margin: 0;
+    font-size: 13px;
+    color: #444444;
+}
+
+.card_date {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-size: 12px;
+    color: #888888;
+    margin: 0;
+    z-index: 2;
+}
+
+/* ================= POSITIONING CONTROL ================= */
+
+/* 1. STATUS BADGE: TOP-RIGHT (Taas sa Kanan) */
+.detail_status .badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 2;
+}
+
+/* 2. VIEW DETAILS BUTTON: BOTTOM-RIGHT (Baba sa Kanan) */
+.detail_status .btn_text {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: blue;
+    border: none;
+    color: #feffff;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 2;
+    padding: 10px 12px;
+}
+
+.detail_status .btn_text:hover {
+    text-decoration: underline;
+}
+  
   /* 3. Main Content Grids */
    .main_content,
-    .main_content_hotline {
+    .main_content_tracking {
         min-width: 0;
         width: 100%;
         padding: 20px;
@@ -198,26 +306,356 @@
     width: 100%;
     height: 300px;
   }
-
+/* =================history report======================== */
   #history_panel {
     position: relative;
+    margin: 30px;
   }
 
   .btn_primary {
-    position: static;
-    margin-top: 20px;
+    position: fixed; /* pin to viewport */
+    top: 16px; /* distance from top */
+    right: 16px; /* ensure on top */
     display: inline-block;
+    height: fit-content;
   }
 
-  #form_panel {
+
+/* ===========================
+   OVERLAY
+=========================== */
+
+#form_overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+
+    transition: opacity .3s ease, visibility .3s ease;
+
+    z-index: 9998;
+
+    pointer-events: none;
+}
+
+#form_overlay.show{
+    display: block;
+    opacity: 1;
+    visibility: visible;
+
+    pointer-events: auto;
+}
+
+
+/* ===========================
+   CREATE REPORT MODAL
+=========================== */
+
+#form_panel{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.9);
+
+    width: 90%;
     max-width: 650px;
-    margin: 0 auto;
-    background: #ffffff;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #fff;
     padding: 28px;
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  }
 
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+
+    display: none;
+    opacity: 0;
+
+    transition: .3s ease;
+
+    z-index: 9999;
+}
+
+#form_panel.show{
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* ===========================
+   DETAILS MODAL
+=========================== */
+
+#details_panel{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(.9);
+
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+
+    overflow-y: auto;
+
+    background: #fff;
+    padding: 28px;
+    border-radius: 16px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.25);
+
+    display: none;
+    opacity: 0;
+
+    transition: .3s ease;
+
+    z-index: 9999;
+
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#details_panel::-webkit-scrollbar{
+    display: none;
+}
+
+#details_panel.show{
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+
+/* Base Style para sa Badge */
+.badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* 🟠 Orange para sa Received */
+.badge_received {
+    background-color: #fca311;
+}
+
+/* 🔵 Blue para sa Ongoing */
+.badge_ongoing {
+    background-color: #007bff;
+}
+
+/* 🟢 Green para sa Resolved */
+.badge_resolved {
+    background-color: #28a745;
+}
+/* ================= DETAILS POPUP MODAL ================= */
+
+
+.details_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.report_id_block {
+    font-size: 15px;
+    color: #444;
+}
+
+
+
+/* Base style para sa Status Badge */
+.details_status_badge .badge {
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* 🟠 Orange para sa Received / Submitted */
+.badge_received {
+    background-color: #fca311;
+}
+
+/* 🔵 Blue para sa Ongoing */
+.badge_ongoing {
+    background-color: #007bff;
+}
+
+/* 🟢 Green para sa Resolved */
+.badge_resolved {
+    background-color: #28a745;
+}
+
+/* Vertical Timeline */
+.timeline_container {
+    position: relative;
+    padding-left: 10px;
+    margin-bottom: 28px;
+}
+
+.timeline_container::before {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 10px;
+    bottom: 20px;
+    width: 2px;
+    background: #ccc;
+}
+
+/* Inactive / Future timeline step (Default gray style) */
+.timeline_item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 22px;
+}
+.timeline_item:last-child {
+    margin-bottom: 0;
+}
+/* Base style ng bilog (Default Gray kapag hindi pa active) */
+.timeline_node {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #bdc3c7;
+    margin-right: 16px;
+    position: relative;
+    z-index: 2;
+    flex-shrink: 0;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Default Muted Text kapag HINDI pa active */
+.timeline_content h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #a0a0a0; /* Muted gray text */
+}
+
+.timeline_content p {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: #c0c0c0;
+}
+
+/* ================= ACTIVE STATES & 3 DISTINCT COLORS ================= */
+
+/* Kapag Active na: gagawing matingkad ang text */
+.timeline_item.active .timeline_content h4 {
+    color: #111111;
+}
+
+.timeline_item.active .timeline_content p {
+    color: #666666;
+}
+
+/* Kulay 1: Report Submitted (Orange) */
+.timeline_item.step_1.active .timeline_node {
+    background-color: #fca311;
+    box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.2);
+}
+
+/* Kulay 2: Ongoing (Blue) */
+.timeline_item.step_2.active .timeline_node {
+    background-color: #007bff;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* Kulay 3: Resolved (Green) */
+.timeline_item.step_3.active .timeline_node {
+    background-color: #28a745;
+    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+}
+
+/* Sections & Attachments */
+.detail_section {
+    margin-bottom: 20px;
+}
+
+.detail_title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #111;
+}
+
+.detail_title_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.edit_actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn_action {
+    background: none;
+    border: none;
+    color: #5d3ebc;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn_action:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.divider {
+    color: #999;
+    font-size: 12px;
+}
+
+.detail_text {
+    font-size: 14px;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+}
+
+.attachment_grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.attachment_img_placeholder {
+    width: 160px;
+    height: 110px;
+    background: linear-gradient(180deg, #d3d3d3 0%, #b3b3b3 100%);
+    border-radius: 16px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.modal_footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+/* ===========profile========== */
   .profile_card {
     max-width: 480px;
     margin: 0 auto 24px;
@@ -294,13 +732,14 @@ white-space: pre-wrap;
     
 
 .card_post {
-    width: 100%px;
+    width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
     flex-shrink: 0;
     border-radius: 10px;
 }
+
 }
 
 

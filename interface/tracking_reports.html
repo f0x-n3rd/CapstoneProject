@@ -17,26 +17,43 @@
                     <p>Odiongan, Romblon</p>
                 </div>
             </header>
-            <main class="main_content_hotline">
-                <!-- CONTAINER 1: HISTORY BLOCK -->
-                <div id="history_panel">
-                    <h3 class="section_heading">Report History</h3>
-                    <div class="data_card" data-fb-document="rep_000001">
-                        <div class="card_header_flex">
-                            <div class="card_info">
-                                <h4 class="card_title">Streetlight Malfunction</h4>
-                                <p class="card_meta">Damage Road</p>
-                                <p class="card_meta">Brgy. Amatong</p>
-                                <div class="card_date">Date: 2026-04-12</div>
-                            </div>
-                            <div class="detail_status">
-                                <span class="badge badge_received">Received</span>
-                                <button class="btn_text" onclick="alert('Viewing Details...')">View Details</button>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+
+            <main class="main_content_tracking">
+          <!-- CONTAINER 1: HISTORY BLOCK -->
+<div id="history_panel">
+    <h3 class="section_heading">Report History</h3>
+
+    <div class="data_card" data-fb-document="rep_000001">
+        <div class="card_header_flex">
+            <div class="card_info">
+                <!-- Category -->
+                 <div class="alignment_icon">
+                <h4 class="card_category"> value nito don nakuha sa mock data sa js-form_panel</h4> 
                 </div>
+                <!-- Location (Idinagdag dito) -->
+                <div class="alignment_icon">
+                <img src="assets/location.png" class="nav_icon" alt="Location">
+                <p class="card_location">value nito don nakuha sa mock data sa js-form_panel</p>
+                </div>
+                <!-- Description -->
+                 <div class="alignment_icon1">
+                    <img src="assets/description (1).png" class="nav_icon" alt="Location">
+                <p class="card_desc">value nito don nakuha sa mock data sa js-form_panel</p>
+                </div>
+                <!-- Date -->
+                <div class="card_date">value nito don nakuha sa mock data sa js-form_panel</div>
+            </div>
+            <div class="detail_status">
+                <span class="badge badge_received">--</span>
+                <button class="btn_text" onclick="openDetailsModal('rep_000001', event)">View Details</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+</div>
+
+
                 <!-- CONTAINER 2: SUBMIT REPORT CREATION BLOCK -->
                 <div id="form_panel" class="form_view">
                     <h3 class="section_heading">
@@ -138,7 +155,90 @@
                         </div>
                     </form>
                 </div>
-            </main>
+         
+
+<!-- CONTAINER 3: REPORT DETAILS POPUP MODAL -->
+<div id="details_panel" class="details_view" data-fb-document="rep_000001">
+    <h3 class="section_heading">
+        <button
+            type="button"
+            class="back_button"
+            aria-label="Back to report history"
+            onclick="closeDetailsModal()"
+        >
+            <img src="assets/undo.png" alt="Back">
+        </button>
+        <span>Report Details</span>
+    </h3>
+
+    <div class="details_header">
+        <div class="report_id_block">
+            <span>Report ID: </span><strong id="detail_report_id">000001</strong>
+        </div>
+        <div class="details_status_badge">
+            <span id="detail_status" class="badge badge_received">Received</span>
+        </div>
+    </div>
+
+    <!-- TIMELINE SECTION -->
+    <div class="timeline_container">
+        <div class="timeline_item active">
+            <div class="timeline_node"></div>
+            <div class="timeline_content">
+                <h4>Report Submitted</h4>
+                <p id="time_submitted">April 12, 2026 - 02:45 PM</p>
+            </div>
+        </div>
+        <div class="timeline_item">
+            <div class="timeline_node"></div>
+            <div class="timeline_content">
+                <h4>Ongoing</h4>
+                <p id="time_ongoing">April 13, 2026 - 11:40 AM</p>
+            </div>
+        </div>
+        <div class="timeline_item">
+            <div class="timeline_node"></div>
+            <div class="timeline_content">
+                <h4>Resolved</h4>
+                <p id="time_resolved">April 13, 2026 - 02:15 PM</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ATTACHMENT SECTION -->
+    <div class="detail_section">
+        <h3 class="detail_title">Attachment</h3>
+        <div id="detail_attachments" class="attachment_grid">
+            <div class="attachment_img_placeholder"></div>
+            <div class="attachment_img_placeholder"></div>
+        </div>
+    </div>
+
+    <!-- CATEGORY SECTION -->
+    <div class="detail_section">
+        <h3 class="detail_title">Category</h3>
+        <p id="detail_category" class="detail_text" data-fb-field="category">Electrical and Streetlight</p>
+    </div>
+
+    <!-- DESCRIPTION SECTION -->
+    <div class="detail_section">
+        <div class="detail_title_row">
+            <h3 class="detail_title">Description</h3>
+            <div class="edit_actions">
+                <button type="button" class="btn_action" id="btn_edit_desc" onclick="toggleEditDescription(true)">Edit</button>
+                <span class="divider">|</span>
+                <button type="button" class="btn_action" id="btn_save_desc" onclick="saveDescription()" disabled>Save</button>
+            </div>
+        </div>
+        <div id="detail_desc_container">
+            <p id="detail_description" class="detail_text" data-fb-field="description">Description of the issue in detail.....</p>
+            <textarea id="edit_description_input" class="form_control" style="display: none; resize: none;" rows="4" data-fb-field="description"></textarea>
+        </div>
+    </div>
+</div>
+
+</main>
+            
             <!-- SYSTEM NAVIGATION FOOTERBAR -->
             <nav id="app_navigation" class="app_nav">
                 <a href="home.html" class="nav_item">
@@ -178,6 +278,7 @@
                 </a>
             </nav>
         </div>
+        <div id="form_overlay" class="form_overlay" onclick="closeAllModals()"></div>
         <script src="form_panel.js"></script>
         <script>
       if ('serviceWorker' in navigator) {

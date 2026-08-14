@@ -12,19 +12,17 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  color: #1e293b; 
+  color: #1e293b;
 }
 
 .app_container {
   width: 100%;
   max-width: 450px;
-  height: 100vh;
-  max-height: 850px;
-  background-color: #f8fafc;
-  position: relative;
+  min-height: 100vh;
+  background: #f8fafc;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  position: relative;
 }
 @media (max-width: 450px) {
   .app_container {
@@ -124,30 +122,30 @@ body {
 .card {
   width: 100%;
   min-height: 150px;
-  background:linear-gradient(135deg, #070707e1, #1616168f);
+  background: linear-gradient(135deg, #070707e1, #1616168f);
   border-radius: 5px;
   margin-bottom: 5px;
   overflow: hidden;
 }
-  .card_post{
+.card_post {
   width: 100%;
   height: 180px;
   padding: 3px;
 }
-.text_alignment{
-  padding:10px;
+.text_alignment {
+  padding: 10px;
 }
-.title_reports{
-  color: white  ;
+.title_reports {
+  color: white;
   font-size: large;
   font-weight: bold;
   padding-bottom: 10px;
 }
-.date_reports{
+.date_reports {
   color: #fffcfce5;
   font-size: 0.7rem;
 }
-.details{
+.details {
   color: rgb(255, 253, 253);
   word-wrap: break-word;
   overflow-wrap: anywhere;
@@ -160,49 +158,48 @@ body {
   -ms-overflow-style: none;
 }
 .snap_scroll {
-    display: flex;
-    gap: 2px;
-    overflow-x: auto;
-    overflow-y: hidden;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
 
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
 
-    /* Ipakita ang horizontal scrollbar */
-    scrollbar-width: auto;
+  /* Ipakita ang horizontal scrollbar */
+  scrollbar-width: auto;
 }
 
 .snap_scroll::-webkit-scrollbar {
-    height: 4px;
+  height: 4px;
 }
 
 .snap_scroll::-webkit-scrollbar-track {
-    background: #1616168f;
-    border-radius: 10px;
+  background: #1616168f;
+  border-radius: 10px;
 }
 
 .snap_scroll::-webkit-scrollbar-thumb {
-    background: #fcf3f3ec;
-    border-radius: 10px;
+  background: #fcf3f3ec;
+  border-radius: 10px;
 }
 
 .snap_scroll::-webkit-scrollbar-thumb:hover {
-    background: #226efc;
+  background: #226efc;
 }
 
 .snap_scroll > div {
-    flex: 0 0 100%;
-    scroll-snap-align: center;
+  flex: 0 0 100%;
+  scroll-snap-align: center;
 }
 
 .card_post {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    display: block;
-    border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  border-radius: 5px;
 }
-
 
 .image_announcement {
   width: 50%;
@@ -214,7 +211,6 @@ body {
   box-sizing: border-box;
   flex-shrink: 0;
   display: block;
-  
 }
 
 .announcement_preview_link {
@@ -222,8 +218,6 @@ body {
   color: inherit;
   display: block;
 }
-
-
 
 .text_title {
   margin: 0;
@@ -260,7 +254,6 @@ body {
   gap: 6px;
   margin-top: 8px;
 }
-
 
 @keyframes slideLoop {
   0%,
@@ -321,7 +314,6 @@ body {
   width: 27px;
   height: 27px;
   margin-bottom: 4px;
-
 }
 .icon {
   width: 100%;
@@ -416,7 +408,7 @@ body {
   scroll-snap-stop: always;
 }
 /* Swiper CSS Dependencies */
-@import url('https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css');
+@import url("https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css");
 
 /* SWIPER CONFIGURATION */
 .announcementSwiper {
@@ -482,7 +474,7 @@ body {
   gap: 12px;
   align-items: center;
   justify-content: center; /* Inilagay sa gitna */
-  text-align: center;      /* Sigurado sa gitna */
+  text-align: center; /* Sigurado sa gitna */
   width: 100%;
 }
 /* ====================================================================== */
@@ -527,7 +519,9 @@ body {
   margin-top: 10px;
   z-index: 1000;
 }
-
+#details_panel{
+  #details_panel
+}
 .form_view {
   display: none;
 }
@@ -574,15 +568,22 @@ body {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   font-size: small;
 }
-.detail_status {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 30px;
+.detail_status{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:12px;
 }
-.card_date {
-  font-size: xx-small;
-  padding-top: 40px;
+.card_date{
+    position:static;
+    padding-top:10px;
+    font-size:11px;
+    color:#64748b;
+}
+.card_desc{
+    width:100%;
+    font-size:13px;
+    line-height:1.5;
 }
 /*===========================new report==============================================*/
 .label {
@@ -595,11 +596,10 @@ body {
   width: 110px;
   height: 90px;
 }
-.image_preview {
-  width: 110px;
-  height: 90px;
-  border-radius: 6px;
-  object-fit: cover;
+.image_preview{
+    width:100%;
+    height:120px;
+    object-fit:cover;
 }
 .remove_image_button {
   position: absolute;
@@ -931,5 +931,25 @@ body {
   font-weight: bold;
   color: #e5a546;
 }
+#history_panel{
+    flex:1;
+    overflow-y:auto;
+    padding:16px;
+    padding-bottom:90px;
+}
+#form_panel{
+    padding:16px;
+}
 
-
+#details_panel{
+    padding:16px;
+}
+.card_header_flex{
+    padding:16px;
+    border-radius:20px;
+}
+.main_content_tracking{
+    flex:1;
+    overflow-y:auto;
+    padding-bottom:80px;
+}
