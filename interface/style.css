@@ -154,14 +154,19 @@ body {
 
 .section_heading {
   font-size: 1.17rem;
-  font-weight: 700;
-  margin-bottom: 5px;
+    font-weight: 700;
+    padding-left: 10px;
 }
-.section_heading_report {
+.section_heading_r {
   font-size: 1.17rem;
   font-weight: 700;
-  padding-left: 10px;
-  padding-top: 15px;
+  padding: 10px;
+}
+.section_heading_report{
+  font-size: 1.16rem;
+  font-weight: 700;
+  margin-top: 17px;
+  margin-left: 18px;
 }
 /* ====================================================================== */
 /* CARD HEADER FLEX & INFO STYLES */

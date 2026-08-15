@@ -216,6 +216,11 @@
     z-index: 2;
   }
 
+  .section_heading_report{
+    margin: auto;
+    padding-left: 20px;
+  }
+
   /* ================= POSITIONING CONTROL ================= */
 
   /* 1. STATUS BADGE: TOP-RIGHT (Taas sa Kanan) */
@@ -246,13 +251,16 @@
   }
 
   /* 3. Main Content Grids */
-  .main_content,
-  .main_content_tracking {
+  .main_content
+   {
     min-width: 0;
     width: 100%;
     padding: 20px;
     padding-top: 10px;
     box-sizing: border-box;
+  }
+  .main_content_tracking{
+    padding: 12px;
   }
 
   .hotline_card {
@@ -307,13 +315,11 @@
   /* =================history report======================== */
   #history_panel {
     top: auto;
-    left: auto; 
     position: relative;
-    max-height: 500px;
+    max-height: 600px;
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-  
   }
 
   #history_panel::-webkit-scrollbar {
