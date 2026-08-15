@@ -670,7 +670,7 @@ body {
   bottom: 80px;
   width: auto;
   min-width: 140px;
-  padding: 5px;
+  padding: 8px 14px;
   border-radius: 16px;
   border: none;
   background: linear-gradient(135deg, #e5a546, #ff7424);
@@ -681,6 +681,18 @@ body {
   box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
   margin-top: 10px;
   z-index: 1000;
+  left: auto;
+  transform: none;
+}
+
+@media (min-width: 440px) and (max-width: 768px) {
+  .btn_primary {
+    right: 180px;
+    bottom: 72px;
+    min-width: 130px;
+    padding: 7px 12px;
+    font-size: 12px;
+  }
 }
 
 /* ====================================================================== */
@@ -900,7 +912,7 @@ body {
 .hotline_card {
   position: relative;
   width: 100%;
-  max-width: 380px;
+  max-width: 480px;
   background-color: #ffffff;
   border-radius: 20px;
   padding: 40px 6px 20px 6px;
@@ -1196,7 +1208,7 @@ body {
 /* ====================================================================== */
 /* MOBILE VIEW (<= 768px) - Scrollable Form Panel */
 /* ====================================================================== */
-@media (max-width: 768px) {
+@media (max-width: 768px)  {
   #history_panel {
     position: relative;
     top: auto;
@@ -1210,8 +1222,15 @@ body {
     box-sizing: border-box;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    max-height: 100vh;
+    max-height: 75vh;
+    padding-bottom: 3rem;
   }
+   .section_heading_report{
+    margin: auto;
+    padding-left: 20px;
+    padding-top: 10px ;
+  }
+ 
 
   #form_panel {
     position: relative;

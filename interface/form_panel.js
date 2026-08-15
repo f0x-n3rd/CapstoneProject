@@ -583,14 +583,10 @@ function saveDescription() {
     return;
   }
   const updatedDescription = input.value;
-  // ----------------------------------------------------------
-  // UPDATE MODAL
-  // ----------------------------------------------------------
+ // UPDATE MODAL// ----------------------------------------------------------
   description.textContent = updatedDescription;
-  // ----------------------------------------------------------
-  // UPDATE MOCK DATA
-  // ----------------------------------------------------------
-  if (currentActiveDocId && mockReports[currentActiveDocId]) {
+ // UPDATE MOCK DATA
+ if (currentActiveDocId && mockReports[currentActiveDocId]) {
     mockReports[currentActiveDocId].description = updatedDescription;
   }
   // ----------------------------------------------------------

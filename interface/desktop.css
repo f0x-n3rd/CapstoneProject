@@ -1,5 +1,5 @@
 /* screen for desktop and larger devices */
-@media (min-width: 1024px) and (max-width: 1440px) {
+@media (min-width: 780px) and (max-width: 1440px) {
   body {
     background-color: #cbd5e1;
   }
@@ -219,6 +219,7 @@
   .section_heading_report{
     margin: auto;
     padding-left: 20px;
+    padding-top: 10px ;
   }
 
   /* ================= POSITIONING CONTROL ================= */
@@ -260,7 +261,10 @@
     box-sizing: border-box;
   }
   .main_content_tracking{
-    padding: 12px;
+    padding:12px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    
   }
 
   .hotline_card {
@@ -316,10 +320,16 @@
   #history_panel {
     top: auto;
     position: relative;
-    max-height: 600px;
+    height: 100%;
+    min-height: 0;
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
+    /* ensure last item is fully visible when scrolled to bottom */
+    padding-bottom: 4rem;
+    scroll-padding-bottom: 1rem;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
   }
 
   #history_panel::-webkit-scrollbar {
