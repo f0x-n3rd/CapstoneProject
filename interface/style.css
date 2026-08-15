@@ -373,8 +373,8 @@ body {
 
 .text_title {
   margin: 0;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.7rem;
+  line-height: 1  ;
   font-weight: 700;
   color: #ffffff;
   text-align: left;
@@ -383,8 +383,8 @@ body {
 
 .text_description {
   margin: 0;
-  font-size: 0.72rem;
-  line-height: 1.2;
+  font-size: 0.9rem;
+  line-height: 1;
   color: rgb(241, 241, 241);
   text-align: left;
   width: 100%;
@@ -898,7 +898,7 @@ body {
   max-width: 380px;
   background-color: #ffffff;
   border-radius: 20px;
-  padding: 40px 12px 20px 12px;
+  padding: 40px 6px 20px 6px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   font-family: "Montserrat", sans-serif;
   box-sizing: border-box;
@@ -963,7 +963,7 @@ body {
     90deg,
     #b71c1c 0%,
     #c62828 35%,
-    #f8d7c4 85%,
+    #c62828  55%,
     #fceae1 100%
   );
   box-sizing: border-box;
@@ -978,18 +978,24 @@ body {
   line-height: 1.1;
   flex: 0 0 100px;
   text-transform: uppercase;
+    overflow-wrap: anywhere;
+    max-width: 60%;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .dept_title.small_text {
   font-size: 10px;
   line-height: 1.05;
+  
 }
 
 .dept_numbers {
-  color: #212121;
+  color: #eeeaea;
   font-family: "Roboto", sans-serif;
   font-weight: 700;
-  font-size: clamp(11px, 3.2vw, 14px);
+  font-size: clamp(13px, 3.2vw, 14px);
   text-align: center;
   line-height: 1.25;
   flex: 1 1 auto;
@@ -1197,6 +1203,9 @@ body {
     box-shadow: none;
     border-radius: 0;
     box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    max-height: 100vh;
   }
 
   #form_panel {

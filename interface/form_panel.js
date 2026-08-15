@@ -1,7 +1,10 @@
-// ito ay para sa pag toggle ng form view at history panel
+// ==========================================================================
+// 1. FORM VIEW / HISTORY PANEL TOGGLE
+// ==========================================================================
+
 function toggleFormView(showForm) {
   if (window.innerWidth <= 768) {
-    // Existing mobile behavior (HUWAG BAGUHIN)
+    // Existing mobile behavior
     document.getElementById("history_panel").style.display = showForm
       ? "none"
       : "block";
@@ -19,6 +22,8 @@ function toggleFormView(showForm) {
 
   const form = document.getElementById("form_panel");
   const overlay = document.getElementById("form_overlay");
+
+  if (!form || !overlay) return;
 
   if (showForm) {
     overlay.style.display = "block";
@@ -39,8 +44,12 @@ function toggleFormView(showForm) {
   }
 }
 
-// Store all selected images in one list.
+// ==========================================================================
+// 2. SELECTED IMAGE / ATTACHMENT PREVIEW
+// ==========================================================================
+
 const selectedFiles = [];
+
 function showSelectedImage(input) {
   for (const file of input.files) {
     if (file.type.startsWith("image/") && !selectedFiles.includes(file)) {
@@ -56,19 +65,20 @@ function renderSelectedImages() {
   const fileNames = document.getElementById("selected_attachment");
   const previewArea = document.getElementById("attachment_preview");
 
-  // Rebuild the preview area so every selected image remains visible.
+  if (!fileNames || !previewArea) return;
   previewArea.innerHTML = "";
   fileNames.textContent =
     selectedFiles.length === 0
       ? ""
-      : `${selectedFiles.length} image${selectedFiles.length === 1 ? "" : "s"} selected`;
+      : `${selectedFiles.length} image${
+          selectedFiles.length === 1 ? "" : "s"
+        } selected`;
+
   previewArea.style.display = selectedFiles.length ? "flex" : "none";
 
-  // ito yong pag Create ng preview for every selected image.
   for (const file of selectedFiles) {
     const previewWrapper = document.createElement("div");
     previewWrapper.className = "image_preview_wrapper";
-
     const image = document.createElement("img");
     image.src = URL.createObjectURL(file);
     image.alt = file.name;
@@ -76,13 +86,13 @@ function renderSelectedImages() {
     image.className = "image_preview";
 
     const removeButton = document.createElement("button");
+
     removeButton.type = "button";
     removeButton.textContent = "x";
     removeButton.setAttribute("aria-label", `Remove ${file.name}`);
     removeButton.title = "Remove image";
     removeButton.className = "remove_image_button";
     removeButton.onclick = () => removeSelectedImage(file);
-
     previewWrapper.appendChild(image);
     previewWrapper.appendChild(removeButton);
     previewArea.appendChild(previewWrapper);
@@ -91,6 +101,7 @@ function renderSelectedImages() {
 
 function removeSelectedImage(fileToRemove) {
   const fileIndex = selectedFiles.indexOf(fileToRemove);
+
   if (fileIndex !== -1) {
     selectedFiles.splice(fileIndex, 1);
   }
@@ -98,34 +109,98 @@ function removeSelectedImage(fileToRemove) {
   renderSelectedImages();
 }
 
+// ==========================================================================
+// 3. MOCK REPORT DATA
+// ==========================================================================
+// Temporary data.
+// Later Firebase data ang papalit dito.
+// ==========================================================================
 
-
-
-
-
-
-
-
-//dito mo na eh edit ang sa backend kailangan ma kuha ang data sa database sa ngayon kasi sample data la
-// 1. MOCK DATA STRUCTURE
 const mockReports = {
   rep_000001: {
     id: "000001",
-    status: "Resolved",
+    status: "Ongoing",
     category: "Electrical and Streetlight",
-    location: "Brgy. Amatong purok Pag-asa", // <<< IDINAGDAG ANG LOCATION FIELD
-    description:
-      "Streetlight malfunction on Damage Road, Brgy. Amatong. dfdsfdfdfdfsdfdsfdfdsfdsfdfdsfsfsdfdf dfdfdsfsdfdfsdf  dtgfgggfg fgfgfdg gdfgfdg g sg sgsg sg sgfgfgdf gdf gdfg fg f gfg gf gg fg fdg sdfg",
+    location: "Brgy. Amatong Purok Pag-asa",
+    description:"Streetlight malfunction on Damage Road, Brgy. Amatong. Several streetlights have not been functioning properly, making the road very dark at night. Residents are requesting immediate inspection and repair to ensure the safety of pedestrians and motorists. The problem has been reported to the concerned personnel for proper assessment and action.",
     timeline: {
       submitted: "April 12, 2026 - 02:45 PM",
       ongoing: "April 13, 2026 - 11:40 AM",
       resolved: "April 13, 2026 - 02:15 PM",
     },
+
+    attachments: [],
+  },
+
+  rep_000002: {
+    id: "000002",
+    status: "Received",
+    category: "Road Maintenance",
+    location: "Brgy. Dapawan, Purok 3",
+    description: "A large pothole has developed along the roadside. The damaged portion of the road is becoming difficult to pass, especially for motorcycles and small vehicles. Residents are requesting immediate road inspection and repair before the damage becomes worse.",
+    timeline: {
+      submitted: "April 14, 2026 - 08:10 AM",
+      ongoing: "",
+      resolved: "",
+    },
+
+    attachments: [],
+  },
+
+  rep_000003: {
+    id: "000003",
+    status: "Resolved",
+    category: "Flooding",
+    location: "Brgy. Liwanag, Riverside",
+    description:"The drainage canal in the area was clogged with leaves, plastic materials, mud, and other debris. Heavy rainfall caused water to overflow onto the road and nearby residential areas. The drainage was cleaned and the affected area was restored.",
+    timeline: {
+      submitted: "April 15, 2026 - 01:20 PM",
+      ongoing: "April 16, 2026 - 09:00 AM",
+      resolved: "April 17, 2026 - 04:35 PM",
+    },
+
+    attachments: [],
+  },
+
+  rep_000004: {
+    id: "000004",
+    status: "Ongoing",
+    category: "Garbage Collection",
+    location: "Brgy. Tulay, Public Market",
+    description:"Garbage has accumulated around the public market due to delayed collection. The accumulated waste is producing unpleasant odors and attracting stray animals. Residents and vendors are requesting immediate garbage collection and proper disposal.",
+    timeline: {
+      submitted: "April 18, 2026 - 10:45 AM",
+      ongoing: "April 19, 2026 - 08:30 AM",
+      resolved: "",
+    },
+
+    attachments: [],
+  },
+
+  rep_000005: {
+    id: "000005",
+    status: "Received",
+    category: "Water Supply",
+    location: "Brgy. Rizal, Purok 2",
+    description:"Several households have reported low water pressure and intermittent water service. Residents are experiencing difficulty obtaining enough water for their daily activities. The concern has been received and is awaiting inspection by the appropriate office.",
+    timeline: {
+      submitted: "April 20, 2026 - 03:15 PM",
+      ongoing: "",
+      resolved: "",
+    },
+
     attachments: [],
   },
 };
+// ==========================================================================
+// 4. CURRENT ACTIVE REPORT
+// ==========================================================================
 
-// Helper function update (may fallback location na rin)
+let currentActiveDocId = null;
+// ==========================================================================
+// 5. GET REPORT DATA
+// ==========================================================================
+
 function getReportData(docId) {
   return (
     mockReports[docId] || {
@@ -140,138 +215,271 @@ function getReportData(docId) {
   );
 }
 
-/* ==========================================================================
-   2. HISTORY CARDS DYNAMIC BADGE UPDATE
-   ========================================================================== */
+// ==========================================================================
+// 6. CREATE STATUS CLASS
+// ==========================================================================
+function getStatusClass(status) {
+  const currentStatus = (status || "Received").toLowerCase();
+  if (currentStatus === "ongoing") {
+    return "badge_ongoing";
+  }
+  if (currentStatus === "resolved") {
+    return "badge_resolved";
+  }
+  return "badge_received";
+}
 
-// Function para i-sync ang kulay ng Status Badge sa lahat ng History Cards sa HTML
+// ==========================================================================
+// 7. HISTORY CARD TEMPLATE
+// ==========================================================================
+// Ito mismo ang structure ng card na binigay mo.
+// Hindi na kailangan ng .data_card sa HTML.
+// JS na ang gagawa ng lahat.
+// ==========================================================================
+
+function createReportCard(docId, report) {
+  const submittedDate =
+    report.timeline && report.timeline.submitted
+      ? report.timeline.submitted.split(" - ")[0]
+      : "N/A";
+  const status = report.status || "Received";
+  const statusClass = getStatusClass(status);
+  return `
+    <div
+      class="data_card"
+      data-fb-document="${docId}">
+      <div class="card_header_flex">
+        <div class="card_info">
+          
+          <!-- Category -->
+          <div class="alignment_icon">
+            <h4 class="card_category">
+              ${report.category || "N/A"}
+            </h4>
+          </div>
+
+
+          <!-- Location -->
+          <div class="alignment_icon">
+           <img src="assets/location.png" class="nav_icon" alt="Location">
+            <p class="card_location">
+              ${report.location || "N/A"}
+            </p>
+          </div>
+
+
+          <!-- Description -->
+          <div class="alignment_icon1">
+            <img src="assets/description (1).png" class="nav_icon1" alt="Description">
+            <p class="card_desc">
+              ${report.description || "N/A"}
+            </p>
+          </div>
+
+        <!-- Date -->
+        <div class="card_date">
+            Date: ${submittedDate}
+          </div>
+        </div>
+
+        <!-- STATUS -->
+        <div class="detail_status">
+          <span
+            class="badge ${statusClass}">
+            ${status}
+          </span>
+          <button class="btn_text" type="button" onclick="openDetailsModal('${docId}', event)">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ==========================================================================
+// 8. RENDER ALL HISTORY CARDS
+// ==========================================================================
+
 function renderHistoryCards() {
-  const cards = document.querySelectorAll(".data_card[data-fb-document]");
+  const historyPanel = document.getElementById("history_panel");
+  if (!historyPanel) {
+    console.error("history_panel not found.");
+    return;
+  }
 
-  cards.forEach((card) => {
-    const docId = card.getAttribute("data-fb-document");
-    const report = getReportData(docId);
+  // ----------------------------------------------------------
+  // CREATE ALL CARDS
+  // ----------------------------------------------------------
 
-    if (report) {
-      // 1. Category
-      const titleElem = card.querySelector(".card_category");
-      if (titleElem) titleElem.textContent = report.category;
+  let cardsHTML = "";
+  Object.entries(mockReports).forEach(([docId, report]) => {
+    cardsHTML += createReportCard(docId, report);
+  });
 
-      // 2. Location (IDINAGDAG)
-      const locElem = card.querySelector(".card_location");
-      if (locElem) locElem.textContent = ` ${report.location || "N/A"}`;
+  // ----------------------------------------------------------
+  // INSERT CARDS
+  // ----------------------------------------------------------
+  // Important:
+  // Hindi natin tatanggalin ang Create New Report button.
+  // ----------------------------------------------------------
+  const createButton = historyPanel.querySelector(".btn_primary");
 
-      // 3. Description
-      const descElem = card.querySelector(".card_desc");
-      if (descElem) descElem.textContent = report.description;
+  // Remove existing generated cards
+  historyPanel
+    .querySelectorAll(".data_card[data-fb-document]")
+    .forEach((card) => card.remove());
 
-      // 4. Date
-      const dateElem = card.querySelector(".card_date");
-      if (dateElem) {
-        const dateOnly = report.timeline.submitted
-          ? report.timeline.submitted.split(" - ")[0]
-          : "N/A";
-        dateElem.textContent = `Date: ${dateOnly}`;
-      }
+  if (createButton) {
+    createButton.insertAdjacentHTML("beforebegin", cardsHTML);
+  } else {
+    historyPanel.insertAdjacentHTML("beforeend", cardsHTML);
+  }
 
-      // 5. Status Badge Text & Color
-      const badge = card.querySelector(".badge");
-      if (badge) {
-        badge.textContent = report.status;
-        badge.classList.remove(
-          "badge_received",
-          "badge_ongoing",
-          "badge_resolved",
-        );
+  // (See more / See less functionality removed)
+}
 
-        const statusLower = report.status.toLowerCase();
-        if (statusLower === "ongoing") {
-          badge.classList.add("badge_ongoing");
-        } else if (statusLower === "resolved") {
-          badge.classList.add("badge_resolved");
-        } else {
-          badge.classList.add("badge_received");
-        }
-      }
+//=======================================================================
+// 9. ATTACHMENTS DISPLAY
+// ==========================================================================
+
+function renderAttachments(container, attachments) {
+  container.innerHTML = "";
+  if (!Array.isArray(attachments) || attachments.length === 0) {
+    container.textContent = "No attachments";
+    return;
+  }
+
+  attachments.forEach((attachment) => {
+    const item = document.createElement("div");
+    item.className = "attachment_item";
+
+    if (typeof attachment === "string") {
+      item.textContent = attachment;
+    } else {
+      item.textContent = attachment.name || "Attachment";
     }
+    container.appendChild(item);
   });
 }
 
-// automatik papatularin ang renderHistoryCards sa pagbukas ng page
-document.addEventListener("DOMContentLoaded", () => {
-  renderHistoryCards();
-});
+// ==========================================================================
+// 10. OPEN DETAILS MODAL
+// ==========================================================================
 
-/* ==========================================================================
-   3. DETAILS MODAL & TIMELINE LOGIC
-   ========================================================================== */
+function openDetailsModal(docId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
 
-// Buksan ang Details Modal
-function openDetailsModal(docId) {
   currentActiveDocId = docId;
-
   const report = getReportData(docId);
   const modal = document.getElementById("details_panel");
+  const overlay = document.getElementById("form_overlay");
+
+  if (!modal || !overlay) {
+    console.error("details_panel or form_overlay not found.");
+    return;
+  }
   modal.setAttribute("data-fb-document", docId);
 
-  // I-populate ang basic text details
-  document.getElementById("detail_report_id").textContent = report.id;
-  document.getElementById("detail_category").textContent = report.category;
-  document.getElementById("detail_description").textContent =
-    report.description;
-  document.getElementById("edit_description_input").value = report.description;
+  // ----------------------------------------------------------
+  // REPORT ID
+  // ----------------------------------------------------------
 
-  // Dynamic Status Badge Color Update sa loob ng Modal
+  const reportId = document.getElementById("detail_report_id");
+  if (reportId) {
+    reportId.textContent = report.id || "N/A";
+  }
+
+  // ----------------------------------------------------------
+  // CATEGORY
+  // ----------------------------------------------------------
+  const category = document.getElementById("detail_category");
+  if (category) {
+    category.textContent = report.category || "N/A";
+  }
+
+  // ----------------------------------------------------------
+  // LOCATION
+  // ----------------------------------------------------------
+  const location = document.getElementById("detail_location");
+  if (location) {
+    location.textContent = report.location || "N/A";
+  }
+  // ----------------------------------------------------------
+  // DESCRIPTION
+  // ----------------------------------------------------------
+  const description = document.getElementById("detail_description");
+
+  if (description) {
+    description.textContent = report.description || "N/A";
+  }
+  // ----------------------------------------------------------
+  // EDIT DESCRIPTION
+  // ----------------------------------------------------------
+  const descriptionInput = document.getElementById("edit_description_input");
+  if (descriptionInput) {
+    descriptionInput.value = report.description || "";
+  }
+  // ----------------------------------------------------------
+  // STATUS
+  // ----------------------------------------------------------
   updateStatusBadgeUI(report.status);
-
-  // Dynamic Timeline UI Update
+  // ----------------------------------------------------------
+  // TIMELINE
+  // ----------------------------------------------------------
   updateTimelineUI(report.status, report.timeline);
-
+  // ----------------------------------------------------------
+  // ATTACHMENTS
+  // ----------------------------------------------------------
+  const attachmentContainer = document.getElementById("detail_attachments");
+  if (attachmentContainer) {
+    renderAttachments(attachmentContainer, report.attachments);
+  }
+  // ----------------------------------------------------------
+  // RESET EDIT MODE
+  // ----------------------------------------------------------
   toggleEditDescription(false);
-
-  // Ipakita ang overlay at modal
-  const overlay = document.getElementById("form_overlay");
+  // ----------------------------------------------------------
+  // SHOW MODAL
+  // ----------------------------------------------------------
   modal.style.display = "block";
-  overlay.style.display = "block";
-
+  overlay.style.display = "block";  
   setTimeout(() => {
     modal.classList.add("show");
     overlay.classList.add("show");
   }, 10);
 }
 
-// Function para sa Status Badge ng Modal
+// ==========================================================================
+// 11. STATUS BADGE
+// ==========================================================================
 function updateStatusBadgeUI(status) {
   const badge = document.getElementById("detail_status");
   if (!badge) return;
-
-  badge.textContent = status;
+  const currentStatus = status || "Received";
+  badge.textContent = currentStatus;
   badge.classList.remove("badge_received", "badge_ongoing", "badge_resolved");
-
-  const lowerStatus = status.toLowerCase();
-  if (lowerStatus === "ongoing") {
-    badge.classList.add("badge_ongoing");
-  } else if (lowerStatus === "resolved") {
-    badge.classList.add("badge_resolved");
-  } else {
-    badge.classList.add("badge_received");
-  }
+  badge.classList.add(getStatusClass(currentStatus));
 }
 
-// Function para sa Dynamic Timeline Update
+// ==========================================================================
+// 12. TIMELINE
+// ==========================================================================
 function updateTimelineUI(status, timelineData = {}) {
   const timelineItems = document.querySelectorAll(".timeline_item");
   let currentStep = 1;
-
-  if (status.toLowerCase() === "ongoing") {
+  const currentStatus = (status || "Received").toLowerCase();
+  if (currentStatus === "ongoing") {
     currentStep = 2;
-  } else if (status.toLowerCase() === "resolved") {
+  } else if (currentStatus === "resolved") {
     currentStep = 3;
   }
 
   timelineItems.forEach((item, index) => {
     const stepNumber = index + 1;
-
     item.classList.remove("step_1", "step_2", "step_3");
     item.classList.add(`step_${stepNumber}`);
 
@@ -282,19 +490,32 @@ function updateTimelineUI(status, timelineData = {}) {
     }
   });
 
-  document.getElementById("time_submitted").textContent =
-    timelineData.submitted || "N/A";
-  document.getElementById("time_ongoing").textContent =
-    currentStep >= 2 ? timelineData.ongoing || "In Progress" : "Pending...";
-  document.getElementById("time_resolved").textContent =
-    currentStep >= 3 ? timelineData.resolved || "Finished" : "Pending...";
+  const submitted = document.getElementById("time_submitted");
+  const ongoing = document.getElementById("time_ongoing");
+  const resolved = document.getElementById("time_resolved");
+  if (submitted) {
+    submitted.textContent = timelineData.submitted || "N/A";
+  }
+  if (ongoing) {
+    ongoing.textContent =
+      currentStep >= 2 ? timelineData.ongoing || "In Progress" : "Pending...";
+  }
+  if (resolved) {
+    resolved.textContent =
+      currentStep >= 3 ? timelineData.resolved || "Finished" : "Pending...";
+  }
 }
 
+// ==========================================================================
+// 13. CLOSE ALL MODALS
+// ==========================================================================
 function closeAllModals() {
   const form = document.getElementById("form_panel");
   const details = document.getElementById("details_panel");
   const overlay = document.getElementById("form_overlay");
-
+  if (!form || !details || !overlay) {
+    return;
+  }
   form.classList.remove("show");
   details.classList.remove("show");
   overlay.classList.remove("show");
@@ -305,26 +526,38 @@ function closeAllModals() {
     overlay.style.display = "none";
   }, 300);
 }
+
+// ==========================================================================
+// 14. CLOSE DETAILS MODAL
+// ==========================================================================
 function closeDetailsModal() {
   const modal = document.getElementById("details_panel");
   const overlay = document.getElementById("form_overlay");
 
+  if (!modal || !overlay) {
+    return;
+  }
+
   modal.classList.remove("show");
   overlay.classList.remove("show");
-
   setTimeout(() => {
     modal.style.display = "none";
     overlay.style.display = "none";
   }, 300);
 }
 
-// Toggle para sa Edit/Save ng Description
+// ==========================================================================
+// 16. EDIT DESCRIPTION
+// ==========================================================================
 function toggleEditDescription(isEditing) {
   const descText = document.getElementById("detail_description");
   const descInput = document.getElementById("edit_description_input");
   const btnEdit = document.getElementById("btn_edit_desc");
   const btnSave = document.getElementById("btn_save_desc");
 
+  if (!descText || !descInput || !btnEdit || !btnSave) {
+    return;
+  }
   if (isEditing) {
     descText.style.display = "none";
     descInput.style.display = "block";
@@ -338,25 +571,67 @@ function toggleEditDescription(isEditing) {
     btnSave.disabled = true;
   }
 }
+// ==========================================================================
+// 15. SAVE DESCRIPTION
+// ==========================================================================
 
-// I-save ang na-edit na description (Backend-ready)
 function saveDescription() {
-  const updatedDescription = document.getElementById(
-    "edit_description_input",
-  ).value;
-  document.getElementById("detail_description").textContent =
-    updatedDescription;
+  const input = document.getElementById("edit_description_input");
+  const description = document.getElementById("detail_description");
 
+  if (!input || !description) {
+    return;
+  }
+  const updatedDescription = input.value;
+  // ----------------------------------------------------------
+  // UPDATE MODAL
+  // ----------------------------------------------------------
+  description.textContent = updatedDescription;
+  // ----------------------------------------------------------
+  // UPDATE MOCK DATA
+  // ----------------------------------------------------------
   if (currentActiveDocId && mockReports[currentActiveDocId]) {
     mockReports[currentActiveDocId].description = updatedDescription;
   }
-
-  // DITO MO ILALAGAY ANG BACKEND API / FIRESTORE UPDATE CALL SA HINAHARAP:
-  // Example: db.collection('reports').doc(currentActiveDocId).update({ description: updatedDescription });
+  // ----------------------------------------------------------
+  // UPDATE HISTORY CARD
+  // ----------------------------------------------------------
+  const card = document.querySelector(
+    `.data_card[data-fb-document="${currentActiveDocId}"]`,
+  );
+  if (card) {
+    const cardDescription = card.querySelector(".card_desc");
+    if (cardDescription) {
+      cardDescription.textContent = updatedDescription;
+      // Reset See More / See Less
+      cardDescription.classList.remove("description_expanded");
+      const seeMoreButton = card.querySelector(".see_more_btn");
+      if (seeMoreButton) {
+        seeMoreButton.textContent = "See More";
+      }
+    }
+  }
+  // ----------------------------------------------------------
+  // BACKEND READY
+  // ----------------------------------------------------------
   console.log(
     `[Backend Ready] Updated Document ${currentActiveDocId}:`,
     updatedDescription,
   );
-
+  /*
+  FUTURE FIREBASE:
+  await updateDoc(
+    doc(db, "reports", currentActiveDocId),
+    {
+      description: updatedDescription
+    }
+  );
+  */
   toggleEditDescription(false);
 }
+// ==========================================================================
+// 16. INITIALIZE
+// ==========================================================================
+document.addEventListener("DOMContentLoaded", function () {
+  renderHistoryCards();
+});

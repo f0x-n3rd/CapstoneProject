@@ -251,6 +251,7 @@
     min-width: 0;
     width: 100%;
     padding: 20px;
+    padding-top: 10px;
     box-sizing: border-box;
   }
 
@@ -259,10 +260,9 @@
     padding: 36px 24px 24px;
   }
 
-  .hotline_list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 16px;
+  .dept_numbers{
+    color:white;
+    align-content: center;
   }
   .text_title {
     font-size: 2rem;
@@ -306,7 +306,18 @@
   }
   /* =================history report======================== */
   #history_panel {
+    top: auto;
+    left: auto; 
     position: relative;
+    max-height: 500px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  
+  }
+
+  #history_panel::-webkit-scrollbar {
+    display: none;
   }
 
   .btn_primary {
@@ -645,9 +656,25 @@
   }
   /* ===========profile========== */
   .profile_card {
-    max-width: 480px;
-    margin: 0 auto 24px;
-  }
+    max-width: 100%;
+    margin-bottom:20px;
+    
+    }
+    .profile_menu {
+      margin-left: 20px;
+    }
+    .profile_avatar {
+  width: 200px;
+  height: 200px;
+  font-size: 80px;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px auto;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+}
 
   .announcement_icon {
     width: 40px;
