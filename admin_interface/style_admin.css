@@ -1,0 +1,127 @@
+ * {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-width: 1200px;
+    max-width: 100%;
+    min-height: 100vh;
+    overflow-x: auto;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    display: block;
+    position: relative;
+}
+
+.dashboard_header {
+    padding: 16px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 1px solid #d7d7d7;
+    width: 100%;
+    min-width: 1200px;
+    height: 102px;
+    box-sizing: border-box;
+    margin: 0;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.header_logo_placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(207, 207, 207);
+    padding: 10px;
+    border-radius: 10px;
+    height: 70px;
+    min-width: 70px;
+    font-size: 1.5rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header_title_block {
+    font-size: 0.8rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header_title_block h1,
+.header_title_block p {
+    margin: 0;
+}
+
+.nav_nemu {
+    width: 260px;
+    min-width: 260px;
+    max-width: 260px;
+    min-height: calc(100vh - 102px);
+    display: flex;
+    flex-direction: column; /* stack menu items vertically */
+    align-items: stretch;
+    margin: 0;
+    box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    top: 102px;
+    bottom: 0;
+    border-right: 1px solid #d7d7d7;
+    padding: 15px;
+    flex-shrink: 0;
+    overflow-y: auto; 
+    row-gap: 20px;
+    
+}
+
+
+.side_bar {
+    margin-top: 0;
+    z-index: 9;
+    width: 260px;
+    min-width: 260px;
+    display: block;
+    flex-shrink: 0;
+    position: fixed;
+    left: 0;
+    top: 102px;
+    bottom: 0;
+}
+.nav_icon{
+    width: 35px;
+}
+.nav_nemu .center_icon, a{
+   text-decoration: none;
+    color: black;
+    display: flex; align-items: center;  gap: 10px; font-size:1.3rem"
+}
+
+@media (max-width: 768px) {
+    html, body {
+        min-width: 1200px;
+    }
+
+    .dashboard_header,
+    .nav_nemu,
+    .side_bar {
+        position: fixed;
+    }
+
+    .nav_nemu {
+        width: 260px;
+        max-width: 260px;
+        min-width: 260px;
+        border-right: 1px solid #d7d7d7;
+        border-bottom: none;
+    }
+}
+
+

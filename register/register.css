@@ -13,7 +13,7 @@ body{
     background:#f4f4f4;
 }
 
-.register-card{
+.register_card{
     width:300px;
     height: 500px;
     background:#fff;
@@ -22,7 +22,7 @@ body{
     box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
-.logo-box{
+.logo_box{
     width:82px;
     height:82px;
     margin:0 auto 14px;
@@ -37,7 +37,7 @@ body{
     font-size:14px;
 }
 
-.system-title{
+.system_title{
     text-align:center;
     font-size:14px;
     font-weight:700;
@@ -52,51 +52,55 @@ body{
     margin-bottom:18px;
 }
 
-.input-group{
+.input_group{
     position:relative;
     margin-bottom:12px;
 }
 
-.input-group input{
+.input_group input{
     width:100%;
     height:32px;
     border:1px solid #e2e2e2;
-    border-radius:12px;
+    border-radius:10px;
     padding:0 14px;
     font-size:14px;
     outline:none;
     background:#fff;
 }
 
-.input-group select {
+.input_group select {
     width: 100%;
     height:32px;
     padding-left: 12px;
     border: 1px solid #ccc;
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 14px;
     outline: none;
     color: #8a8a8a; 
     cursor: pointer;
 }
 
-.input-group select option {
+.input_group select option {
     color: #000; 
 }
 
-.input-group select:valid {
+.input_group select:valid {
     color: #000; 
 }
 
-.input-group input:focus{
-    border-color:#4a89ff;
+.input_group input:focus{
+    border-color:#ff7424;
+}
+.input_group input:hover{
+    border-color:#ff7424;
 }
 
-.password-input{
+
+.password_input{
     padding-right:50px !important;
 }
 
-.toggle-password{
+.toggle_password{
     position:absolute;
     right:12px;
     top:50%;
@@ -107,19 +111,19 @@ body{
     padding:0;
 }
 
-.toggle-password img{
+.toggle_password img{
     width:18px;
     height:18px;
     display:block;
 }
 
-.signin-btn{
+.signin_btn{
     width:100%;
     height:45px;
     border:none;
     border-radius:12px;
     margin-top:6px;
-    background:linear-gradient(to bottom,#6da4ff,#4f86f7);
+    background: linear-gradient(135deg, #e5a546, #ff7424);
     color:#fff;
     font-size:16px;
     font-weight:700;
@@ -127,24 +131,24 @@ body{
     transition:.3s;
 }
 
-.signin-btn:hover{
+.signin_btn:hover{
     transform:translateY(-1px);
     box-shadow:0 6px 12px rgba(79,134,247,.3);
 }
 
-.footer-text{
+.footer_text{
     text-align:center;
     margin-top:16px;
     font-size:12px;
     color:#777;
 }
 
-.footer-text a{
+.footer_text a{
     color:#2563eb;
     text-decoration:none;
     font-weight:600;
 }
 
-.footer-text a:hover{
+.footer_text a:hover{
     text-decoration:underline;
 }
