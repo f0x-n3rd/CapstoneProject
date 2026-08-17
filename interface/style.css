@@ -299,7 +299,6 @@ body {
   flex-shrink: 0;
   display: block;
   -webkit-user-drag: none;
-  user-drag: none;
   pointer-events: none;
 }
 .announcement_preview_link {
