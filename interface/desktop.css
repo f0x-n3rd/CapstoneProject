@@ -1,13 +1,38 @@
 /* screen for desktop and larger devices */
 @media (min-width: 780px) and (max-width: 1440px) {
-  body {
+  html, body {
     background-color: #cbd5e1;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    min-height: 100vh;
   }
 
   .main_content {
-    max-width: 1200px;
-    margin: 0 auto;
+   
+ 
+    scrollbar-width: thin;
+    -ms-overflow-style: auto;
   }
+
+  /* Chrome / Edge scrollbar */
+  .main_content::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  .main_content::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .main_content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  }
+
+
+
 
   .announcement_card {
     width: 100%;
@@ -15,7 +40,7 @@
     display: flex;
     gap: 20px;
   }
-
+  
   /* LEFT SIDE CONTENT */
   .announcement_details {
     flex: 1 1 0;
@@ -277,7 +302,7 @@
     align-content: center;
   }
   .text_title {
-    font-size: 2rem;
+    font-size: 1.4rem;
     line-height: 1.4;
     font-weight: 700;
   }
@@ -291,14 +316,28 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     overflow-wrap: anywhere;
-    max-height: 300px;
+    max-height: 225px;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    
   }
-  .text_description::-webkit-scrollbar {
-    display: none;
+  .text_description:hover{
+       scrollbar-width:thin;
+    -ms-overflow-style: auto;
+    scroll-behavior: smooth;
   }
+   .text_description::-webkit-scrollbar {
+    width: 2px;
+  }
+
+  .text_description::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .text_description::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.45);
+    border-radius: 10px;
+  }
+  
   .image_announcement {
     max-width: 100%;
     width: 50%;
@@ -310,12 +349,17 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.25rem;
   }
-
-  .card_slider_wrapper {
-    max-width: 100%;
+.card_slider_wrapper {
     width: 100%;
+    max-width: 100%;
+
     height: 300px;
+    min-height: 300px;
+
+    overflow: hidden;
+    
   }
+
   /* =================history report======================== */
   #history_panel {
     top: auto;
@@ -323,18 +367,29 @@
     height: 100%;
     min-height: 0;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    overflow-x: hidden; 
+     scrollbar-width: thin;
+    -ms-overflow-style: auto;
     /* ensure last item is fully visible when scrolled to bottom */
     padding-bottom: 4rem;
     scroll-padding-bottom: 1rem;
     box-sizing: border-box;
     -webkit-overflow-scrolling: touch;
   }
-
+  /* Chrome / Edge scrollbar */
   #history_panel::-webkit-scrollbar {
-    display: none;
+    width: 7px;
   }
+
+  #history_panel::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  #history_panel::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+  }
+
 
   .btn_primary {
     position: fixed; /* pin to viewport */
@@ -707,9 +762,14 @@
     overflow-wrap: anywhere;
     max-height: 260px;
     overflow-y: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+
   }
+  .announcement_content:hover {
+        scrollbar-width: thin;
+    -ms-overflow-style: auto;
+  }
+
+
   .announcement_image {
     max-width: 100%;
     width: 50%;
@@ -735,12 +795,12 @@
     height: 10px;
   }
   .snap_scroll::-webkit-scrollbar-thumb {
-    background: rgba(247, 247, 247, 0.561);
+    background: #226efc;
     border-radius: 10px;
   }
 
   .snap_scroll::-webkit-scrollbar-thumb:hover {
-    background: #226efc;
+    background: rgba(247, 247, 247, 0.561);
   }
 
   .card {

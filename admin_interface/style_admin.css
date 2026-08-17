@@ -75,10 +75,10 @@ body {
     top: 102px;
     bottom: 0;
     border-right: 1px solid #d7d7d7;
-    padding: 15px;
+    padding: 10px;
     flex-shrink: 0;
     overflow-y: auto; 
-    row-gap: 20px;
+    row-gap: 10px;
     
 }
 
@@ -95,14 +95,34 @@ body {
     top: 102px;
     bottom: 0;
 }
+
 .nav_icon{
     width: 35px;
+    position: relative;
+    left: 15px;
 }
-.nav_nemu .center_icon, a{
+.nav_nemu .center_icon, p{
    text-decoration: none;
     color: black;
-    display: flex; align-items: center;  gap: 10px; font-size:1.3rem"
+    display: flex; 
+    align-items: center;  
+    gap: 10px; 
+    font-size:1.1rem;
+    white-space: nowrap;
 }
+.center_icon{
+    position: relative;
+    border-radius: 150px;
+}
+.center_icon:hover{
+     box-shadow: 0 4px 12px rgba(6, 10, 19, 0.425);
+}
+.active_color{
+    color: rgb(255, 145, 0);
+}.active{
+    box-shadow: 0 4px 12px rgba(6, 10, 19, 0.425);
+}
+
 
 @media (max-width: 768px) {
     html, body {
