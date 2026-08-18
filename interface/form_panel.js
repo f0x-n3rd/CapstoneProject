@@ -135,7 +135,7 @@ const mockReports = {
   rep_000002: {
     id: "000002",
     status: "Received",
-    category: "Road Maintenance",
+    category: "Infrastructures",
     location: "Brgy. Dapawan, Purok 3",
     description: "A large pothole has developed along the roadside. The damaged portion of the road is becoming difficult to pass, especially for motorcycles and small vehicles. Residents are requesting immediate road inspection and repair before the damage becomes worse.",
     timeline: {
@@ -180,7 +180,7 @@ const mockReports = {
   rep_000005: {
     id: "000005",
     status: "Received",
-    category: "Water Supply",
+    category: "Water Management",
     location: "Brgy. Rizal, Purok 2",
     description:"Several households have reported low water pressure and intermittent water service. Residents are experiencing difficulty obtaining enough water for their daily activities. The concern has been received and is awaiting inspection by the appropriate office.",
     timeline: {

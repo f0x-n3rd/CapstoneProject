@@ -38,9 +38,69 @@
                 <p class="nav_icon" >Announcement</p>
             </a>
         </div>
-
-
     </section>
 
+   <main class="table_of_reports_content">
+
+
+  <!-- Toolbar / Search Bar -->
+  <div class="table-toolbar">
+    <h1>Tables of Reports</h1>
+    <div class="search-box">
+      <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input type="text" id="residentSearchInput" class="search-input" placeholder="Search resident name..." onkeyup="filterReports()">
+    </div>
+  </div>
+
+  <!-- Main Table -->
+  <div class="table-container">
+    <table class="pro-table">
+      <thead>
+        <tr>
+          <th>Report ID</th>
+          <th>Resident Name</th>
+          <th>Category</th>
+          <th>Location</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+
+      <tbody id="reportsTableBody">
+        <!-- Rendered via JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+
+
+  <!-- Floating Modal (Hidden by default) -->
+  <div id="descModal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="floating-card" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <span id="modalReportId" class="modal-title">Report Details</span>
+        <button class="modal-close" onclick="closeModalDirect()">&times;</button>
+      </div>
+      <div id="modalBody" class="modal-body">
+        <p id="modalDescription" class="modal-desc-text"></p>
+        
+        <!-- Attached Images Section -->
+        <div class="modal-images-section">
+          <h4 class="modal-section-title">Attached Photos</h4>
+          <div id="modalImagesGrid" class="modal-images-grid">
+            <!-- Dynamically populated via JS -->
+          </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</main>
+
+
+
+<script src="js_dashboardTable/reports_table.js"></script>
 </body>
 </html>
