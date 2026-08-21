@@ -166,12 +166,11 @@ body {
 .section_heading {
   font-size: 1.17rem;
     font-weight: 700;
-    padding-left: 10px;
+    padding-left: 1px;
 }
 .section_heading_r {
   font-size: 1.17rem;
   font-weight: 700;
-  padding: 10px;
 }
 .section_heading_report{
   font-size: 1.16rem;

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <title>Analytics</title>
     <link rel="stylesheet" href="style_admin.css">
 </head>
@@ -42,5 +43,69 @@
 
     </section>
 
+<!-- Main Content Area -->
+    <main class="main_content">
+        <div class="analytics_container">
+            
+            <div class="analytics_top_bar">
+             <h2>Analytics</h2>
+             <button class="btn_export" onclick="exportAnalyticsReport()">Export PDF</button>
+            </div>
+
+            <div class="analytics_header_filter">
+                <h3>Reports Categories</h3>
+                <select id="categoryFilter" class="category_dropdown" onchange="filterAnalyticsByCategory()">
+                    <option value="All">Select Category (All)</option>
+                    <option value="Infrastructures">Infrastructures</option>
+                    <option value="Waste Management">Waste Management</option>
+                    <option value="Drainage and Flooding">Drainage and Flooding</option>
+                    <option value="Public Facilities">Public Facilities</option>
+                    <option value="Electrical and Streetlight">Electrical and Streetlight</option>
+                    <option value="Road Obstruction">Road Obstruction</option>
+                </select>
+            </div>
+
+            <!-- Upper Grid: Category Chart + Summary Cards -->
+            <div class="analytics_top_grid">
+                <div class="chart_card category_chart_box">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+
+                <!-- Kasama na ang Ongoing Stat Card -->
+                <div class="stat_cards_group">
+                    <div class="stat_card">
+                        <span class="stat_label">Received</span>
+                        <h2 id="countReceived">0</h2>
+                    </div>
+                    <div class="stat_card">
+                        <span class="stat_label">Ongoing</span>
+                        <h2 id="countOngoing">0</h2>
+                    </div>
+                    <div class="stat_card">
+                        <span class="stat_label">Resolved</span>
+                        <h2 id="countResolved">0</h2>
+                    </div>
+                    <div class="stat_card">
+                        <span class="stat_label">Total</span>
+                        <h2 id="countTotal">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lower Grid: 25 Barangays Chart -->
+            <div class="chart_card barangay_chart_box">
+                <h3>Reports by Barangay</h3>
+                <div class="canvas_scroll_wrapper">
+                    <canvas id="barangayChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- External Script Reference -->
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js_dashboardTable/reports_table.js"></script>
+    <script src="js_dashboardTable/analytics.js"></script>
 </body>
 </html>
