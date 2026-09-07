@@ -121,65 +121,80 @@ function removeSelectedImage(fileToRemove) {
 // ==========================================================================
 
 const mockReports = {
-
   rep_000001: {
     reportID: "000001",
     reportStatus: "Received",
     issueCategory: "Infrastructures",
     barangayArea: "Brgy. Dapawan, Purok 3",
-    issueDescription: "A large pothole has developed along the roadside. The damaged portion of the road is becoming difficult to pass, especially for motorcycles and small vehicles. Residents are requesting immediate road inspection and repair before the damage becomes worse.",
+    issueDescription: "A large pothole has developed along the roadside...",
     timestamp: {
       submitted: "April 14, 2026 - 08:10 AM",
-      ongoing: "",
+      for_verification: "",
+      for_referral: "",
       resolved: "",
+      not_lgu: "",
     },
-
     supportingImage: [],
   },
-
   rep_000002: {
     reportID: "000002",
     reportStatus: "Resolved",
     issueCategory: "Drainage and Flooding",
     barangayArea: "Brgy. Liwanag, Riverside",
-    issueDescription:"The drainage canal in the area was clogged with leaves, plastic materials, mud, and other debris. Heavy rainfall caused water to overflow onto the road and nearby residential areas. The drainage was cleaned and the affected area was restored.",
+    issueDescription: "The drainage canal in the area was clogged...",
     timestamp: {
       submitted: "April 15, 2026 - 01:20 PM",
-      ongoing: "April 16, 2026 - 09:00 AM",
+      for_verification: "April 16, 2026 - 09:00 AM",
+      for_referral: "April 16, 2026 - 02:00 PM",
       resolved: "April 17, 2026 - 04:35 PM",
+      not_lgu: "",
     },
-
     supportingImage: [],
   },
-
   rep_000003: {
     reportID: "000003",
-    reportStatus: "Ongoing",
+    reportStatus: "For Verification",
     issueCategory: "Garbage Collection",
     barangayArea: "Brgy. Tulay, Public Market",
-    issueDescription:"Garbage has accumulated around the public market due to delayed collection. The accumulated waste is producing unpleasant odors and attracting stray animals. Residents and vendors are requesting immediate garbage collection and proper disposal.",
+    issueDescription: "Garbage has accumulated around the public market...",
     timestamp: {
       submitted: "April 18, 2026 - 10:45 AM",
-      ongoing: "April 19, 2026 - 08:30 AM",
+      for_verification: "April 19, 2026 - 08:30 AM",
+      for_referral: "",
       resolved: "",
+      not_lgu: "",
     },
-
     supportingImage: [],
   },
-
   rep_000004: {
     reportID: "000004",
-    reportStatus: "Ongoing",
+    reportStatus: "For Referral/Referred",
     issueCategory: "Drainage and Flooding",
     barangayArea: "Brgy. Tulay, Public Market",
-    issueDescription: "The main drainage canal near the public market is heavily clogged with silt, plastics, and debris, causing water to overflow during heavy rainfall. Maintenance personnel are currently on-site clearing the drainage system to restore proper water flow.",
+    issueDescription: "The main drainage canal near the public market is heavily clogged...",
     timestamp: {
       submitted: "April 18, 2026 - 10:45 AM",
-      ongoing: "April 19, 2026 - 08:30 AM",
+      for_verification: "April 19, 2026 - 08:30 AM",
+      for_referral: "April 19, 2026 - 01:15 PM",
       resolved: "",
+      not_lgu: "",
     },
-
-    attachmesupportingImagents: [],
+    supportingImage: [],
+  },
+  rep_000005: {
+    reportID: "000005",
+    reportStatus: "Not within LGU Jurisdiction",
+    issueCategory: "Public Facilities",
+    barangayArea: "Brgy. Poblacion, Highway",
+    issueDescription: "Concern regarding national highway maintenance electrical post...",
+    timestamp: {
+      submitted: "April 20, 2026 - 09:00 AM",
+      for_verification: "April 20, 2026 - 10:30 AM",
+      for_referral: "",
+      resolved: "",
+      not_lgu: "April 20, 2026 - 11:00 AM",
+    },
+    supportingImage: [],
   },
 };
 // ==========================================================================
@@ -210,15 +225,21 @@ function getReportData(docId) {
 // ==========================================================================
 function getStatusClass(reportStatus) {
   const currentStatus = (reportStatus || "Received").toLowerCase();
-  if (currentStatus === "ongoing") {
-    return "badge_ongoing";
+  
+  if (currentStatus === "for verification") {
+    return "badge_verification";
+  }
+  if (currentStatus === "for referral/referred" || currentStatus === "referred") {
+    return "badge_referral";
   }
   if (currentStatus === "resolved") {
     return "badge_resolved";
   }
+  if (currentStatus === "not within lgu jurisdiction") {
+    return "badge_not_lgu";
+  }
   return "badge_received";
 }
-
 // ==========================================================================
 // 7. HISTORY CARD TEMPLATE
 // ==========================================================================
@@ -448,51 +469,104 @@ function updateStatusBadgeUI(reportStatus) {
   if (!badge) return;
   const currentStatus = reportStatus || "Received";
   badge.textContent = currentStatus;
-  badge.classList.remove("badge_received", "badge_ongoing", "badge_resolved");
+  badge.classList.remove(
+    "badge_received", 
+    "badge_verification", 
+    "badge_referral", 
+    "badge_resolved", 
+    "badge_not_lgu"
+  );
   badge.classList.add(getStatusClass(currentStatus));
 }
-
 // ==========================================================================
 // 12. TIMELINE
 // ==========================================================================
 function updateTimelineUI(reportStatus, timelineData = {}) {
-  const timelineItems = document.querySelectorAll(".timeline_item");
-  let currentStep = 1;
-  const currentStatus = (reportStatus || "Received").toLowerCase();
-  if (currentStatus === "ongoing") {
-    currentStep = 2;
-  } else if (currentStatus === "resolved") {
-    currentStep = 3;
+  const timelineContainer = document.querySelector(".timeline_container");
+  if (!timelineContainer) return;
+
+  const currentStatus = reportStatus || "Received";
+  const statusLower = currentStatus.toLowerCase();
+
+  // Kapag "Not within LGU Jurisdiction" -> Maikling 2-step timeline
+  if (statusLower === "not within lgu jurisdiction") {
+    timelineContainer.innerHTML = `
+      <div class="timeline_item active step_1">
+        <div class="timeline_node"></div>
+        <div class="timeline_content">
+          <h4>Received</h4>
+          <p id="time_submitted">${timelineData.submitted || "N/A"}</p>
+        </div>
+      </div>
+      <div class="timeline_item active step_5">
+        <div class="timeline_node"></div>
+        <div class="timeline_content">
+          <h4>Not within LGU Jurisdiction</h4>
+          <p id="time_not_lgu">${timelineData.not_lgu || "Process Closed"}</p>
+        </div>
+      </div>
+    `;
+    return;
   }
 
-  timelineItems.forEach((item, index) => {
-    const stepNumber = index + 1;
-    item.classList.remove("step_1", "step_2", "step_3");
-    item.classList.add(`step_${stepNumber}`);
+  // Standard 4-Step Timeline Workflow
+  timelineContainer.innerHTML = `
+    <div class="timeline_item step_1" id="timeline_step_received">
+      <div class="timeline_node"></div>
+      <div class="timeline_content">
+        <h4>Received</h4>
+        <p id="time_submitted">${timelineData.submitted || "N/A"}</p>
+      </div>
+    </div>
+    <div class="timeline_item step_2" id="timeline_step_verification">
+      <div class="timeline_node"></div>
+      <div class="timeline_content">
+        <h4>For Verification</h4>
+        <p id="time_verification">Pending...</p>
+      </div>
+    </div>
+    <div class="timeline_item step_3" id="timeline_step_referral">
+      <div class="timeline_node"></div>
+      <div class="timeline_content">
+        <h4>For Referral / Referred</h4>
+        <p id="time_referral">Pending...</p>
+      </div>
+    </div>
+    <div class="timeline_item step_4" id="timeline_step_resolved">
+      <div class="timeline_node"></div>
+      <div class="timeline_content">
+        <h4>Resolved</h4>
+        <p id="time_resolved">Pending...</p>
+      </div>
+    </div>
+  `;
 
-    if (stepNumber <= currentStep) {
-      item.classList.add("active");
-    } else {
-      item.classList.remove("active");
+  let currentStep = 1;
+  if (statusLower === "for verification") currentStep = 2;
+  else if (statusLower === "for referral/referred" || statusLower === "referred") currentStep = 3;
+  else if (statusLower === "resolved") currentStep = 4;
+
+  const steps = [
+    { id: "timeline_step_received", timeId: "time_submitted", val: timelineData.submitted || "N/A" },
+    { id: "timeline_step_verification", timeId: "time_verification", val: timelineData.for_verification || "In Progress" },
+    { id: "timeline_step_referral", timeId: "time_referral", val: timelineData.for_referral || "In Progress" },
+    { id: "timeline_step_resolved", timeId: "time_resolved", val: timelineData.resolved || "Finished" }
+  ];
+
+  steps.forEach((step, idx) => {
+    const item = document.getElementById(step.id);
+    const timeElem = document.getElementById(step.timeId);
+    if (item) {
+      if (idx + 1 <= currentStep) {
+        item.classList.add("active");
+        if (timeElem) timeElem.textContent = step.val;
+      } else {
+        item.classList.remove("active");
+        if (timeElem) timeElem.textContent = "Pending...";
+      }
     }
   });
-
-  const submitted = document.getElementById("time_submitted");
-  const ongoing = document.getElementById("time_ongoing");
-  const resolved = document.getElementById("time_resolved");
-  if (submitted) {
-    submitted.textContent = timelineData.submitted || "N/A";
-  }
-  if (ongoing) {
-    ongoing.textContent =
-      currentStep >= 2 ? timelineData.ongoing || "In Progress" : "Pending...";
-  }
-  if (resolved) {
-    resolved.textContent =
-      currentStep >= 3 ? timelineData.resolved || "Finished" : "Pending...";
-  }
 }
-
 // ==========================================================================
 // 13. CLOSE ALL MODALS
 // ==========================================================================

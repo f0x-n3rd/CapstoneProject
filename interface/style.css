@@ -212,6 +212,9 @@ body {
   font-size: 15px;
   font-weight: 700;
   color: #111111;
+  max-width: 50%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .card_location {
@@ -1411,27 +1414,36 @@ body {
 /* ====================================================================== */
 .badge {
   display: inline-block;
-  font-size: 11px;
+  font-size: 8px;
   padding: 4px 10px;
   border-radius: 20px;
   font-weight: bold;
   text-transform: uppercase;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
-  /* 🟠 Orange para sa Received */
-  .badge_received {
-    background-color: #fca311;
-  }
+/* Badges para sa 5 Statuses */
+.badge_received {
+  background-color: #fca311; /* Orange / Gold */
+}
 
-  /* 🔵 Blue para sa Ongoing */
-  .badge_ongoing {
-    background-color: #007bff;
-  }
+.badge_verification {
+  background-color: #0284c7; /* Sky Blue */
+}
 
-  /* 🟢 Green para sa Resolved */
-  .badge_resolved {
-    background-color: #28a745;
-  }
+.badge_referral {
+  background-color: #8b5cf6; /* Purple */
+}
+
+.badge_resolved {
+  background-color: #22c55e; /* Green */
+}
+
+.badge_not_lgu {
+  background-color: #ef4444; /* Red */
+}
 
 /* ====================================================================== */
 /* TIMELINE STYLES (Para sa updateTimelineUI function) */
@@ -1499,22 +1511,30 @@ body {
   color: #666666;
 }
 
-/* Kulay 1: Report Submitted (Orange) */
+/* Color Coding sa Active Nodes ng Timeline */
 .timeline_item.step_1.active .timeline_node {
   background-color: #fca311;
   box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.2);
 }
 
-/* Kulay 2: Ongoing (Blue) */
 .timeline_item.step_2.active .timeline_node {
-  background-color: #007bff;
-  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+  background-color: #0284c7;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
 }
 
-/* Kulay 3: Resolved (Green) */
 .timeline_item.step_3.active .timeline_node {
-  background-color: #28a745;
-  box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
+  background-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+}
+
+.timeline_item.step_4.active .timeline_node {
+  background-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+
+.timeline_item.step_5.active .timeline_node {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
 }
 
 /* Active Status (Kapag umabot na ang report sa step na iyon) */

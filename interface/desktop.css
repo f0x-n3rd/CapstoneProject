@@ -516,21 +516,26 @@
     display: inline-block;
     transition: background-color 0.3s ease;
   }
+/* Badges para sa 5 Statuses */
+.badge_received {
+  background-color: #fca311; /* Orange / Gold */
+}
 
-  /* 🟠 Orange para sa Received */
-  .badge_received {
-    background-color: #fca311;
-  }
+.badge_verification {
+  background-color: #0284c7; /* Sky Blue */
+}
 
-  /* 🔵 Blue para sa Ongoing */
-  .badge_ongoing {
-    background-color: #007bff;
-  }
+.badge_referral {
+  background-color: #8b5cf6; /* Purple */
+}
 
-  /* 🟢 Green para sa Resolved */
-  .badge_resolved {
-    background-color: #28a745;
-  }
+.badge_resolved {
+  background-color: #22c55e; /* Green */
+}
+
+.badge_not_lgu {
+  background-color: #ef4444; /* Red */
+}
   /* ================= DETAILS POPUP MODAL ================= */
 
   .details_header {
@@ -638,23 +643,31 @@
     color: #666666;
   }
 
-  /* Kulay 1: Report Submitted (Orange) */
-  .timeline_item.step_1.active .timeline_node {
-    background-color: #fca311;
-    box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.2);
-  }
+  /* Color Coding sa Active Nodes ng Timeline */
+.timeline_item.step_1.active .timeline_node {
+  background-color: #fca311;
+  box-shadow: 0 0 0 4px rgba(252, 163, 17, 0.2);
+}
 
-  /* Kulay 2: Ongoing (Blue) */
-  .timeline_item.step_2.active .timeline_node {
-    background-color: #007bff;
-    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
-  }
+.timeline_item.step_2.active .timeline_node {
+  background-color: #0284c7;
+  box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.2);
+}
 
-  /* Kulay 3: Resolved (Green) */
-  .timeline_item.step_3.active .timeline_node {
-    background-color: #28a745;
-    box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.2);
-  }
+.timeline_item.step_3.active .timeline_node {
+  background-color: #8b5cf6;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+}
+
+.timeline_item.step_4.active .timeline_node {
+  background-color: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+
+.timeline_item.step_5.active .timeline_node {
+  background-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+}
 
   /* Sections & Attachments */
   .detail_section {
