@@ -31,6 +31,12 @@ self.addEventListener("fetch", (event) => {
   // Never interfere with form submissions or other non-GET requests.
   if (request.method !== "GET") return;
 
+  // Leave Firebase connections and other external requests to the browser.
+  // Only cache local pages and assets, never fetch/XHR API responses.
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  if (!['document', 'script', 'style', 'image', 'font'].includes(request.destination)) return;
+
   const isFreshnessCritical =
     request.mode === "navigate" || NETWORK_FIRST_DESTINATIONS.has(request.destination);
 

@@ -54,10 +54,10 @@
     <main class="main_content">
         <div class="announcement_top_bar">
             <h2>Announcement History</h2>
-            <button class="btn_create_announcement" id="openModalBtn">Create Announcement</button>
+            <button class="btn_create_announcement" id="openModalBtn" disabled>Create Announcement</button>
             
         </div>
-        <hr>
+        <hr><p id="announcementFeedback" role="status"></p><button id="announcementRetry" type="button">Refresh announcements</button>
         <!-- Announcement Cards Container -->
         <div class="announcement_grid" id="announcementsList">
 
@@ -70,27 +70,28 @@
         <div class="announcement_modal_card">
             <h3>Create Announcement</h3>
             
-            <input type="text" id="announcementTitle" class="modal_input_field" placeholder="Title">
-            <textarea id="announcementContent" class="modal_textarea_field" placeholder="content"></textarea>
+            <input type="text" id="announcementTitle" maxlength="200" class="modal_input_field" placeholder="Title">
+            <textarea id="announcementContent" maxlength="10000" class="modal_textarea_field" placeholder="content"></textarea>
             
-            <span class="attach_photos_label">Attach Photos</span>
+            <span class="attach_photos_label">Attach one image (JPEG, PNG, WebP; up to 5 MB)</span>
             <div class="photo_actions">
                 <!-- Camera Button na may PNG Image -->
                 <label for="imageUploadCamera" class="photo_btn">
                     <img src="assets_admin/photo-camera.png" alt="Camera" class="btn_icon_img">
                 </label>
-                <input type="file" id="imageUploadCamera" accept="image/*" capture="environment" style="display: none;">
+                <input type="file" id="imageUploadCamera" accept="image/jpeg,image/png,image/webp" capture="environment" style="display: none;">
 
                 <!-- File Folder Button na may PNG Image -->
                 <label for="imageUploadFile" class="photo_btn">
                     <img src="assets_admin/image.png" alt="Folder" class="btn_icon_img"> Choose File
                 </label>
-                <input type="file" id="imageUploadFile" accept="image/*" multiple style="display: none;">
+                <input type="file" id="imageUploadFile" accept="image/jpeg,image/png,image/webp" style="display: none;">
             </div>
 
             <!-- Preview Container para sa na-upload na images -->
             <div class="photo_previews" id="photoPreviews"></div>
 
+            <p id="announcementFormFeedback" role="status"></p>
             <button type="button" class="btn_post_announcement" id="postAnnouncementBtn">Post Announcement</button>
         </div>
     </div>
@@ -107,7 +108,7 @@
 </div>
 
     <!-- Separate JS File para sa Firebase / Mock Data Operations -->
-    <script src="js_dashboardTable/announcements_submit.js"></script>
-    <script src="admin_login/login_as_admin.js"></script>
+    <script type="module" src="js_dashboardTable/announcements_submit.js"></script>
+    <script type="module" src="admin_login/login_as_admin.js"></script>
 </body>
 </html>

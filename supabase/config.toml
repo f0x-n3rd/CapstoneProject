@@ -1,0 +1,6 @@
+project_id = "capstone-reporting-images"
+
+[functions.image-storage]
+# The handler validates the Firebase token through Firebase itself and checks
+# Firestore admin permissions. The legacy Supabase JWT check cannot do that.
+verify_jwt = false

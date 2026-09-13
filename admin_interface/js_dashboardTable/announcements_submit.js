@@ -1,188 +1,93 @@
-let mockAnnouncements = [
-    {
-        id: "1",
-        title: "Drainage Clearing Activity",
-        content: "announcement content....",
-        images: []
-    }
-];
+import { getServices } from '../../firebase/client.js';
+import { hasRole } from '../../firebase/auth.js';
+import { watchAnnouncements, createAnnouncement, removeAnnouncement, validateAnnouncement, announcementError, textElement, announcementImage } from '../../firebase/announcements.js';
 
-let selectedImages = [];
-
-const announcementDB = {
-    async getAnnouncements() {
-        return mockAnnouncements;
-    },
-
-    async createAnnouncement(title, content, images) {
-        const newAnnouncement = {
-            id: Date.now().toString(),
-            title: title,
-            content: content,
-            images: images
+const list = document.getElementById('announcementsList');
+const feedback = document.getElementById('announcementFeedback');
+const formFeedback = document.getElementById('announcementFormFeedback');
+const modal = document.getElementById('announcementModal');
+const view = document.getElementById('viewAnnouncementModal');
+const open = document.getElementById('openModalBtn');
+const post = document.getElementById('postAnnouncementBtn');
+const title = document.getElementById('announcementTitle');
+const content = document.getElementById('announcementContent');
+const inputs = [document.getElementById('imageUploadCamera'), document.getElementById('imageUploadFile')];
+let file = null;
+let previewURL;
+let busy = false;
+let stop;
+let starting = false;
+function resetImage() {
+    if (previewURL) URL.revokeObjectURL(previewURL);
+    previewURL = null;
+    file = null;
+    inputs.forEach(input => input.value = '');
+    document.getElementById('photoPreviews').replaceChildren();
+}
+inputs.forEach(input => input.addEventListener('change', () => {
+    const selected = input.files[0];
+    if (!selected) return;
+    try { validateAnnouncement('Preview', 'Preview', selected); }
+    catch (error) { formFeedback.textContent = error.message; input.value = ''; return; }
+    resetImage(); file = selected; previewURL = URL.createObjectURL(file);
+    const image = document.createElement('img'); image.src = previewURL; image.className = 'photo_placeholder'; image.alt = 'Selected attachment';
+    const remove = textElement('button', 'btn_remove_img', 'Remove image'); remove.type = 'button'; remove.onclick = () => { if (!busy) resetImage(); };
+    document.getElementById('photoPreviews').append(image, remove);
+}));
+open.onclick = () => modal.classList.add('active');
+modal.onclick = event => { if (event.target === modal && !busy) modal.classList.remove('active'); };
+view.onclick = event => { if (event.target === view) view.classList.remove('active'); };
+document.getElementById('closeViewModalBtn').onclick = () => view.classList.remove('active');
+function render(items) {
+    list.replaceChildren();
+    if (!items.length) list.append(textElement('p', '', 'No announcements yet.'));
+    items.forEach(item => {
+        const card = textElement('div', 'announcement_card', '');
+        const details = textElement('button', '', ''); details.type = 'button';
+        details.append(textElement('h3', '', item.title), textElement('p', '', item.content));
+        const image = announcementImage(item.announcementImageURL, 'card_img_thumb'); if (image) details.append(image);
+        details.onclick = () => {
+            document.getElementById('viewTitle').textContent = item.title;
+            document.getElementById('viewContent').textContent = item.content;
+            const images = document.getElementById('viewImagesContainer'); images.replaceChildren();
+            const full = announcementImage(item.announcementImageURL, 'view_full_img'); if (full) images.append(full);
+            view.classList.add('active');
         };
-        mockAnnouncements.push(newAnnouncement);
-        return newAnnouncement;
-    },
-
-    async deleteAnnouncement(id) {
-        mockAnnouncements = mockAnnouncements.filter(item => item.id !== id);
-    }
+        const remove = textElement('button', 'btn_delete_announcement', 'Delete'); remove.type = 'button';
+        remove.onclick = async () => {
+            if (!confirm('Delete this announcement?')) return;
+            remove.disabled = true;
+            try { feedback.textContent = await removeAnnouncement(item); }
+            catch (error) { feedback.textContent = announcementError(error); remove.disabled = false; }
+        };
+        card.append(details, remove); list.append(card);
+    });
+}
+post.onclick = async () => {
+    if (busy) return;
+    busy = true; post.disabled = true; title.disabled = true; content.disabled = true; inputs.forEach(input => input.disabled = true);
+    formFeedback.textContent = 'Publishing…';
+    try {
+        await createAnnouncement(title.value, content.value, file);
+        title.value = ''; content.value = ''; resetImage(); modal.classList.remove('active');
+        feedback.textContent = 'Announcement published.'; formFeedback.textContent = '';
+    } catch (error) { formFeedback.textContent = announcementError(error); }
+    finally { busy = false; post.disabled = false; title.disabled = false; content.disabled = false; inputs.forEach(input => input.disabled = false); }
 };
-
-async function renderAnnouncements() {
-    const listContainer = document.getElementById("announcementsList");
-    listContainer.innerHTML = "";
-
-    const announcements = await announcementDB.getAnnouncements();
-
-    announcements.forEach(item => {
-        const imagesHTML = item.images && item.images.length > 0
-            ? `<div class="card_images">
-                ${item.images.map(img => `<img src="${img}" class="card_img_thumb" />`).join('')}
-               </div>`
-            : '';
-
-        const card = document.createElement("div");
-        card.className = "announcement_card";
-        
-        // Kapag clinic ang mismong Card, mag-o-open ang View Overlay
-        card.addEventListener("click", () => openViewModal(item));
-
-        card.innerHTML = `
-            <div>
-                <h3>${item.title}</h3>
-                <p>${item.content}</p>
-                ${imagesHTML}
-            </div>
-            <button class="btn_delete_announcement">Delete</button>
-        `;
-
-        // Para hindi mag-trigger ang View Overlay kapag 'Delete' ang pino-point/pindot
-        const deleteBtn = card.querySelector(".btn_delete_announcement");
-        deleteBtn.addEventListener("click", (e) => {
-            e.stopPropagation(); 
-            handleDeleteAnnouncement(item.id);
-        });
-
-        listContainer.appendChild(card);
-    });
+async function start() {
+    if (starting) return;
+    starting = true;
+    open.disabled = true;
+    try {
+        const { auth } = await getServices();
+        if (!await hasRole(auth.currentUser, 'Admin')) throw new Error('Admin access is required.');
+        open.disabled = false; stop?.();
+        stop = await watchAnnouncements((items, metadata) => {
+            render(items);
+            feedback.textContent = metadata.fromCache ? 'Connecting… displayed announcements may be out of date.' : '';
+        }, error => feedback.textContent = announcementError(error));
+    } catch (error) { feedback.textContent = announcementError(error); }
+    finally { starting = false; }
 }
-
-// Function para Buksan at Ipakita ang Detalye ng Announcement sa Overlay
-function openViewModal(item) {
-    const viewModal = document.getElementById("viewAnnouncementModal");
-    const viewTitle = document.getElementById("viewTitle");
-    const viewContent = document.getElementById("viewContent");
-    const viewImagesContainer = document.getElementById("viewImagesContainer");
-
-    viewTitle.innerText = item.title;
-    viewContent.innerText = item.content;
-
-    // Render ng malalaking images kung mayroon
-    if (item.images && item.images.length > 0) {
-        viewImagesContainer.innerHTML = item.images
-            .map(img => `<img src="${img}" class="view_full_img" />`)
-            .join('');
-    } else {
-        viewImagesContainer.innerHTML = '';
-    }
-
-    viewModal.classList.add("active");
-}
-
-async function handleDeleteAnnouncement(id) {
-    if (confirm("Are you sure you want to delete this announcement?")) {
-        await announcementDB.deleteAnnouncement(id);
-        renderAnnouncements();
-    }
-}
-
-function renderPreviews() {
-    const previewsContainer = document.getElementById("photoPreviews");
-    previewsContainer.innerHTML = "";
-
-    selectedImages.forEach((imgUrl, index) => {
-        const itemWrapper = document.createElement("div");
-        itemWrapper.className = "preview_item";
-
-        itemWrapper.innerHTML = `
-            <img src="${imgUrl}" class="photo_placeholder" />
-            <button type="button" class="btn_remove_img" onclick="removeSelectedImage(${index})">&times;</button>
-        `;
-
-        previewsContainer.appendChild(itemWrapper);
-    });
-}
-
-window.removeSelectedImage = function(index) {
-    selectedImages.splice(index, 1);
-    renderPreviews();
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    // Create Modal Elements
-    const createModal = document.getElementById("announcementModal");
-    const openBtn = document.getElementById("openModalBtn");
-    const postBtn = document.getElementById("postAnnouncementBtn");
-    const titleInput = document.getElementById("announcementTitle");
-    const contentInput = document.getElementById("announcementContent");
-    const cameraInput = document.getElementById("imageUploadCamera");
-    const fileInput = document.getElementById("imageUploadFile");
-
-    // View Modal Elements
-    const viewModal = document.getElementById("viewAnnouncementModal");
-    const closeViewBtn = document.getElementById("closeViewModalBtn");
-
-    // Controls para sa Create Modal
-    openBtn.addEventListener("click", () => createModal.classList.add("active"));
-    createModal.addEventListener("click", (e) => {
-        if (e.target === createModal) createModal.classList.remove("active");
-    });
-
-    // Controls para sa View Overlay Modal
-    closeViewBtn.addEventListener("click", () => viewModal.classList.remove("active"));
-    viewModal.addEventListener("click", (e) => {
-        if (e.target === viewModal) viewModal.classList.remove("active");
-    });
-
-    // Upload Files Handling
-    const handleFiles = (files) => {
-        Array.from(files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                selectedImages.push(event.target.result);
-                renderPreviews();
-            };
-            reader.readAsDataURL(file);
-        });
-    };
-
-    cameraInput.addEventListener("change", (e) => handleFiles(e.target.files));
-    fileInput.addEventListener("change", (e) => handleFiles(e.target.files));
-
-    // Post Announcement Event
-    postBtn.addEventListener("click", async () => {
-        const title = titleInput.value.trim();
-        const content = contentInput.value.trim();
-
-        if (!title || !content) {
-            alert("Please fill in both title and content.");
-            return;
-        }
-
-        await announcementDB.createAnnouncement(title, content, selectedImages);
-
-        titleInput.value = "";
-        contentInput.value = "";
-        cameraInput.value = "";
-        fileInput.value = "";
-        selectedImages = [];
-        renderPreviews();
-        createModal.classList.remove("active");
-
-        renderAnnouncements();
-    });
-
-    renderAnnouncements();
-});
+document.getElementById('announcementRetry').onclick = start;
+await start();
