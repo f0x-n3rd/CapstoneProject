@@ -7,7 +7,7 @@
     <title>Analytics</title>
     <link rel="stylesheet" href="style_admin.css">
 </head>
-<body>
+<body data-report-page>
 
     <header class="dashboard_header">    
         <div class="header_logo_placeholder">Logo</div>
@@ -55,55 +55,24 @@
         <div class="analytics_container">
             
             <div class="analytics_top_bar">
-             <h2>Analytics</h2>
-             <button class="btn_export" onclick="exportAnalyticsReport()">Export PDF</button>
+                <h2>Analytics</h2><button id="exportAnalytics" class="btn_export" disabled>Export PDF</button>
             </div>
-
-            <div class="analytics_header_filter">
-                <h3>Reports Categories</h3>
-                <select id="categoryFilter" class="category_dropdown" onchange="filterAnalyticsByCategory()">
-                    <option value="All">Select Category (All)</option>
-                    <option value="Infrastructures">Infrastructures</option>
-                    <option value="Waste Management">Waste Management</option>
-                    <option value="Road Hazard">Road Hazard</option>
-                    <option value="Drainage and Flooding">Drainage and Flooding</option>
-                    <option value="Public Facilities">Public Facilities</option>
-                </select>
+            <div class="analytics_filters">
+                <label>From <input id="dateFrom" type="date"></label>
+                <label>Through <input id="dateTo" type="date"></label>
+                <label>Barangay <select id="barangayFilter"><option value="">All barangays</option></select></label>
+                <label>Category <select id="categoryFilter"><option value="">All categories</option></select></label>
+                <button id="resetFilters">Reset filters</button>
             </div>
-
-            <!-- Upper Grid: Category Chart + Summary Cards -->
-            <div class="analytics_top_grid">
-                <div class="chart_card category_chart_box">
-                    <canvas id="categoryChart"></canvas>
-                </div>
-
-                <!-- Kasama na ang Ongoing Stat Card -->
-                <div class="stat_cards_group">
-                    <div class="stat_card">
-                        <span class="stat_label">Received</span>
-                        <h2 id="countReceived">0</h2>
-                    </div>
-                    <div class="stat_card">
-                        <span class="stat_label">Ongoing</span>
-                        <h2 id="countOngoing">0</h2>
-                    </div>
-                    <div class="stat_card">
-                        <span class="stat_label">Resolved</span>
-                        <h2 id="countResolved">0</h2>
-                    </div>
-                    <div class="stat_card">
-                        <span class="stat_label">Total</span>
-                        <h2 id="countTotal">0</h2>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lower Grid: 25 Barangays Chart -->
-            <div class="chart_card barangay_chart_box">
-                <h3>Reports by Barangay</h3>
-                <div class="canvas_scroll_wrapper">
-                    <canvas id="barangayChart"></canvas>
-                </div>
+            <p id="analyticsFeedback" role="status">Loading analytics…</p>
+            <button id="retryAnalytics" hidden>Retry loading</button>
+            <div id="analyticsResults" hidden>
+                <p id="analyticsScope"></p>
+                <p>Dates use Philippine time. Status counts show current statuses, not historical status changes. Counts represent submitted reports.</p>
+                <div id="analyticsCounts" class="analytics_counts"></div>
+                <section class="chart_card"><h3>Reports by category</h3><div class="analytics_plot"><canvas id="categoryChart" aria-label="Reports by category" role="img"></canvas></div></section>
+                <section class="chart_card"><h3>Reports by barangay</h3><div class="analytics_plot analytics_barangays"><canvas id="barangayChart" aria-label="Reports by barangay" role="img"></canvas></div></section>
+                <section class="chart_card"><h3>Report submissions over time</h3><p id="timelineNote"></p><div class="analytics_plot"><canvas id="timelineChart" aria-label="Report submissions over time" role="img"></canvas></div></section>
             </div>
 
         </div>
@@ -111,8 +80,7 @@
 
     <!-- External Script Reference -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js_dashboardTable/reports_table.js"></script>
-    <script src="js_dashboardTable/analytics.js"></script>
+    <script type="module" src="js_dashboardTable/analytics.js"></script>
     <script type="module" src="admin_login/login_as_admin.js"></script>
 </body>
 </html>

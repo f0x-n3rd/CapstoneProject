@@ -6,6 +6,8 @@
         <title>Municipal Gov - Home</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
+        <link rel="manifest" href="manifest.webmanifest">
+        <meta name="theme-color" content="#1f3d5b">
     </head>
     <body>
         <style>.app_container[hidden], #sessionStatus[hidden] { display: none !important; }</style>
@@ -43,26 +45,7 @@
                 <!-- Reports Section - mga recent reports ng user-->
                 <section class="reports_section">
                     <h3 class="section_heading_r">Reports</h3>
-                    <div class="card">
-                        <div class="text_alignment">
-                            <p class="title_reports">Clog Drainage</p>
-                            <p class="details">Good day. I would like to report a clogged drainage along Rizal Street, Barangay Poblacion, Odiongan. The drainage is blocked by leaves, plastic bottles, and other waste, causing water to accumulate whenever it rains. The standing water has become a concern for nearby residents and motorists, as it may lead to flooding if left unattended.
-
-I kindly request the concerned municipal office to inspect the area and clear the drainage as soon as possible. Thank you for your prompt attention to this matter.
-                            </p>
-                            <p class="date_reports">August 20, 2026</p>
-                        </div>
-
-                        <div class="snap_scroll">
-                            <div>
-                               <img src="assets/sample_img/images.jpg" alt="report image" class="card_post">
-                            </div>
-                             <div>
-                               <img src="assets/sample_img/images.jpg" alt="report image" class="card_post">
-                            </div>
-                            
-                        </div>
-                    </div>
+                    <a href="tracking_reports.html" class="btn_text">View your submitted reports or create a new report</a>
                 </section>
             </main>
 
@@ -106,11 +89,7 @@ I kindly request the concerned municipal office to inspect the area and clear th
             </nav>
         </div>
         <script type="module" src="announcements.js"></script>
-        <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-        </script>
+        <script src="offline.js" defer></script>
         
     <script type="module" src="../firebase/resident-session.js"></script>
 </body>

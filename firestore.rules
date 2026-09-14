@@ -46,7 +46,52 @@ service cloud.firestore {
               'https://lpcmwrdizcistkxylsps.supabase.co/storage/v1/object/public/announcement-images/' + announcementId + '/image'));
       allow delete: if admin();
     }
-    // Reports remain denied until their private data flow is implemented.
+    // Private resident reports with optional confirmed map pins and admin processing.
+    match /reports/{reportId} {
+      function validText(value, limit) {
+        return value is string && value.size() <= limit
+          && value.matches('[\\s\\S]*\\S[\\s\\S]*');
+      }
+      allow read: if (signedIn() && resource.data.submitterID == request.auth.uid) || admin();
+      allow create: if signedIn()
+        && request.auth.token.firebase.sign_in_provider == 'password'
+        && get(/databases/$(database)/documents/residents/$(request.auth.uid)).data.role == 'Resident'
+        && request.resource.data.keys().hasAll([
+          'submitterID', 'issueCategory', 'barangayArea', 'locationDescription',
+          'issueDescription', 'timestamp', 'updatedAt', 'reportStatus'])
+        && request.resource.data.keys().hasOnly([
+          'submitterID', 'issueCategory', 'barangayArea', 'locationDescription',
+          'issueDescription', 'timestamp', 'updatedAt', 'reportStatus', 'geoLocation', 'supportingImageURL'])
+        && request.resource.data.submitterID == request.auth.uid
+        && request.resource.data.reportStatus == 'Received'
+        && request.resource.data.timestamp == request.time
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.issueCategory in [
+          'Road and public infrastructure damage', 'Malfunctioning public streetlights',
+          'Clogged or damaged drainage systems', 'Improper waste disposal',
+          'Minor flooding caused by blocked waterways', 'Deterioration of municipal public facilities']
+        && request.resource.data.barangayArea in [
+          'Amatong', 'Anahao', 'Bangon', 'Batiano', 'Budiong', 'Canduyong', 'Dapawan',
+          'Gabawan', 'Libertad', 'Ligaya', 'Liwanag', 'Liwayway', 'Malilico', 'Mayha',
+          'Panique', 'Pato-o', 'Poctoy', 'Progreso Este', 'Progreso Weste', 'Rizal',
+          'Tabing Dagat', 'Tabobo-an', 'Tuburan', 'Tumingad', 'Tulay']
+        && validText(request.resource.data.locationDescription, 500)
+        && validText(request.resource.data.issueDescription, 5000)
+        && (!('geoLocation' in request.resource.data) || request.resource.data.geoLocation is latlng)
+        && (!('supportingImageURL' in request.resource.data)
+          || request.resource.data.supportingImageURL == request.auth.uid + '/' + reportId + '/image');
+      allow update: if admin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'reportStatus', 'priorityLevel', 'routingLevel', 'referredTo', 'updatedAt'])
+        && request.resource.data.reportStatus in [
+          'Received', 'For Verification', 'Referred', 'Ongoing', 'Resolved', 'Not Within LGU Jurisdiction']
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.get('priorityLevel', null) in [null, 'High', 'Medium', 'Low']
+        && request.resource.data.get('routingLevel', null) in [null, 'Barangay', 'Municipal', 'External']
+        && (request.resource.data.get('referredTo', null) == null
+          || validText(request.resource.data.referredTo, 200));
+      allow delete: if false;
+    }
     match /{document=**} {
       allow read, write: if false;
     }

@@ -30,7 +30,7 @@ if (isLoginPage) {
         } catch (error) { feedback.textContent = authMessage(error); }
         finally { button.disabled = false; }
     });
-} else {
+} else if (!document.body.hasAttribute("data-report-page")) {
     try {
         const { auth } = await getServices();
         if (!await hasRole(auth.currentUser, "Admin")) window.location.replace("admin_login/admin.html");

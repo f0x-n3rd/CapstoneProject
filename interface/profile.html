@@ -6,6 +6,8 @@
         <title>Municipal Gov - Profile</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
+        <link rel="manifest" href="manifest.webmanifest">
+        <meta name="theme-color" content="#1f3d5b">
     </head>
     <body>
         <style>.app_container[hidden], #sessionStatus[hidden] { display: none !important; }</style>
@@ -87,11 +89,7 @@
                 </a>
             </nav>
         </div>
-        <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-    </script>
+        <script src="offline.js" defer></script>
     <script type="module" src="../firebase/resident-session.js"></script>
 </body>
 </html>

@@ -1441,6 +1441,10 @@ body {
   background-color: #22c55e; /* Green */
 }
 
+.badge_ongoing {
+  background-color: #2563eb;
+}
+
 .badge_not_lgu {
   background-color: #ef4444; /* Red */
 }
@@ -1620,3 +1624,6 @@ body {
   justify-content: flex-end;
   margin-top: 16px;
 }
+
+.offline_notice { flex-shrink: 0; padding: 10px 14px; background: #fff1c2; color: #493800; font-size: .85rem; line-height: 1.4; }
+.offline_notice[hidden] { display: none !important; }

@@ -1,3 +1,4 @@
+import { readOffline, saveOffline, removeOffline } from './offline-cache.mjs';
 import { getServices } from "./client.js";
 import { getRoleProfile, logout, authMessage } from "./auth.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
@@ -28,9 +29,26 @@ function clearProfile() {
     hasProfile = false;
 }
 
+function showProfile(profile) {
+    for (const field of ["fullName", "emailAddress", "homeBarangay"]) {
+        card.querySelector(`[data-fb-field="${field}"]`).textContent = profile[field] || "Not provided";
+    }
+    const words = (profile.fullName || "").trim().split(/\s+/).filter(Boolean);
+    const initials = words.length > 1 ? [words[0], words[words.length - 1]] : words;
+    card.querySelector(".profile_avatar").textContent = initials.map(word => Array.from(word)[0]).join("").toUpperCase() || "?";
+    hasProfile = true;
+}
+
 async function loadProfile() {
     if (!card || !auth?.currentUser || loadingProfile) return;
     const user = auth.currentUser;
+    const saved = readOffline(user.uid, 'profile');
+    if (saved) showProfile(saved);
+    if (!navigator.onLine) {
+        profileMessage.textContent = saved ? "Showing saved profile information. Reconnect to refresh." : "No profile saved in this session. Connect to load it.";
+        profileStatus.hidden = false;
+        return;
+    }
     const request = ++profileRequest;
     loadingProfile = true;
     profileRetry.disabled = true;
@@ -41,24 +59,20 @@ async function loadProfile() {
         // Ignore a response for an account that has since signed out or changed.
         if (request !== profileRequest || auth.currentUser?.uid !== user.uid) return;
         if (!profile) {
+            removeOffline(user.uid, "profile");
             clearProfile();
             profileMessage.textContent = "Your resident profile is unavailable. Retry or contact the project administrator.";
             profileStatus.hidden = false;
             return;
         }
-        for (const field of ["fullName", "emailAddress", "homeBarangay"]) {
-            card.querySelector(`[data-fb-field="${field}"]`).textContent = profile[field] || "Not provided";
-        }
-        const words = (profile.fullName || "").trim().split(/\s+/).filter(Boolean);
-        const initials = words.length > 1 ? [words[0], words[words.length - 1]] : words;
-        card.querySelector(".profile_avatar").textContent =
-            initials.map(word => Array.from(word)[0]).join("").toUpperCase() || "?";
-        hasProfile = true;
+        showProfile(profile);
+        saveOffline(user.uid, 'profile', Object.fromEntries(['fullName', 'emailAddress', 'homeBarangay'].map(field => [field, profile[field] || ''])));
         profileStatus.hidden = true;
     } catch (error) {
         if (request !== profileRequest || auth.currentUser?.uid !== user.uid) return;
         console.error("Resident profile loading failed:", error.code || error.name);
         const denied = ["permission-denied", "unauthenticated"].includes(error.code);
+        if (denied) removeOffline(user.uid, "profile");
         if (denied || !hasProfile) clearProfile();
         profileMessage.textContent = denied
             ? "Unable to access your profile. Retry or contact the project administrator."
@@ -83,7 +97,7 @@ function handleSession(user) {
     activeUid = user?.uid || null;
     if (!user || user.isAnonymous) {
         container.hidden = true;
-        window.location.replace("../index.html");
+        window.location.replace(navigator.onLine ? "../index.html" : "signed-out.html");
         return;
     }
     // Authentication restores the session without a Firestore profile lookup.
@@ -128,7 +142,7 @@ if (button) {
         try {
             await logout();
             container.hidden = true;
-            window.location.replace("../index.html");
+            window.location.replace(navigator.onLine ? "../index.html" : "signed-out.html");
         } catch (error) {
             message.textContent = authMessage(error);
             status.hidden = false;

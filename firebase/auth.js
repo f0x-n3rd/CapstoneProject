@@ -1,3 +1,4 @@
+import { clearOfflinePrivate } from './offline-cache.mjs';
 import { getServices } from "./client.js";
 import { signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
@@ -24,6 +25,7 @@ export async function login(email, password, role) {
 export async function logout() {
   const { auth } = await getServices();
   await signOut(auth);
+  clearOfflinePrivate();
 }
 export function authMessage(error) {
   if (error.code === "auth/email-already-in-use") return "This email is already registered. Sign in instead.";

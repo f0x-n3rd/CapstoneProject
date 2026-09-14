@@ -1,3 +1,4 @@
+import { readOffline, saveOffline } from './offline-cache.mjs';
 import { getServices } from './client.js';
 import { hasRole } from './auth.js';
 import { collection, doc, setDoc, deleteDoc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js';
@@ -11,9 +12,15 @@ export function validateAnnouncement(title, content, file) {
     }
 }
 export async function watchAnnouncements(onData, onError) {
-    const { db } = await getServices();
+    const { db, auth } = await getServices();
+    const uid = auth.currentUser?.uid;
+    let saved = readOffline(uid, 'announcements');
+    if (saved) onData(saved, { fromCache: true });
     return onSnapshot(query(collection(db, 'announcements'), orderBy('datePosted', 'desc')), { includeMetadataChanges: true }, snapshot => {
-        onData(snapshot.docs.map(item => ({ ...item.data(), id: item.id })), snapshot.metadata);
+        const items = snapshot.docs.map(item => ({ ...item.data(), id: item.id }));
+        if (!snapshot.metadata.fromCache && !snapshot.metadata.hasPendingWrites) { saved = items; saveOffline(uid, 'announcements', items); }
+        if (snapshot.metadata.fromCache && saved) return;
+        onData(items, snapshot.metadata);
     }, onError);
 }
 async function adminServices() {

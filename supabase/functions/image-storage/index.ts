@@ -6,7 +6,7 @@ const ID_PATTERN = /^[A-Za-z0-9_-]{1,128}$/;
 const CORS = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'authorization, apikey, content-type',
-    'Access-Control-Allow-Methods': 'POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
     'Cache-Control': 'no-store',
 };
 class RequestError extends Error {
@@ -50,7 +50,7 @@ export function createImageHandler(config, fetcher = fetch) {
         try { return await fetcher(url, { ...options, signal: AbortSignal.timeout(15000) }); }
         catch { throw new RequestError(503, 'An image service could not be reached. Please retry.'); }
     }
-    async function requireAdmin(token) {
+    async function requireUser(token) {
         const identity = await remote(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(config.firebaseApiKey)}`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken: token }),
         });
@@ -60,8 +60,12 @@ export function createImageHandler(config, fetcher = fetch) {
         }
         const user = (await identity.json()).users?.[0];
         if (!user?.localId || user.disabled || !user.providerUserInfo?.some(provider => provider.providerId === 'password')) {
-            throw new RequestError(403, 'An enabled email/password admin account is required.');
+            throw new RequestError(403, 'An enabled email/password account is required.');
         }
+        return user;
+    }
+    async function requireAdmin(token) {
+        const user = await requireUser(token);
         const profile = await remote(`https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/databases/(default)/documents/admins/${encodeURIComponent(user.localId)}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -70,19 +74,63 @@ export function createImageHandler(config, fetcher = fetch) {
         if (!profile.ok) throw new RequestError(503, 'Admin access could not be checked. Please retry.');
         if ((await profile.json()).fields?.role?.stringValue !== 'Admin') throw new RequestError(403, 'Admin access is required to manage announcement images.');
     }
+    async function reportImage(request, token, id) {
+        if (!['GET', 'POST'].includes(request.method)) throw new RequestError(405, 'Report photos cannot be deleted or replaced.');
+        const user = await requireUser(token);
+        // Firebase applies the live report owner/admin read rule to this request.
+        const base = `https://firestore.googleapis.com/v1/projects/${config.firebaseProjectId}/databases/(default)/documents`;
+        const report = await remote(`${base}/reports/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+        if (report.status === 401 || report.status === 403 || report.status === 404) throw new RequestError(403, 'Report photo access was denied.');
+        if (!report.ok) throw new RequestError(503, 'Report access could not be checked. Please retry.');
+        const fields = (await report.json()).fields;
+        const owner = fields?.submitterID?.stringValue;
+        if (!owner || !ID_PATTERN.test(owner)) throw new RequestError(403, 'Invalid report owner.');
+        const path = `${owner}/${id}/image`;
+        if (fields?.supportingImageURL?.stringValue !== path) throw new RequestError(404, 'This report has no photo attachment.');
+        const headers = { Authorization: `Bearer ${config.serviceRoleKey}`, apikey: config.serviceRoleKey };
+        if (request.method === 'POST') {
+            if (owner !== user.localId) throw new RequestError(403, 'Only the report owner can upload its photo.');
+            const profile = await remote(`${base}/residents/${encodeURIComponent(user.localId)}`, { headers: { Authorization: `Bearer ${token}` } });
+            if (profile.status === 401 || profile.status === 403 || profile.status === 404) throw new RequestError(403, 'A resident account is required.');
+            if (!profile.ok) throw new RequestError(503, 'Resident access could not be checked.');
+            if ((await profile.json()).fields?.role?.stringValue !== 'Resident') throw new RequestError(403, 'A resident account is required.');
+            const { bytes, contentType } = await readImage(request);
+            const result = await remote(`${config.supabaseUrl}/storage/v1/object/report-images/${path}`, {
+                method: 'POST', headers: { ...headers, 'Content-Type': contentType, 'x-upsert': 'false' }, body: bytes,
+            });
+            if (!result.ok) throw new RequestError(502, 'Photo upload was not confirmed. Reload the photo before retrying; existing photos cannot be replaced.');
+            return reply(200, { ok: true });
+        }
+        const result = await remote(`${config.supabaseUrl}/storage/v1/object/authenticated/report-images/${path}`, { headers });
+        // Supabase may return 400 for a missing object, so classify its error code too.
+        if (!result.ok) {
+            const body = await result.json().catch(() => ({}));
+            if (result.status === 404 || body.code === 'NoSuchKey' || body.error === 'not_found') {
+                throw new RequestError(404, 'The report photo has not uploaded yet.');
+            }
+            throw new RequestError(503, 'The report photo could not load. Please retry.');
+        }
+        const { bytes, contentType } = await readImage(result);
+        return new Response(bytes, { headers: { ...CORS, 'Content-Type': contentType, 'X-Content-Type-Options': 'nosniff' } });
+    }
     return async request => {
         if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
         try {
-            if (!['POST', 'DELETE'].includes(request.method)) throw new RequestError(405, 'Method not allowed.');
+            if (!['GET', 'POST', 'DELETE'].includes(request.method)) throw new RequestError(405, 'Method not allowed.');
             if (!config.supabaseUrl || !config.serviceRoleKey || !config.firebaseApiKey || !config.firebaseProjectId) {
                 throw new RequestError(503, 'Image storage server configuration is incomplete.');
             }
             const url = new URL(request.url);
             const id = url.searchParams.get('id');
-            // The client cannot select another bucket, path, or operation.
-            if (!id || !ID_PATTERN.test(id) || [...url.searchParams.keys()].some(key => key !== 'id')) throw new RequestError(400, 'Invalid announcement request.');
+            const kind = url.searchParams.get('kind');
+            // Only the explicit report route is added; arbitrary bucket/path selection is forbidden.
+            if (!id || !ID_PATTERN.test(id) || (kind !== null && kind !== 'report')
+                || url.searchParams.getAll('id').length !== 1 || url.searchParams.getAll('kind').length > 1
+                || [...url.searchParams.keys()].some(key => !['id', 'kind'].includes(key))) throw new RequestError(400, 'Invalid image request.');
             const match = /^Bearer (\S+)$/i.exec(request.headers.get('authorization') || '');
             if (!match || match[1].length > 16384) throw new RequestError(401, 'A Firebase sign-in is required.');
+            if (kind === 'report') return await reportImage(request, match[1], id);
+            if (request.method === 'GET') throw new RequestError(405, 'Method not allowed.');
             await requireAdmin(match[1]);
             const headers = { Authorization: `Bearer ${config.serviceRoleKey}`, apikey: config.serviceRoleKey };
             const path = `${id}/image`;

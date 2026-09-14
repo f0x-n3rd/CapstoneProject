@@ -39,7 +39,7 @@ async function start() {
         stop = await watchAnnouncements((items, metadata) => {
             render(items);
             feedback.textContent = metadata.fromCache
-                ? (items.length ? 'Showing previously loaded announcements. Waiting for a connection.' : 'Connecting to announcements…')
+                ? (items.length ? 'Showing previously loaded announcements. Waiting for a connection.' : (navigator.onLine ? 'Connecting to announcements…' : 'No announcements saved in this session. Connect to load them.'))
                 : (items.length ? '' : 'No announcements have been published yet.');
             retry.hidden = !metadata.fromCache;
         }, error => { feedback.textContent = announcementError(error); retry.hidden = false; });

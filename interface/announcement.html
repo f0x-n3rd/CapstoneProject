@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
+        <link rel="manifest" href="manifest.webmanifest">
+        <meta name="theme-color" content="#1f3d5b">
     </head>
     <body>
         <div class="app_container">
@@ -73,11 +75,6 @@
        <!-- Swiper JS CDN -->
 <!-- Swiper JS CDN -->
 <script type="module" src="announcements.js"></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js');
-  }
-
-</script>
+<script src="offline.js" defer></script>
     </body>
 </html>

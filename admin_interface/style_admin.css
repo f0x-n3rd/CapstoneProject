@@ -1196,3 +1196,19 @@ font-size: 1.1rem;
 .pin{
   width: 20px;
 }
+/* Report processing controls use the existing modal layout. */
+#reportEditor[hidden] { display: none !important; }
+#processingForm label { display: block; margin: 12px 0; }
+#processingForm select, #processingForm input { display: block; width: 100%; padding: 8px; box-sizing: border-box; }
+#editorDetails p, .report_card p { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Functional analytics layout; scoped to avoid changing other admin pages. */
+.analytics_filters { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.analytics_filters label { display: flex; flex-direction: column; gap: 4px; max-width: 100%; }
+.analytics_filters select { max-width: 360px; width: 100%; }
+.analytics_counts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin: 16px 0; }
+.analytics_counts .stat_card { width: auto; min-height: 100px; height: auto; }
+#analyticsResults .chart_card { margin: 16px 0; }
+.analytics_plot { position: relative; height: 340px; }
+.analytics_barangays { height: 720px; }
+.analytics_container button:disabled { opacity: .55; cursor: default; }
