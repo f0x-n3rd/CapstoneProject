@@ -97,7 +97,7 @@ function handleSession(user) {
     activeUid = user?.uid || null;
     if (!user || user.isAnonymous) {
         container.hidden = true;
-        window.location.replace(navigator.onLine ? "../index.html" : "signed-out.html");
+        window.location.replace("signed-out.html");
         return;
     }
     // Authentication restores the session without a Firestore profile lookup.
@@ -142,7 +142,7 @@ if (button) {
         try {
             await logout();
             container.hidden = true;
-            window.location.replace(navigator.onLine ? "../index.html" : "signed-out.html");
+            window.location.replace("signed-out.html");
         } catch (error) {
             message.textContent = authMessage(error);
             status.hidden = false;

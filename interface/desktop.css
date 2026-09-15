@@ -1,5 +1,5 @@
 /* screen for desktop and larger devices */
-@media (min-width: 780px) and (max-width: 1440px) {
+@media (min-width: 780px) {
   html, body {
     background-color: #cbd5e1;
     height: 100%;

@@ -35,5 +35,12 @@ if ('serviceWorker' in navigator) {
     }).catch(() => { failed = true; update(); });
 } else { failed = true; update(); }
 
-// Reload restored history pages so old account DOM cannot bypass current session checks.
-window.addEventListener('pageshow', event => { if (event.persisted) window.location.reload(); });
+// Conceal the document before it enters back/forward history. A restored page
+// stays concealed until a fresh load checks the current Firebase session.
+window.addEventListener('pagehide', () => { document.documentElement.style.visibility = 'hidden'; });
+window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+        document.documentElement.style.visibility = 'hidden';
+        window.location.reload();
+    }
+});

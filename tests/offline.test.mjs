@@ -91,3 +91,17 @@ test('all precached local files exist and include local module dependencies and 
     const manifest = JSON.parse(await readFile(new URL('../interface/manifest.webmanifest', import.meta.url), 'utf8'));
     for (const icon of manifest.icons) assert.ok(h.entries.has(new URL(icon.src, 'https://example.test/project/interface/').href));
 });
+test('history snapshots are hidden before leaving and remain hidden during restored-session reload', async () => {
+    const events = {}, root = { style: {} }; let reloads = 0;
+    const context = vm.createContext({
+        document: { documentElement: root, createElement: () => ({ setAttribute() {} }), querySelector: () => ({ prepend() {} }) },
+        navigator: { onLine: true },
+        window: { addEventListener: (name, handler) => events[name] = handler, location: { reload: () => reloads++ } }
+    });
+    vm.runInContext(await readFile(new URL('../interface/offline.js', import.meta.url), 'utf8'), context);
+    events.pageshow({ persisted: false });
+    assert.equal(root.style.visibility, undefined); assert.equal(reloads, 0);
+    events.pagehide(); assert.equal(root.style.visibility, 'hidden');
+    events.pageshow({ persisted: true });
+    assert.equal(root.style.visibility, 'hidden'); assert.equal(reloads, 1);
+});
