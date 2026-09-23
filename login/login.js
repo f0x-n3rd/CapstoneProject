@@ -1,9 +1,4 @@
-
-// Temporary development-only account. Replace with Firebase Authentication.
-const DEVELOPMENT_ACCOUNT = {
-    email: "resident@test.local",
-    password: "Test1234!",
-};
+import { login, authMessage } from "../firebase/auth.js";
 
 const togglePassword = document.getElementById("togglePassword");
 const password = document.getElementById("password");
@@ -22,24 +17,18 @@ togglePassword.addEventListener("click", () => {
     }
 });
 
-loginForm.addEventListener("submit", (event) => {
+loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     loginFeedback.hidden = true;
-
-    const enteredEmail = email.value.trim().toLowerCase();
-    const enteredPassword = password.value;
-
-    if (
-        enteredEmail === DEVELOPMENT_ACCOUNT.email &&
-        enteredPassword === DEVELOPMENT_ACCOUNT.password
-    ) {
-        sessionStorage.setItem("dev-resident-session", "true");
+    const button = loginForm.querySelector('[type="submit"]');
+    button.disabled = true;
+    try {
+        await login(email.value, password.value, "Resident");
         window.location.href = "interface/home.html";
-        return;
+    } catch (error) {
+        loginFeedback.textContent = authMessage(error);
+        loginFeedback.hidden = false;
+    } finally {
+        button.disabled = false;
     }
-
-    loginFeedback.textContent = "Incorrect email or password. Use the development test account provided by the team.";
-    loginFeedback.hidden = false;
-    password.value = "";
-    password.focus();
 });

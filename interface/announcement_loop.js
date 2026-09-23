@@ -1,8 +1,8 @@
 
-document.addEventListener("DOMContentLoaded", function () {
+export function initializeAnnouncementSlider() {
     const slider = document.querySelector(".card_slider");
-    const cards = document.querySelectorAll(".empty_card");
-    if (!slider || cards.length === 0) {
+    let cards = slider ? slider.querySelectorAll(".empty_card") : [];
+    if (!slider) {
         return;
     }
     let currentIndex = 0;
@@ -211,4 +211,8 @@ document.addEventListener("mouseup", function () {
     startAutoSlide();
     allowFutureClicks();
 });
-});
+    slider.addEventListener("announcements-updated", () => {
+        cards = slider.querySelectorAll(".empty_card");
+        moveSlider(0, false);
+    });
+}

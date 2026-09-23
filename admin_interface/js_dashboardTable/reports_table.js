@@ -1,355 +1,214 @@
-// Global memory store for reports
-let currentReportsList = [];
+import { createReportPhotoViewer } from '../../interface/report-photo.js';
+import { watchAdminReports, updateAdminReport } from '../../firebase/admin-reports.js';
+import { REPORT_STATUSES, REPORT_PRIORITIES, REPORT_ROUTING, reportDate, googleMapsLink } from '../../firebase/report-model.mjs';
 
-// Mock Data na may eksaktong Coordinates ng bawat Barangay sa Odiongan, Romblon
-const reportsData = [
-  {
-    reportID: "REP-001",
-    fullName: "Juan Dela Cruz",
-    issueCategory: "Infrastructures",
-    barangayArea: "Brgy. Dapawan, Purok 3",
-    issueDescription: "A large pothole has developed along the roadside. The damaged portion of the road is becoming difficult to pass, especially for motorcycles and small vehicles. Residents are requesting immediate road inspection and repair before the damage becomes worse.",
-    timestamp: "April 14, 2026 - 08:10 AM",
-    reportStatus: "Ongoing",
-    supportingImage: [],
-    latitude: 12.4018,
-    longitude: 121.9920
-  },
-  {
-    reportID: "REP-002",
-    fullName: "Andres Bonifacio",
-    issueCategory: "Waste Management",
-    barangayArea: "Brgy. Mayha, Purok 2, Front of Chapel",
-    issueDescription: "May malaking tumatagas na tubo ng tubig sa harap ng Purok 2, umaapaw na ang tubig sa kalsada.",
-    timestamp: "April 15, 2026 - 01:20 PM",
-    reportStatus: "Received",
-    supportingImage: [],
-    latitude: 12.3740,
-    longitude: 121.9931
-  },
-  {
-    reportID: "REP-003",
-    fullName: "Emilio Aguinaldo",
-    issueCategory: "Road Hazard",
-    barangayArea: "Brgy. Batiano, Zone 5, Highway Boundary",
-    issueDescription: "May mga nakatambak na construction materials sa gitna ng daanan na humaharang sa mga sasakyan.",
-    timestamp: "April 18, 2026 - 10:45 AM",
-    reportStatus: "Ongoing",
-    supportingImage: [],
-    latitude: 12.4200,
-    longitude: 121.9975
-  },
-  {
-    reportID: "REP-004",
-    fullName: "Maria Clara",
-    issueCategory: "Drainage and Flooding",
-    barangayArea: "Brgy. Tulay, Public Market",
-    issueDescription: "The main drainage canal near the public market is heavily clogged with silt, plastics, and debris, causing water to overflow during heavy rainfall. Maintenance personnel are currently on-site clearing the drainage system to restore proper water flow.",
-    timestamp: "April 18, 2026 - 10:45 AM",
-    reportStatus: "Ongoing",
-    supportingImage: [],
-    latitude: 12.3891,
-    longitude: 121.9854
-  }
-];
-
-// Helper function para makuha ang angkop na class color
-function getStatusClass(status) {
-  const statusLower = (status || '').toLowerCase();
-  if (statusLower === 'received') return 'card-status-received';
-  if (statusLower === 'ongoing') return 'card-status-ongoing';
-  if (statusLower === 'resolved') return 'card-status-resolved';
-  return '';
+function adminNotice(node, text, tone = 'pending') {
+    node.className = 'admin_notice notice-' + tone;
+    node.textContent = text;
 }
 
-// Function na nagpapalit ng kulay ng dropdown kapag pinalitan ng user
-function handleStatusColorChange(selectElement) {
-  selectElement.classList.remove('card-status-received', 'card-status-ongoing', 'card-status-resolved');
-  const newClass = getStatusClass(selectElement.value);
-  selectElement.classList.add(newClass);
+
+const byId = id => document.getElementById(id);
+const photoViewer = createReportPhotoViewer(byId('editorPhoto'));
+const table = byId('reportsTableBody'), cards = byId('reportsListContainer');
+const previews = new Map();
+function clearPreviews() {
+    for (const entry of previews.values()) entry.viewer.dispose();
+    previews.clear();
 }
+const message = byId('reportsFeedback'), retry = byId('reportsRetry');
+const modal = byId('reportEditor'), form = byId('processingForm'), feedback = byId('processingFeedback');
+let reports = [], selected = null, expectedVersion = null, dirty = false, saving = false;
+let uid = null, epoch = 0, stop, starting = false, allowed = false;
 
-// Helper function para mag-format ng bagong timestamp kapag nag-update ng status ang admin
-function getFormattedTimestamp() {
-  const now = new Date();
-  const options = { 
-    month: 'long', 
-    day: 'numeric', 
-    year: 'numeric', 
-    hour: '2-digit', 
-    minute: '2-digit', 
-    hour12: true 
-  };
-  return now.toLocaleString('en-US', options).replace(' at', ' -');
+function node(tag, text = '', className = '') {
+    const element = document.createElement(tag); element.textContent = text; element.className = className; return element;
 }
-
-// Variable para sa Leaflet Map Instance
-let leafletMap = null;
-let leafletMarker = null;
-
-// Function para buksan ang Map Modal at i-center ang pin sa coordinates
-function openMapModal(lat, lng, title, location) {
-  const modal = document.getElementById('mapModal');
-  if (!modal) return;
-
-  document.getElementById('mapModalTitle').innerText = `Location Map: ${title}`;
-  document.getElementById('mapCoordinatesText').innerText = `Coordinates: Lat ${lat}, Lng ${lng} (${location})`;
-  
-  modal.classList.add('active');
-
-  setTimeout(() => {
-    if (!leafletMap) {
-      leafletMap = L.map('mapContainer').setView([lat, lng], 16);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '© OpenStreetMap'
-      }).addTo(leafletMap);
-    } else {
-      leafletMap.setView([lat, lng], 16);
+function button(text, action, className = 'btn_update') {
+    const result = node('button', text, className); result.type = 'button'; result.addEventListener('click', action); return result;
+}
+function options(id, values, optional = false) {
+    const select = byId(id);
+    if (optional) select.add(new Option('Not assigned', ''));
+    values.forEach(value => select.add(new Option(value, value)));
+}
+options('processingStatus', REPORT_STATUSES);
+options('processingPriority', REPORT_PRIORITIES, true);
+options('processingRouting', REPORT_ROUTING, true);
+function locationLink(report) {
+    const url = googleMapsLink(report.geoLocation);
+    if (!url) return node('span', 'No map pin supplied');
+    const link = node('a', 'Open in Google Maps'); link.href = url;
+    link.target = '_blank'; link.rel = 'noopener noreferrer'; return link;
+}
+function showDetails(report, resetDraft = false) {
+    byId('editorTitle').textContent = 'Report ' + report.id;
+    const details = byId('editorDetails'); details.replaceChildren();
+    for (const [label, value] of [
+        ['Resident', report.fullName], ['Resident UID', report.submitterID], ['Category', report.issueCategory],
+        ['Barangay', report.barangayArea], ['Landmark', report.locationDescription],
+        ['Description', report.issueDescription], ['Submitted', reportDate(report.timestamp)],
+        ['Last updated', reportDate(report.updatedAt)], ['Saved status', report.reportStatus],
+    ]) details.append(node('p', label + ': ' + (value || 'Not available')));
+    details.append(locationLink(report));
+    photoViewer.set(report);
+    if (resetDraft) {
+        byId('processingStatus').value = report.reportStatus;
+        byId('processingPriority').value = report.priorityLevel || '';
+        byId('processingRouting').value = report.routingLevel || '';
+        byId('processingReferral').value = report.referredTo || '';
+        expectedVersion = report.updatedAt; dirty = false;
     }
-
-    if (leafletMarker) {
-      leafletMap.removeLayer(leafletMarker);
-    }
-
-    leafletMarker = L.marker([lat, lng]).addTo(leafletMap)
-      .bindPopup(`<b>${title}</b><br>${location}`)
-      .openPopup();
-
-    leafletMap.invalidateSize();
-  }, 300);
 }
-function closeMapModal(event) {
-  if (event && event.target.id === 'mapModal') {
-    document.getElementById('mapModal').classList.remove('active');
-  }
+function openReport(id) {
+    const report = reports.find(item => item.id === id);
+    if (!allowed || !report || saving) return;
+    selected = id; adminNotice(feedback, '', 'pending'); showDetails(report, true);
+    modal.hidden = false; modal.classList.add('active'); byId('processingStatus').focus();
 }
-
-function closeMapModalDirect() {
-  const modal = document.getElementById('mapModal');
-  if (modal) modal.classList.remove('active');
+function closeEditor(force = false) {
+    if (saving && !force) return;
+    modal.hidden = true; modal.classList.remove('active');
+    photoViewer.clear();
+    selected = null; expectedVersion = null; dirty = false;
+    form.reset(); byId('editorDetails').replaceChildren(); adminNotice(feedback, '', 'pending');
+    byId('editorTitle').textContent = '';
 }
-
-// Main function to render UI
-function renderReports(data) {
-  currentReportsList = data; 
-  
-  const tbody = document.getElementById('reportsTableBody');
-  const cardsContainer = document.getElementById('reportsListContainer');
-
-  // 1. Dashboard Table View
-  if (tbody) {
-    tbody.innerHTML = '';
-    if (data.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="7" class="no-results">No residents found matching your search.</td></tr>';
-      return;
+function render() {
+    const query = byId('residentSearchInput').value.trim().toLowerCase();
+    const filtered = reports.filter(report => [report.fullName, report.id, report.issueCategory, report.barangayArea, report.reportStatus]
+        .some(value => String(value || '').toLowerCase().includes(query)));
+    table?.replaceChildren(); cards?.replaceChildren();
+    const visible = new Set(filtered.map(report => report.id));
+    for (const [id, entry] of previews) {
+        if (!visible.has(id)) { entry.viewer.dispose(); previews.delete(id); }
     }
-
-    data.forEach(report => {
-      const tr = document.createElement('tr');
-      let statusCSS = '';
-      const statusLower = (report.reportStatus || '').toLowerCase();
-      if (statusLower === 'received') statusCSS = 'status-received';
-      else if (statusLower === 'ongoing') statusCSS = 'status-ongoing';
-      else if (statusLower === 'resolved') statusCSS = 'status-resolved';
-
-      tr.innerHTML = `
-        <td><strong>${report.reportID}</strong></td>
-        <td>${report.fullName}</td>
-        <td>${report.issueCategory}</td>
-        <td>${report.barangayArea}</td>
-        <td class="desc-cell" style="cursor: pointer;" title="Click to view full description and images" onclick="openModal('${report.reportID}')">
-          ${report.issueDescription}
-        </td>
-        <td>${report.timestamp}</td>
-        <td><span class="status-badge ${statusCSS}">${report.reportStatus}</span></td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  // 2. Report Management Card View
-  if (cardsContainer) {
-    cardsContainer.innerHTML = '';
-    if (data.length === 0) {
-      cardsContainer.innerHTML = '<p style="text-align:center; color:#777; padding:20px;">No reports found.</p>';
-      return;
+    for (const report of filtered) {
+        if (table) {
+            const row = node('tr');
+            for (const value of [report.id, report.fullName, report.issueCategory, report.barangayArea + ' — ' + report.locationDescription]) row.append(node('td', value));
+            const detail = node('td'); detail.append(button('View details / process', () => openReport(report.id)));
+            row.append(detail, node('td', reportDate(report.timestamp)), node('td', report.pending ? 'Saving — not confirmed' : report.reportStatus));
+            table.append(row);
+        }
+        if (cards) {
+            const card = node('article', '', 'report_card');
+            const text = node('div', '', 'report_card_text');
+            text.append(node('h2', report.fullName, 'resident_name'));
+            for (const [label, value] of [
+                ['Report', report.id], ['Category', report.issueCategory],
+                ['Location', report.barangayArea + ' — ' + report.locationDescription],
+                ['Description', report.issueDescription], ['Status', report.pending ? 'Saving — not confirmed' : report.reportStatus],
+                ['Priority', report.priorityLevel || 'Not assigned'], ['Routing', report.routingLevel || 'Not assigned'],
+                ['Referral', report.referredTo || 'Not assigned'], ['Submitted', reportDate(report.timestamp)],
+            ]) {
+                const field = node('p', '', ['Report', 'Submitted'].includes(label) ? 'report_field report_metadata' : 'report_field');
+                const caption = node('strong', label + ': ', 'report_field_label');
+                const content = node('span', value);
+                if (label === 'Status' || label === 'Priority') {
+                    const tones = label === 'Status' ? {
+                        'Received': 'blue', 'For Verification': 'amber', 'Referred': 'purple',
+                        'Ongoing': 'blue', 'Resolved': 'green', 'Not Within LGU Jurisdiction': 'neutral',
+                        'Saving — not confirmed': 'amber',
+                    } : { 'High': 'red', 'Medium': 'amber', 'Low': 'green' };
+                    content.className = 'report_badge report_badge_' + (tones[value] || 'neutral');
+                }
+                field.append(caption, content); text.append(field);
+            }
+            text.append(locationLink(report));
+            let preview = previews.get(report.id);
+            if (!preview) {
+                const container = node('div', '', 'report_card_photo');
+                preview = { container, viewer: createReportPhotoViewer(container, { preview: true }) };
+                previews.set(report.id, preview);
+            }
+            preview.viewer.set(report);
+            const actions = node('div', '', 'report_card_actions');
+            actions.append(button('View details', () => openReport(report.id)));
+            card.append(text, preview.container, actions);
+            cards.append(card);
+        }
     }
-
-    data.forEach(report => {
-      const card = document.createElement('div');
-      card.className = 'report_card';
-
-      let imagesHTML = '';
-      if (report.supportingImage && report.supportingImage.length > 0) {
-        report.supportingImage.forEach(url => {
-          imagesHTML += `<img src="${url}" class="img_placeholder" alt="Report Image">`;
+    if (!filtered.length) {
+        if (table) { const row = node('tr'), cell = node('td', query ? 'No matching reports.' : 'No reports available.'); cell.colSpan = 7; row.append(cell); table.append(row); }
+        if (cards) cards.append(node('p', query ? 'No matching reports.' : 'No reports available.'));
+    }
+    if (selected) {
+        const report = reports.find(item => item.id === selected);
+        if (!report) { closeEditor(true); return; }
+        if (!saving) {
+            showDetails(report, !dirty);
+            if (dirty && !report.updatedAt?.isEqual(expectedVersion)) adminNotice(feedback, 'This report changed. Reload saved values before updating.', 'pending');
+        }
+    }
+}
+function clear() {
+    allowed = false; ++epoch; reports = [];
+    clearPreviews();
+    table?.replaceChildren(); cards?.replaceChildren(); closeEditor(true);
+}
+async function start() {
+    if (starting) return;
+    starting = true; retry.disabled = true; stop?.(); clear();
+    const current = epoch;
+    adminNotice(message, 'Checking admin access…', 'pending');
+    try {
+        stop = await watchAdminReports((items, meta) => {
+            if (current !== epoch) return;
+            uid = meta.uid;
+            if (meta.state === 'signed-out') { clear(); window.location.replace('admin_login/admin.html'); return; }
+            if (meta.state !== 'ready') {
+                allowed = false; reports = []; clearPreviews(); table?.replaceChildren(); cards?.replaceChildren(); closeEditor(true);
+                adminNotice(message, meta.state === 'blocked' ? 'Admin access is unavailable.' : 'Checking admin access…', 'pending'); return;
+            }
+            allowed = true; reports = items; render();
+            adminNotice(message, meta.fromCache ? 'Showing loaded reports. Waiting for the latest information…' : '', 'pending');
+            retry.hidden = !meta.fromCache;
+        }, error => {
+            if (current !== epoch) return;
+            allowed = false; reports = []; clearPreviews(); table?.replaceChildren(); cards?.replaceChildren(); closeEditor(true);
+            adminNotice(message, error.code === 'permission-denied' ? 'Admin access was denied. Check your role and the published rules.' : 'Reports could not load. Check your connection and retry.', 'error');
+            retry.hidden = false;
         });
-      } else {
-        imagesHTML = `
-          <div class="img_placeholder"></div>
-          <div class="img_placeholder"></div>
-        `;
-      }
-
-      const statusColorClass = getStatusClass(report.reportStatus);
-
-      card.innerHTML = `
-        <div class="card_header">
-          <div class="resident_name">${report.fullName}</div>
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <button class="btn_view_map" onclick="openMapModal(${report.latitude}, ${report.longitude}, '${report.reportID} - ${report.issueCategory}', '${report.barangayArea}')">
-              <img src="assets_admin/location.png" alt="pin" class="pin"> View Map
-            </button>
-            <select id="status-select-${report.reportID}" class="status_select ${statusColorClass}" onchange="handleStatusColorChange(this)">
-              <option value="Received" ${report.reportStatus === 'Received' ? 'selected' : ''}>Received</option>
-              <option value="Ongoing" ${report.reportStatus === 'Ongoing' ? 'selected' : ''}>Ongoing</option>
-              <option value="Resolved" ${report.reportStatus === 'Resolved' ? 'selected' : ''}>Resolved</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="report_details">
-          <p><strong>Report ID:</strong> ${report.reportID}</p>
-          <p><strong>Category:</strong> ${report.issueCategory}</p>
-          <p><strong>Location:</strong> ${report.barangayArea}</p>
-          <p><strong>Coordinates:</strong> Lat: ${report.latitude}, Lng: ${report.longitude}</p>
-          <p><strong>Description:</strong></p>
-          <p class="desc_report_management">${report.issueDescription}</p>
-        </div>
-
-        <div class="card_images">
-          ${imagesHTML}
-        </div>
-
-        <div class="card_footer">
-          <div class="report_date">Date: ${report.timestamp}</div>
-          <div class="card_actions">
-            <button class="btn_delete" onclick="deleteReport('${report.reportID}')">Delete</button>
-            <button class="btn_update" onclick="updateReportStatus('${report.reportID}')">Update status</button>
-          </div>
-        </div>
-      `;
-
-      cardsContainer.appendChild(card);
-    });
-  }
+    } catch {
+        adminNotice(message, 'Reports could not load. Check your connection and retry.', 'error'); retry.hidden = false;
+    } finally { starting = false; retry.disabled = false; }
 }
-
-// Live Search Filter
-function filterReports() {
-  const input = document.getElementById('residentSearchInput');
-  if (!input) return;
-
-  const query = input.value.toLowerCase();
-  const filteredData = reportsData.filter(report => 
-    report.fullName.toLowerCase().includes(query) ||
-    report.reportID.toLowerCase().includes(query) ||
-    report.issueCategory.toLowerCase().includes(query)
-  );
-  renderReports(filteredData);
-}
-
-// Function para sa Delete Button
-function deleteReport(id) {
-  const confirmDelete = confirm(`Are you sure you want to delete the report? (${id})?`);
-  
-  if (confirmDelete) {
-    const index = reportsData.findIndex(item => item.reportID === id);
-    if (index !== -1) {
-      reportsData.splice(index, 1);
-      filterReports();
-    }
-  }
-}
-
-// Function para sa Update Status Button
-function updateReportStatus(id) {
-  const selectElement = document.getElementById(`status-select-${id}`);
-  if (!selectElement) return;
-
-  const newStatus = selectElement.value;
-  const report = reportsData.find(item => item.reportID === id);
-
-  if (report) {
-    report.reportStatus = newStatus;
-    report.timestamp = getFormattedTimestamp();
-    alert(`Report status ${id} has been successfully updated to "${newStatus}".`);
-    filterReports();
-  }
-}
-
-// Modal Control Functions (para sa Table Description Popup)
-function openModal(id) {
-  const report = currentReportsList.find(item => item.reportID === id);
-  if (!report) return;
-
-  const modal = document.getElementById('descModal');
-  const imagesGrid = document.getElementById('modalImagesGrid');
-
-  if (!modal) return;
-
-  document.getElementById('modalReportId').innerText = `Report Details - ${report.reportID}`;
-  document.getElementById('modalDescription').innerText = report.issueDescription;
-
-  if (imagesGrid) {
-    imagesGrid.innerHTML = '';
-    if (report.supportingImage && report.supportingImage.length > 0) {
-      report.supportingImage.forEach(imgUrl => {
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.alt = `Report Image ${report.reportID}`;
-        img.className = 'modal-img-thumb';
-        img.onclick = () => window.open(imgUrl, '_blank');
-        imagesGrid.appendChild(img);
-      });
-    } else {
-      imagesGrid.innerHTML = '<p class="no-images-text">No images attached to this report.</p>';
-    }
-  }
-
-  modal.classList.add('active');
-}
-
-function closeModal(event) {
-  if (event.target.id === 'descModal') {
-    document.getElementById('descModal').classList.remove('active');
-  }
-}
-
-function closeModalDirect() {
-  const modal = document.getElementById('descModal');
-  if (modal) modal.classList.remove('active');
-}
-
-// Initial Load on page DOM ready
-document.addEventListener('DOMContentLoaded', () => {
-  renderReports(reportsData);
-
-  // Idagdag ang click event listener para sa mapModal overlay
-  const mapModal = document.getElementById('mapModal');
-  if (mapModal) {
-    mapModal.addEventListener('click', closeMapModal);
-  }
+byId('residentSearchInput').addEventListener('input', render);
+retry.addEventListener('click', start);
+byId('closeEditor').addEventListener('click', () => closeEditor());
+modal.addEventListener('click', event => { if (event.target === modal) closeEditor(); });
+byId('reloadProcessing').addEventListener('click', () => {
+    const report = reports.find(item => item.id === selected);
+    if (report && !saving) { showDetails(report, true); adminNotice(feedback, 'Loaded current saved values.', 'success'); }
 });
-
-/* 
-  Future Firebase Integration Snippet:
-  
-  db.collection("reports").onSnapshot((snapshot) => {
-    const firebaseData = snapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        reportID: doc.id,
-        fullName: data.fullName || '',
-        issueCategory: data.issueCategory || '',
-        barangayArea: data.barangayArea || '',
-        issueDescription: data.issueDescription || '',
-        timestamp: data.timestamp || '',
-        reportStatus: data.reportStatus || 'Received',
-        supportingImage: Array.isArray(data.supportingImage) ? data.supportingImage : [] // Pull array of Firebase Storage URLs
-      };
-    });
-    renderReports(firebaseData);
-  });
-*/
+form.addEventListener('input', () => { dirty = true; });
+form.addEventListener('change', () => { dirty = true; });
+form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!allowed || saving || !selected || !form.reportValidity()) return;
+    const id = selected, sessionUid = uid, current = epoch;
+    const input = {
+        reportStatus: byId('processingStatus').value, priorityLevel: byId('processingPriority').value,
+        routingLevel: byId('processingRouting').value, referredTo: byId('processingReferral').value,
+    };
+    saving = true; [...form.elements].forEach(control => control.disabled = true);
+    adminNotice(feedback, 'Saving… Keep this page open until confirmed.', 'pending');
+    try {
+        const result = await updateAdminReport(id, input, expectedVersion);
+        if (!allowed || current !== epoch || sessionUid !== uid || result.uid !== uid || selected !== id) return;
+        dirty = false;
+        const latest = reports.find(report => report.id === id);
+        if (latest) showDetails(latest, true);
+        adminNotice(feedback, 'Changes saved.', 'success');
+    } catch (error) {
+        if (allowed && current === epoch && sessionUid === uid && selected === id) {
+            adminNotice(feedback, error.code ? 'Changes were not saved. Check your connection and admin access, then retry.' : error.message, 'error');
+        }
+    } finally { saving = false; [...form.elements].forEach(control => control.disabled = false); }
+});
+window.addEventListener('beforeunload', event => {
+    if (saving || dirty) { event.preventDefault(); event.returnValue = ''; }
+});
+window.addEventListener('online', () => { if (!allowed) void start(); });
+await start();

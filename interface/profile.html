@@ -6,13 +6,21 @@
         <title>Municipal Gov - Profile</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
+        <link rel="manifest" href="manifest.webmanifest">
+        <meta name="theme-color" content="#1f3d5b">
     </head>
     <body>
-        <div class="app_container">
+        <style>.app_container[hidden], #sessionStatus[hidden] { display: none !important; }</style>
+        <div id="sessionStatus" role="status" aria-live="polite" hidden>
+            <p id="sessionMessage"></p>
+            <button id="sessionRetry" type="button" disabled>Retry</button>
+        </div>
+        <noscript>JavaScript is required to verify your account.</noscript>
+        <div class="app_container" hidden>
             <header class="app_header">
-                <div class="app_logo_placeholder">Logo</div>
+                <div class="app_logo_placeholder"><img src="assets/app-192.png" alt="" class="brand_icon"></div>
                 <div class="header_title_block">
-                    <h1>System Title</h1>
+                    <h1>Odiongan Municipal Reporting</h1>
                     <p>Odiongan, Romblon</p>
                 </div>
             </header>
@@ -22,18 +30,20 @@
 
             
             <main class="main_content">
-                <div class="profile_card" data-fb-collection="users">
-                    <div class="profile_avatar">JU</div>
-                    <h3 class="profile-name" data-fb-field="fullName">Jerome Urbano</h3>
-                    <p class="profile-email" data-fb-field="email">jerome.urbano@rsu.edu.ph</p>
-                    <div class="badge-brgy" data-fb-field="barangay">Brgy. Amatong</div>
+                <div id="profileStatus" role="status" aria-live="polite" hidden>
+                    <p id="profileMessage"></p>
+                    <button id="profileRetry" type="button">Retry</button>
                 </div>
-                <div>
-                    <button type="button" class="profile_menu">
-                        Feedback
-                    </button>
-                    <button type="button" class="profile_menu">
-                        Log-out
+                <div class="profile_card" data-fb-collection="residents" aria-busy="true">
+                    <div class="profile_avatar" aria-hidden="true">…</div>
+                    <h3 class="profile_name" data-fb-field="fullName">Loading profile…</h3>
+                    <p class="profile_email" data-fb-field="emailAddress"></p>
+                    <div class="badge-brgy" data-fb-field="homeBarangay"></div>
+                </div>
+                <div class="profile_actions">
+                    <button type="button" class="profile_menu" id="residentLogout" disabled>
+                        <span>Log out</span>
+                        <span aria-hidden="true">→</span>
                     </button>
                 </div>
             </main>
@@ -77,10 +87,7 @@
                 </a>
             </nav>
         </div>
-        <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-    </script>
-    </body>
+        <script src="offline.js" defer></script>
+    <script type="module" src="../firebase/resident-session.js"></script>
+</body>
 </html>

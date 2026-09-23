@@ -15,7 +15,7 @@
 
     <form id="registerForm"> 
 <div class="input_group">
-            <input type="fullName" id="fullName" name="fullName" placeholder="Full Name" required>
+            <input type="text" id="fullName" name="fullName" placeholder="Full Name" required>
         </div>
 
         <div class="input_group">
@@ -69,11 +69,12 @@
 
         <button type="submit" class="signin_btn">Create account</button>
     </form>
+<p id="registerFeedback" role="alert" hidden></p>
 
     <div class="footer_text">Already have an account? <a href="index.html">Sign In</a></div>
 </div>
 
 
-<script src="register/register.js"></script>
+<script type="module" src="register/register.js"></script>
 </body>
 </html>

@@ -6,15 +6,24 @@
         <title>Municipal Gov - Track Report</title>
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="desktop.css">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+        <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <link rel="manifest" href="manifest.webmanifest">
+        <meta name="theme-color" content="#1f3d5b">
     </head>
     <body>
-        <div class="app_container">
+        <style>.app_container[hidden], #sessionStatus[hidden] { display: none !important; }</style>
+        <div id="sessionStatus" role="status" aria-live="polite" hidden>
+            <p id="sessionMessage"></p>
+            <button id="sessionRetry" type="button" disabled>Retry</button>
+        </div>
+        <noscript>JavaScript is required to verify your account.</noscript>
+        <div class="app_container" hidden>
             <!-- APP HEADER -->
             <header class="app_header">
-                <div class="app_logo_placeholder">Logo</div>
+                <div class="app_logo_placeholder"><img src="assets/app-192.png" alt="" class="brand_icon"></div>
                 <div class="header_title_block">
-                    <h1>System Title</h1>
+                    <h1>Odiongan Municipal Reporting</h1>
                     <p>Odiongan, Romblon</p>
                 </div>
             </header>
@@ -22,34 +31,16 @@
 
 
             <main class="main_content_tracking">
-                
+
                  <!-- CONTAINER 1: HISTORY BLOCK -->
                 <div id="history_panel">
-                     <h3 class="section_heading_report">Report History</h3>
-                   <!--  <div class="data_card" > e cut and paste it para gamitin as template sa js usinginnerHTML parakaya mag display ng marami not hard coded sa ngayon mock data palang nagagamit 
-                        <div class="card_header_flex">
-                            <div class="card_info">
-                                <div class="alignment_icon">
-                                    <h4 class="card_category"> value nito don nakuha sa mock data sa js-form_panel</h4>
-                                </div>
-                                <div class="alignment_icon">
-                                    <img src="assets/location.png" class="nav_icon" alt="Location">
-                                    <p class="card_location">value nito don nakuha sa mock data sa js-form_panel</p>
-                                </div>
-                                <div class="alignment_icon1">
-                                    <img src="assets/description (1).png" class="nav_icon1" alt="Location">
-                                    <p class="card_desc">value nito don nakuha sa mock data sa js-form_panel</p>
-                                </div>
-                                <div class="card_date">value nito don nakuha sa mock data sa js-form_panel</div>
-                            </div>
-                            <div class="detail_status">
-                                <span class="badge badge_received">dito nag babago ang status</span>
-                                <button class="btn_text" onclick="openDetailsModal('rep_000001', event)">View Details</button>
-                            </div>
-                        </div>
+                     <div class="report_history_header"><h3 class="section_heading_report">Report History</h3><button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button></div>
+                    <div class="status_notice">
+                        <p id="history_feedback" role="status">Loading your reports…</p>
+                        <button id="reports_retry" type="button" hidden>Retry</button>
                     </div>
- -->             
-                    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+                    <div id="reports_list"></div>
+
                 </div>
 
 
@@ -67,123 +58,41 @@
                         </button>
                         <span>Submit Report</span>
                     </h3>
-                    <form id="report_form" onsubmit="processForm(event)" novalidate>
+                    <form id="report_form">
                         <div id="form_feedback" class="form_feedback" role="status" aria-live="polite" hidden></div>
                         <div class="form_group">
                             <label for="category" class="label">Category</label>
-                            <select
-                                id="category"
-                                class="form_control"
-                                required
-                                data-fb-field="category"
-                            >
-                                <option value="" disabled selected>Select Category</option>
-                                <option value="Infrastructure">Infrastructure</option>
-                                <option value="Waste Management">Waste Management</option>
-                                <option value="Road Hazard">Road Hazard</option>
-                                <option value="Drainage and Flooding">Drainage and Flooding</option>
-                                <option value="Public Facilities">Public Facilities</option>
-                        </select>
+                            <select id="category" class="form_control" required></select>
                         </div>
                         <div class="form_group">
-                            <label for="location" class="label">Location</label>
-                            <input list="barangay" id="location" class="form_control" name="location" placeholder="Barangay" autocomplete="address-level3" required>
-                            <datalist id = "barangay">
-                            <option value="Amatong">Amatong</option>
-                            <option value="Anahao">Anahao</option>
-                            <option value="Bangon">Bangon</option>
-                            <option value="Batiano">Batiano</option>
-                            <option value="Budiong">Budiong</option>
-                            <option value="Canduyong">Canduyong</option>
-                            <option value="Dapawan">Dapawan</option>
-                            <option value="Gabawan">Gabawan</option>
-                            <option value="Libertad">Libertad</option>
-                            <option value="Ligaya">Ligaya</option>
-                            <option value="Liwanag">Liwanag</option>
-                            <option value="Liwayway">Liwayway</option>
-                            <option value="Malilico">Malilico</option>
-                            <option value="Mayha">Mayha</option>
-                            <option value="Panique">Panique</option>
-                            <option value="Pato-o">Pato-o</option>
-                            <option value="Poctoy">Poctoy</option>
-                            <option value="Progreso Este">Progreso Este</option>
-                            <option value="Progreso Weste">Progreso Weste</option>
-                            <option value="Rizal">Rizal</option>
-                            <option value="Tabing Dagat">Tabing Dagat</option>
-                            <option value="Tabobo-an">Tabobo-an</option>
-                            <option value="Tuburan">Tuburan</option>
-                            <option value="Tumingad">Tumingad</option>
-                            <option value="Tulay">Tulay</option>
-                            </datalist>
+                            <label for="location" class="label">Barangay</label>
+                            <select id="location" class="form_control" required></select>
                         </div>
-
-                            <!-- IDAGDAG ITO: Map Container at Hidden Coordinates Input -->
                         <div class="form_group">
-                                <label class="label">Pin Location on Map</label>
-                                <div id="map" style="height: 220px; width: 100%; border-radius: 12px; border: 1px solid #cbd5e1; z-index: 1;"></div>
-                                <input type="hidden" id="latitude" name="latitude">
-                                <input type="hidden" id="longitude" name="longitude">
-                                <input type="hidden" id="location_name" name="location_name">
+                            <label for="location_description" class="label">Street / nearby landmark</label>
+                            <input id="location_description" class="form_control" maxlength="500" required placeholder="Describe where the issue is located">
                         </div>
-
-
+                        <div class="form_group">
+                            <button id="open_map" type="button" class="btn_secondary">Open map (optional)</button>
+                            <p>Select a barangay to center the map, then tap or drag a pin to the issue location.</p>
+                            <div id="report_map" style="height:260px; width:100%; z-index:1" hidden></div>
+                            <p id="map_status" role="status"></p>
+                            <label><input id="confirm_pin" type="checkbox" disabled> I confirm this pin marks the issue location.</label>
+                            <button id="remove_pin" type="button" class="btn_secondary" disabled>Remove pin</button>
+                        </div>
                         <div class="form_group">
                             <label for="description" class="label">Description</label>
-                            <textarea
-                                id="description"
-                                class="form_control"
-                                rows="4"
-                                placeholder="Describe the issue in detail....."
-                                required
-                                data-fb-field="description"
-                            ></textarea>
+                            <textarea id="description" class="form_control" rows="4" maxlength="5000" required placeholder="Describe the issue in detail"></textarea>
                         </div>
                         <div class="form_group">
-                            <label for="attachment" class="label">Attach Photo</label>
-                            <div class="attachment_buttons">
-                                <button
-                                    type="button"
-                                    class="btn_camera"
-                                    aria-label="Open camera"
-                                    title="Open camera"
-                                    onclick="document.getElementById('camera_capture').click()"
-                                >
-                                    <img src="assets/photo-camera.png" alt="Take a photo" class="upload_img">
-                                </button>
-                                <input
-                                    id="camera_capture"
-                                    type="file"
-                                    accept="image/*"
-                                    capture="environment"
-                                    multiple
-                                    data-fb-storage="attachments/"
-                                    hidden
-                                    onchange="showSelectedImage(this)"
-                                >
-                                <button type="button" class="btn_secondary" onclick="document.getElementById('attachment').click()">
-                                    <span class="for_icon">
-                                        <img src="assets/image.png" alt="Choose file" class="upload_img">
-                                    </span>
-                                    <span>Choose File</span>
-                                </button>
-                                <input
-                                    id="attachment"
-                                    type="file"
-                                    accept="image/*"
-                                    multiple
-                                    data-fb-storage="attachments/"
-                                    hidden
-                                    onchange="showSelectedImage(this)"
-                                >
-                            </div>
-                            <div id="selected_attachment"></div>
-                            <div id="attachment_preview" aria-live="polite"></div>
-                            <div class="btn_submit_container">
-                                <button class="btn_submit" type="submit">
-                                    <img src="assets/arrow.png" alt="arrow" style="width:30px; padding-right:10px;">
-                                    Submit Report
-                                </button>
-                            </div>
+                            <label for="report_photo" class="label">Attach photo (optional)</label>
+                            <input id="report_photo" type="file" accept="image/jpeg,image/png,image/webp">
+                            <p>One JPEG, PNG or WebP, up to 5 MB. Visible only to you and authorized admins.</p>
+                            <button id="remove_photo" type="button" class="btn_secondary">Remove selected photo</button>
+                            <p id="photo_feedback" role="status"></p>
+                        </div>
+                        <div class="btn_submit_container">
+                            <button class="btn_submit" type="submit">Submit Report</button>
                         </div>
                     </form>
                 </div>
@@ -192,7 +101,7 @@
 
 
                 <!-- CONTAINER 3: REPORT DETAILS POPUP MODAL -->
-                <div id="details_panel" class="details_view" data-fb-document="rep_000001">
+                <div id="details_panel" class="details_view">
                     <h3 class="section_heading">
                         <button type="button" class="back_button" aria-label="Back to report history" onclick="closeDetailsModal()">
                             <img src="assets/undo.png" alt="Back">
@@ -209,48 +118,18 @@
                         </div>
                     </div>
                     <!-- TIMELINE SECTION -->
-                    <div class="timeline_container">
-                        <div class="timeline_item step_1 active" id="timeline_step_received">
-                            <div class="timeline_node"></div>
-                            <div class="timeline_content">
-                                <h4>Received</h4>
-                                <p id="time_submitted"></p>
-                            </div>
-                        </div>
-                        <div class="timeline_item step_2" id="timeline_step_verification">
-                            <div class="timeline_node"></div>
-                            <div class="timeline_content">
-                                <h4>For Verification</h4>
-                                <p id="time_verification">Pending...</p>
-                            </div>
-                        </div>
-                        <div class="timeline_item step_3" id="timeline_step_referral">
-                            <div class="timeline_node"></div>
-                            <div class="timeline_content">
-                                <h4>For Referral / Referred</h4>
-                                <p id="time_referral">Pending...</p>
-                            </div>
-                        </div>
-                        <div class="timeline_item step_4" id="timeline_step_resolved">
-                            <div class="timeline_node"></div>
-                            <div class="timeline_content">
-                                <h4>Resolved</h4>
-                                <p id="time_resolved">Pending...</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="timeline_container"></div>
+                    <p id="detail_processing"></p>
+                    <a id="detail_map_link" target="_blank" rel="noopener noreferrer" hidden>Open in Google Maps</a>
                     <!-- ATTACHMENT SECTION -->
                     <div class="detail_section">
                         <h3 class="detail_title">Attachment</h3>
-                        <div id="detail_attachments" class="attachment_grid">
-                            <div class="attachment_img_placeholder"></div>
-                            <div class="attachment_img_placeholder"></div>
-                        </div>
+                        <div id="detail_attachments" class="attachment_grid"></div>
                     </div>
                     <!-- CATEGORY SECTION -->
                     <div class="detail_section">
                         <h3 class="detail_title">Category</h3>
-                        <p id="detail_category" class="detail_text" data-fb-field="category"></p>
+                        <p id="detail_category" class="detail_text" data-fb-field="issueCategory"></p>
                     </div>
                     <div class="detail_section">
                         <h3 class="detail_title">Location</h3>
@@ -260,32 +139,11 @@
                     <div class="detail_section">
                         <div class="detail_title_row">
                             <h3 class="detail_title">Description</h3>
-                            <div class="edit_actions">
-                                <button
-                                    type="button"
-                                    class="btn_action"
-                                    id="btn_edit_desc"
-                                    onclick="toggleEditDescription(true)"
-                                >Edit</button>
-                                <span class="divider">|</span>
-                                <button
-                                    type="button"
-                                    class="btn_action"
-                                    id="btn_save_desc"
-                                    onclick="saveDescription()"
-                                    disabled
-                                >Save</button>
-                            </div>
+
                         </div>
                         <div id="detail_desc_container">
-                            <p id="detail_description" class="detail_text" data-fb-field="description"></p>
-                            <textarea
-                                id="edit_description_input"
-                                class="form_control"
-                                style="display: none; resize: none;"
-                                rows="4"
-                                data-fb-field="description"
-                            ></textarea>
+                            <p id="detail_description" class="detail_text" data-fb-field="issueDescription"></p>
+
                         </div>
                     </div>
                 </div>
@@ -332,15 +190,11 @@
             </nav>
         </div>
         <div id="form_overlay" class="form_overlay" onclick="closeAllModals()"></div>
-        
-        
-        <script src="form_panel.js"></script>
-        <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./sw.js');
-      }
-        </script>
-        
-        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    </body>
+
+
+        <script type="module" src="form_panel.js"></script>
+        <script src="offline.js" defer></script>
+
+    <script type="module" src="../firebase/resident-session.js"></script>
+</body>
 </html>

@@ -1,0 +1,7 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Images now use Supabase; no Firebase Storage client access is required.
+    match /{path=**} { allow read, write: if false; }
+  }
+}
