@@ -1870,3 +1870,24 @@ body {
 .photo_retry_button:hover:not(:disabled), .photo_retry_file:not(:disabled)::file-selector-button:hover { background: #e8efff; }
 .photo_retry_button:focus-visible, .photo_retry_file:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
 .photo_retry_button:disabled, .photo_retry_file:disabled { opacity: .6; cursor: wait; }
+
+/* Compact owner-only report history on Home. */
+#homeReports { list-style: none; padding: 0; margin: 14px 0; display: grid; gap: 10px; }
+.home_report_link { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px; border: 1px solid #dbe3ed; border-radius: 12px; background: #fff; color: #173858; text-decoration: none; font-family: system-ui, sans-serif; }
+.home_report_link:hover { background: #f1f6fc; }
+.home_report_link:focus-visible { outline: 2px solid #2563eb; outline-offset: 3px; }
+.home_report_info { display: grid; gap: 6px; min-width: 0; overflow-wrap: anywhere; line-height: 1.5; }
+.home_report_meta { font-size: .85rem; color: #52647b; }
+.home_report_badge { flex-shrink: 0; max-width: 40%; border-radius: 8px; padding: 5px 10px; font-size: .8rem; font-weight: 600; overflow-wrap: anywhere; }
+.home_report_blue { background: #e4efff; color: #1e4692; }
+.home_report_amber { background: #fff1cc; color: #785000; }
+.home_report_purple { background: #eee8fc; color: #633a92; }
+.home_report_green { background: #e3f3e8; color: #23633b; }
+.home_report_neutral { background: #e8edf2; color: #465569; }
+@media (max-width: 480px) {
+  .home_report_link { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .home_report_badge { max-width: 100%; }
+}
+
+#homeReportsNote { margin: 8px 0 0; color: #52647b; font: .875rem/1.5 system-ui, sans-serif; }
+#homeReportsNote[hidden] { display: none; }

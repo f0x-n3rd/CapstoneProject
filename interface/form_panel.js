@@ -32,6 +32,7 @@ document.getElementById('remove_photo').addEventListener('click', () => { photoI
 form.addEventListener('reset', () => { photoFeedback.textContent = ''; });
 let reports = new Map();
 let selectedId = null;
+let linkedReportId = new URLSearchParams((window.location?.hash || '').slice(1)).get('report');
 let ownerUid = null;
 let saving = false;
 let starting = false;
@@ -168,6 +169,11 @@ async function startHistory() {
             }
             reports = new Map(items.map(report => [report.id, report]));
             renderReports(items);
+            // Open only a report returned by the authenticated owner's query.
+            if (linkedReportId && reports.has(linkedReportId)) {
+                selectedId = linkedReportId; linkedReportId = null;
+                renderDetails(reports.get(selectedId)); showPanel(details);
+            }
             noticeTone(historyFeedback, meta.fromCache ? 'pending' : 'info');
             historyFeedback.textContent = meta.fromCache
                 ? (items.length ? 'Showing saved reports. Reconnect for the latest information.' : (navigator.onLine ? 'Connecting to your reports…' : 'No reports saved in this session. Connect to load them.'))
