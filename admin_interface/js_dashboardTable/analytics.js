@@ -2,6 +2,12 @@ import { watchAdminReports } from '../../firebase/admin-reports.js';
 import { REPORT_CATEGORIES, REPORT_BARANGAYS } from '../../firebase/report-model.mjs';
 import { summarizeReports } from '../../firebase/analytics-model.mjs';
 
+function adminNotice(node, text, tone = 'pending') {
+    node.className = 'admin_notice notice-' + tone;
+    node.textContent = text;
+}
+
+
 const node = id => document.getElementById(id);
 const inputs = ['dateFrom', 'dateTo', 'categoryFilter', 'barangayFilter'];
 let reports = [], ready = false, cached = false, stop, generation = 0, exporting = false;
@@ -47,21 +53,21 @@ function render() {
         if (typeof window.Chart === 'function') {
             chart('categoryChart', summary.categories); chart('barangayChart', summary.barangays); chart('timelineChart', summary.timeline, true);
         } else messages.push('Charts could not load. Summary counts and PDF tables are still available. Reload when connected to retry charts.');
-        node('analyticsFeedback').textContent = messages.join(' ') || 'Reports are up to date.';
+        adminNotice(node('analyticsFeedback'), messages.join(' ') || 'Reports are up to date.', messages.length ? 'pending' : 'success');
         node('exportAnalytics').disabled = exporting || cached;
     } catch (error) {
-        clear(); node('analyticsFeedback').textContent = error.message;
+        clear(); adminNotice(node('analyticsFeedback'), error.message, 'error');
     }
 }
 async function connect() {
     const current = ++generation;
     stop?.(); stop = null; ready = false; reports = []; clear();
     node('retryAnalytics').hidden = true;
-    node('analyticsFeedback').textContent = 'Loading analytics…';
+    adminNotice(node('analyticsFeedback'), 'Loading analytics…', 'pending');
     const fail = error => {
         if (current !== generation) return;
         ready = false; reports = []; clear();
-        node('analyticsFeedback').textContent = error.code === 'permission-denied' ? 'Admin access is required to view analytics.' : 'Unable to load analytics. Check your connection and retry.';
+        adminNotice(node('analyticsFeedback'), error.code === 'permission-denied' ? 'Admin access is required to view analytics.' : 'Unable to load analytics. Check your connection and retry.', 'error');
         node('retryAnalytics').hidden = false;
     };
     try {
@@ -71,7 +77,7 @@ async function connect() {
             ready = meta.state === 'ready'; cached = Boolean(meta.fromCache); reports = ready ? items : [];
             if (meta.state === 'signed-out') { clear(); window.location.replace('admin_login/admin.html'); return; }
             render();
-            if (!ready) node('analyticsFeedback').textContent = 'Waiting for admin access verification…';
+            if (!ready) adminNotice(node('analyticsFeedback'), 'Waiting for admin access verification…', 'pending');
             if (ready) node('retryAnalytics').hidden = true;
         }, fail, { includeNames: false });
         if (current !== generation) unsubscribe(); else stop = unsubscribe;
@@ -87,7 +93,7 @@ window.addEventListener('pageshow', event => { if (event.persisted) connect(); }
 // No resident names, descriptions, IDs, images or precise locations enter the PDF.
 node('exportAnalytics').addEventListener('click', async () => {
     if (!ready || cached || !summary || exporting) return;
-    if (typeof window.html2pdf !== 'function') { node('analyticsFeedback').textContent = 'PDF tools could not load. Reconnect and reload the page.'; return; }
+    if (typeof window.html2pdf !== 'function') { adminNotice(node('analyticsFeedback'), 'PDF tools could not load. Reconnect and reload the page.', 'error'); return; }
     exporting = true; node('exportAnalytics').disabled = true;
     const version = generation, access = accessVersion, snapshot = summary;
     const sheet = document.createElement('div');
@@ -118,7 +124,7 @@ node('exportAnalytics').addEventListener('click', async () => {
         await worker;
         if (version !== generation || access !== accessVersion || !ready) throw new Error('Access changed. Export cancelled.');
         await worker.save();
-    } catch (error) { node('analyticsFeedback').textContent = error.message || 'PDF export failed. Please retry.'; }
+    } catch (error) { adminNotice(node('analyticsFeedback'), error.message || 'PDF export failed. Please retry.', 'error'); }
     finally { exporting = false; node('exportAnalytics').disabled = !ready || cached || !summary; }
 });
 await connect();

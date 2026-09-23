@@ -20,6 +20,11 @@ let profileRequest = 0;
 let loadingProfile = false;
 let hasProfile = false;
 
+function noticeTone(node, tone) {
+    node.classList.remove('notice-pending', 'notice-success', 'notice-error', 'notice-info');
+    node.classList.add('notice-' + tone);
+}
+
 function clearProfile() {
     if (!card) return;
     for (const field of ["fullName", "emailAddress", "homeBarangay"]) {
@@ -45,6 +50,7 @@ async function loadProfile() {
     const saved = readOffline(user.uid, 'profile');
     if (saved) showProfile(saved);
     if (!navigator.onLine) {
+        noticeTone(profileStatus, 'pending');
         profileMessage.textContent = saved ? "Showing saved profile information. Reconnect to refresh." : "No profile saved in this session. Connect to load it.";
         profileStatus.hidden = false;
         return;
@@ -59,6 +65,7 @@ async function loadProfile() {
         // Ignore a response for an account that has since signed out or changed.
         if (request !== profileRequest || auth.currentUser?.uid !== user.uid) return;
         if (!profile) {
+            noticeTone(profileStatus, 'error');
             removeOffline(user.uid, "profile");
             clearProfile();
             profileMessage.textContent = "Your resident profile is unavailable. Retry or contact the project administrator.";
@@ -74,6 +81,7 @@ async function loadProfile() {
         const denied = ["permission-denied", "unauthenticated"].includes(error.code);
         if (denied) removeOffline(user.uid, "profile");
         if (denied || !hasProfile) clearProfile();
+        noticeTone(profileStatus, 'error');
         profileMessage.textContent = denied
             ? "Unable to access your profile. Retry or contact the project administrator."
             : "Unable to load your profile. Check your connection and retry.";
@@ -117,6 +125,7 @@ async function startSession() {
         unsubscribe?.();
         unsubscribe = onAuthStateChanged(auth, handleSession);
     } catch (error) {
+        noticeTone(status, 'error');
         message.textContent = "Unable to restore your sign-in. Please retry.";
         status.hidden = false;
         console.error("Session restoration failed:", error.code || error.name);
@@ -133,6 +142,7 @@ window.addEventListener("online", () => {
 });
 window.addEventListener("offline", () => {
     if (!card || !activeUid) return;
+    noticeTone(profileStatus, 'pending');
     profileMessage.textContent = "Connection lost. Loaded profile information may be out of date.";
     profileStatus.hidden = false;
 });
@@ -144,6 +154,7 @@ if (button) {
             container.hidden = true;
             window.location.replace("signed-out.html");
         } catch (error) {
+            noticeTone(status, 'error');
             message.textContent = authMessage(error);
             status.hidden = false;
             button.disabled = false;

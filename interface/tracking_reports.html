@@ -21,9 +21,9 @@
         <div class="app_container" hidden>
             <!-- APP HEADER -->
             <header class="app_header">
-                <div class="app_logo_placeholder">Logo</div>
+                <div class="app_logo_placeholder"><img src="assets/app-192.png" alt="" class="brand_icon"></div>
                 <div class="header_title_block">
-                    <h1>System Title</h1>
+                    <h1>Odiongan Municipal Reporting</h1>
                     <p>Odiongan, Romblon</p>
                 </div>
             </header>
@@ -31,14 +31,16 @@
 
 
             <main class="main_content_tracking">
-                
+
                  <!-- CONTAINER 1: HISTORY BLOCK -->
                 <div id="history_panel">
-                     <h3 class="section_heading_report">Report History</h3>
-                    <p id="history_feedback" role="status">Loading your reports…</p>
-                    <button id="reports_retry" type="button" hidden>Retry</button>
+                     <div class="report_history_header"><h3 class="section_heading_report">Report History</h3><button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button></div>
+                    <div class="status_notice">
+                        <p id="history_feedback" role="status">Loading your reports…</p>
+                        <button id="reports_retry" type="button" hidden>Retry</button>
+                    </div>
                     <div id="reports_list"></div>
-                    <button class="btn_primary" onclick="toggleFormView(true)">Create New Report</button>
+
                 </div>
 
 
@@ -188,11 +190,11 @@
             </nav>
         </div>
         <div id="form_overlay" class="form_overlay" onclick="closeAllModals()"></div>
-        
-        
+
+
         <script type="module" src="form_panel.js"></script>
         <script src="offline.js" defer></script>
-        
+
     <script type="module" src="../firebase/resident-session.js"></script>
 </body>
 </html>

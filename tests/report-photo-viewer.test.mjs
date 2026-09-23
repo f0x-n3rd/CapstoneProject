@@ -10,19 +10,19 @@ class Element {
     setAttribute(){}
     addEventListener(name,fn){this.events[name]=fn;}
 }
-async function setup() {
+async function setup(options) {
     const container=new Element(),auth={currentUser:{uid:'owner'}},requests=[],revoked=[];
-    let authCallback;
+    let authCallback, unsubscribed = false;
     const dependencies={
         document:{createElement:()=>new Element()},getServices:async()=>({auth}),
-        onAuthStateChanged:(_,fn)=>{authCallback=fn;return()=>{};},
+        onAuthStateChanged:(_,fn)=>{authCallback=fn;return()=>{unsubscribed=true;};},
         downloadReportPhoto:(id,uid,signal)=>new Promise((resolve,reject)=>requests.push({id,uid,signal,resolve,reject})),
         uploadReportPhoto:async()=>{},AbortController,
         URL:{createObjectURL:()=> 'blob:private-photo',revokeObjectURL:value=>revoked.push(value)},
     };
     const create=new Function(...Object.keys(dependencies),text.replace(/^import .*;\n/gm,'').replace(/export /g,'')+';return createReportPhotoViewer;')(...Object.values(dependencies));
-    const viewer=create(container);await tick();
-    return {viewer,container,requests,revoked,authChanged:uid=>{auth.currentUser=uid?{uid}:null;authCallback(auth.currentUser);}};
+    const viewer=create(container, options);await tick();
+    return {viewer,container,requests,revoked,unsubscribed:()=>unsubscribed,authChanged:uid=>{auth.currentUser=uid?{uid}:null;authCallback(auth.currentUser);}};
 }
 const report={id:'report1',submitterID:'owner',supportingImageURL:'owner/report1/image'};
 test('viewer loads through authenticated helper, reuses a loaded photo and revokes it on close',async()=>{
@@ -42,10 +42,23 @@ test('signout aborts pending reads and late bytes never become visible',async()=
 test('missing photo offers owner retry while an access-denied error does not expose upload controls',async()=>{
     const h=await setup();h.viewer.set(report);await tick();
     h.requests[0].reject({status:404});await tick();
-    assert.equal(h.container.children[2].children[0].type,'file');
+    assert.ok(h.container.children[2].children.some(child => child.type === 'file'));
     h.viewer.clear();h.viewer.set(report);await tick();
     h.requests[1].reject({status:403});await tick();
     assert.equal(h.container.children.length,2);
     h.viewer.clear();h.viewer.set({id:'text-only'});await tick();
     assert.equal(h.requests.length,2);assert.equal(h.container.textContent,'No photo attached.');
+});
+
+test('card preview hides upload controls and disposal releases its auth subscription', async () => {
+    const h = await setup({preview:true});
+    h.viewer.set(report); await tick();
+    h.requests[0].reject({status:404}); await tick();
+    assert.equal(h.container.children.length, 2);
+    h.viewer.dispose();
+    assert.equal(h.unsubscribed(), true);
+    assert.equal(h.requests[0].signal.aborted, true);
+    h.viewer.set(report); await tick();
+    assert.equal(h.requests.length, 1);
+    assert.equal(h.container.children.length, 0);
 });

@@ -6,12 +6,12 @@
     <link rel="stylesheet" href="style_admin.css">
     <title>Announcement</title>
 </head>
-<body>
+<body class="admin_announcements_page">
 
     <header class="dashboard_header">    
-        <div class="header_logo_placeholder">Logo</div>
+        <div class="header_logo_placeholder"><img src="../interface/assets/app-192.png" alt="" class="brand_icon"></div>
                 <div class="header_title_block">
-                    <h1>System Title</h1>
+                    <h1>Odiongan Municipal Reporting</h1>
                     <p>Odiongan, Romblon</p>
                 </div>
     </header>
@@ -57,7 +57,7 @@
             <button class="btn_create_announcement" id="openModalBtn" disabled>Create Announcement</button>
             
         </div>
-        <hr><p id="announcementFeedback" role="status"></p><button id="announcementRetry" type="button">Refresh announcements</button>
+        <p id="announcementFeedback" role="status"></p><button id="announcementRetry" type="button">Refresh announcements</button>
         <!-- Announcement Cards Container -->
         <div class="announcement_grid" id="announcementsList">
 
@@ -67,17 +67,19 @@
 
     <!-- Modal Overlay para sa Create Announcement -->
     <div class="modal-overlay" id="announcementModal">
-        <div class="announcement_modal_card">
-            <h3>Create Announcement</h3>
+        <div class="announcement_modal_card" role="dialog" aria-modal="true" aria-labelledby="createAnnouncementHeading">
+            <div class="announcement_dialog_heading"><h3 id="createAnnouncementHeading">Create Announcement</h3><button type="button" id="closeAnnouncementBtn" aria-label="Close create announcement">&times;</button></div>
             
+            <label for="announcementTitle">Title</label>
             <input type="text" id="announcementTitle" maxlength="200" class="modal_input_field" placeholder="Title">
-            <textarea id="announcementContent" maxlength="10000" class="modal_textarea_field" placeholder="content"></textarea>
+            <label for="announcementContent">Announcement content</label>
+            <textarea id="announcementContent" maxlength="10000" class="modal_textarea_field" placeholder="Write the update residents need to know"></textarea>
             
             <span class="attach_photos_label">Attach one image (JPEG, PNG, WebP; up to 5 MB)</span>
             <div class="photo_actions">
                 <!-- Camera Button na may PNG Image -->
                 <label for="imageUploadCamera" class="photo_btn">
-                    <img src="assets_admin/photo-camera.png" alt="Camera" class="btn_icon_img">
+                    <img src="assets_admin/photo-camera.png" alt="" class="btn_icon_img"> Take photo
                 </label>
                 <input type="file" id="imageUploadCamera" accept="image/jpeg,image/png,image/webp" capture="environment" style="display: none;">
 
@@ -99,8 +101,8 @@
 
     <!-- Modal Overlay para sa pag-view ng Clicked Announcement Details -->
 <div class="modal-overlay" id="viewAnnouncementModal">
-    <div class="announcement_modal_card view_modal_card">
-        <button type="button" class="btn_close_view_modal" id="closeViewModalBtn">&times;</button>
+    <div class="announcement_modal_card view_modal_card" role="dialog" aria-modal="true" aria-labelledby="viewTitle">
+        <button type="button" class="btn_close_view_modal" id="closeViewModalBtn" aria-label="Close announcement">&times;</button>
         <h2 id="viewTitle"></h2>
         <p id="viewContent" class="view_content_text"></p>
         <div id="viewImagesContainer" class="view_images_container"></div>

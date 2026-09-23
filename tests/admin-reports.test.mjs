@@ -107,23 +107,25 @@ test('map centers without creating a pin; confirmation, dragging, removal and ba
     assert.equal(controller.getPin(),null);
     delete window.L;controller.show();assert.match(nodes.map_status.textContent,/could not load/);
 });
-async function pageHarness() {
+async function pageHarness(cards = false) {
     const html=await readFile(new URL('../admin_interface/dashboard.html',import.meta.url),'utf8');
     const nodes=Object.fromEntries([...html.matchAll(/id="([^"]+)"/g)].map(([,id])=>[id,new Element()]));
+    if (cards) { delete nodes.reportsTableBody; nodes.reportsListContainer = new Element(); }
+    const viewers = [];
     nodes.processingForm.elements=[nodes.processingStatus,nodes.processingPriority,nodes.processingRouting,nodes.processingReferral];
     nodes.processingForm.reportValidity=()=>true;
     let onData,onError,resolve,reject,writes=0;
     const deps={
         document:{getElementById:id=>nodes[id]||null,createElement:()=>new Element()},
         window:{addEventListener(){},location:{replace(){}}},
-        createReportPhotoViewer:()=>({set(){},clear(){}}),
+        createReportPhotoViewer:()=>{ const viewer = {disposed:false,set(){},clear(){},dispose(){this.disposed=true;}}; viewers.push(viewer); return viewer; },
         Option:class extends Element{},REPORT_STATUSES,REPORT_PRIORITIES,REPORT_ROUTING,reportDate:()=> 'date',googleMapsLink,
         watchAdminReports:async(data,error)=>{onData=data;onError=error;return()=>{};},
         updateAdminReport:()=>{writes++;return new Promise((yes,no)=>{resolve=yes;reject=no;});},
     };
     const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
     await new AsyncFunction(...Object.keys(deps),await source('../admin_interface/js_dashboardTable/reports_table.js'))(...Object.values(deps));
-    return {nodes,data:(items,meta={uid:'admin',state:'ready'})=>onData(items,meta),error:onError,
+    return {nodes,viewers,data:(items,meta={uid:'admin',state:'ready'})=>onData(items,meta),error:onError,
         resolve:()=>resolve({uid:'admin'}),reject:()=>reject(new Error('Failed')),writes:()=>writes};
 }
 const report={id:'report',fullName:'<img onerror=alert(1)>',submitterID:'resident',issueCategory:'Road',barangayArea:'Dapawan',locationDescription:'Landmark',issueDescription:'Private',reportStatus:'Received',updatedAt:{isEqual:()=>true}};
@@ -141,4 +143,24 @@ test('admin page renders text safely, retains failed edits and prevents duplicat
     assert.equal(h.nodes.processingStatus.value,'Ongoing');assert.equal(h.nodes.processingFeedback.textContent,'Failed');
     h.data([],{uid:'other',state:'checking'});
     assert.equal(h.nodes.editorDetails.children.length,0);assert.equal(h.nodes.reportEditor.hidden,true);
+});
+
+test('report cards reuse previews across updates and dispose them on filtering or lost access', async () => {
+    const h = await pageHarness(true);
+    h.data([report]);
+    const card = h.nodes.reportsListContainer.children[0];
+    assert.equal(card.children[0].children[0].textContent, report.fullName);
+    assert.equal(card.children[2].children[0].textContent, 'View details');
+    const preview = card.children[1];
+    h.data([{...report, reportStatus:'Ongoing'}]);
+    assert.equal(h.nodes.reportsListContainer.children[0].children[1], preview);
+    assert.equal(h.viewers.length, 2);
+    h.nodes.residentSearchInput.value = 'no-match';
+    h.nodes.residentSearchInput.events.input();
+    assert.equal(h.viewers[1].disposed, true);
+    h.nodes.residentSearchInput.value = '';
+    h.nodes.residentSearchInput.events.input();
+    h.error({code:'permission-denied'});
+    assert.equal(h.viewers[2].disposed, true);
+    assert.equal(h.nodes.reportsListContainer.children.length, 0);
 });

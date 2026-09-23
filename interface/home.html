@@ -19,9 +19,9 @@
         <div class="app_container" hidden>
             <!-- APP HEADER -->
             <header class="app_header">
-                <div class="app_logo_placeholder">Logo</div>
+                <div class="app_logo_placeholder"><img src="assets/app-192.png" alt="" class="brand_icon"></div>
                 <div class="header_title_block">
-                    <h1>System Title</h1>
+                    <h1>Odiongan Municipal Reporting</h1>
                     <p>Odiongan, Romblon</p>
                 </div>
             </header>
@@ -37,15 +37,19 @@
                     <div class="card_slider_wrapper">
                         <div class="card_slider"></div>
                     </div>
-                    <p id="announcementFeedback" role="status">Loading announcements…</p>
-                    <button id="announcementRetry" type="button" hidden>Retry</button>
+                    <div class="status_notice">
+                        <p id="announcementFeedback" role="status">Loading announcements…</p>
+                        <button id="announcementRetry" type="button" hidden>Retry</button>
+                    </div>
                 </section>
 
 
                 <!-- Reports Section - mga recent reports ng user-->
                 <section class="reports_section">
-                    <h3 class="section_heading_r">Reports</h3>
-                    <a href="tracking_reports.html" class="btn_text">View your submitted reports or create a new report</a>
+                    <div class="reports_section_header">
+                        <h3 class="section_heading_r">Reports</h3>
+                        <a href="tracking_reports.html" class="reports_view_link">View reports <span aria-hidden="true">→</span></a>
+                    </div>
                 </section>
             </main>
 

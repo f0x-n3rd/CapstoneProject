@@ -5,6 +5,11 @@ import { getServices } from '../firebase/client.js';
 import { createTextReport, watchOwnReports } from '../firebase/reports.js';
 import { REPORT_CATEGORIES, REPORT_BARANGAYS, reportDate, reportError, googleMapsLink } from '../firebase/report-model.mjs';
 
+function noticeTone(node, tone) {
+    node.classList.remove('notice-pending', 'notice-success', 'notice-error', 'notice-info');
+    node.classList.add('notice-' + tone);
+}
+
 const form = document.getElementById('report_form');
 const list = document.getElementById('reports_list');
 const historyFeedback = document.getElementById('history_feedback');
@@ -20,8 +25,8 @@ photoInput.addEventListener('change', () => {
     const file = photoInput.files?.[0];
     photoFeedback.textContent = '';
     if (!file) return;
-    try { validateReportPhoto(file); photoFeedback.textContent = 'Selected: ' + file.name; }
-    catch (error) { photoInput.value = ''; photoFeedback.textContent = error.message; }
+    try { validateReportPhoto(file); noticeTone(photoFeedback, 'success'); photoFeedback.textContent = 'Selected: ' + file.name; }
+    catch (error) { photoInput.value = ''; noticeTone(photoFeedback, 'error'); photoFeedback.textContent = error.message; }
 });
 document.getElementById('remove_photo').addEventListener('click', () => { photoInput.value = ''; photoFeedback.textContent = ''; });
 form.addEventListener('reset', () => { photoFeedback.textContent = ''; });
@@ -146,6 +151,7 @@ async function startHistory() {
     starting = true; retry.disabled = true;
     const current = ++subscription;
     stop?.();
+    noticeTone(historyFeedback, 'pending');
     historyFeedback.textContent = 'Loading your reports…';
     try {
         stop = await watchOwnReports((items, meta) => {
@@ -156,11 +162,13 @@ async function startHistory() {
             }
             if (meta.state !== 'ready') {
                 if (meta.state === 'signed-out') clearPrivateData();
+                noticeTone(historyFeedback, meta.state === 'signed-out' ? 'info' : 'pending');
                 historyFeedback.textContent = meta.state === 'signed-out' ? 'Sign in to view your reports.' : 'Loading your reports…';
                 return;
             }
             reports = new Map(items.map(report => [report.id, report]));
             renderReports(items);
+            noticeTone(historyFeedback, meta.fromCache ? 'pending' : 'info');
             historyFeedback.textContent = meta.fromCache
                 ? (items.length ? 'Showing saved reports. Reconnect for the latest information.' : (navigator.onLine ? 'Connecting to your reports…' : 'No reports saved in this session. Connect to load them.'))
                 : (items.length ? '' : 'You have not submitted any reports yet.');
@@ -168,9 +176,9 @@ async function startHistory() {
         }, error => {
             if (current !== subscription) return;
             if (['permission-denied', 'unauthenticated'].includes(error.code)) clearPrivateData();
-            historyFeedback.textContent = reportError(error); retry.hidden = false;
+            noticeTone(historyFeedback, 'error'); historyFeedback.textContent = reportError(error); retry.hidden = false;
         });
-    } catch (error) { historyFeedback.textContent = reportError(error); retry.hidden = false; }
+    } catch (error) { noticeTone(historyFeedback, 'error'); historyFeedback.textContent = reportError(error); retry.hidden = false; }
     finally { starting = false; retry.disabled = false; }
 }
 retry.addEventListener('click', startHistory);
@@ -185,12 +193,12 @@ form.addEventListener('submit', async event => {
     };
     let pin;
     try { pin = reportMap.getPin(); }
-    catch (error) { feedback.hidden = false; feedback.classList.add('error'); feedback.textContent = error.message; return; }
+    catch (error) { feedback.hidden = false; feedback.classList.add('error'); noticeTone(feedback, 'error'); feedback.textContent = error.message; return; }
     saving = true;
     const controls = [...form.elements].filter(control => !control.disabled);
     controls.forEach(control => control.disabled = true);
     reportMap.setBusy(true);
-    feedback.classList.remove('error'); feedback.hidden = false;
+    feedback.classList.remove('error'); noticeTone(feedback, 'pending'); feedback.hidden = false;
     feedback.textContent = 'Sending your report… Keep this page open until submission is confirmed.';
     const submissionUid = ownerUid;
     try {
@@ -198,10 +206,11 @@ form.addEventListener('submit', async event => {
         const { auth } = await getServices();
         if (auth.currentUser?.uid !== result.uid || ownerUid !== submissionUid) return;
         form.reset(); reportMap.reset();
+        noticeTone(feedback, result.photoFailed ? 'pending' : 'success');
         feedback.textContent = `Report submitted. Reference: ${result.id}. Status: Received.` + (result.photoFailed ? ' Your photo upload was not confirmed. Open View Details to reload or retry the photo; do not submit another report.' : '');
     } catch (error) {
         if (ownerUid !== submissionUid) return;
-        feedback.classList.add('error'); feedback.textContent = reportError(error);
+        feedback.classList.add('error'); noticeTone(feedback, 'error'); feedback.textContent = reportError(error);
     } finally {
         saving = false;
         controls.forEach(control => control.disabled = false);
@@ -212,6 +221,7 @@ window.addEventListener('beforeunload', event => {
     if (saving) { event.preventDefault(); event.returnValue = ''; }
 });
 window.addEventListener('offline', () => {
+    noticeTone(historyFeedback, 'pending');
     historyFeedback.textContent = 'You are offline. Loaded reports may be out of date.';
     retry.hidden = false;
 });

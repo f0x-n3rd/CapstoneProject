@@ -2,6 +2,12 @@ import { getServices } from '../../firebase/client.js';
 import { hasRole } from '../../firebase/auth.js';
 import { watchAnnouncements, createAnnouncement, removeAnnouncement, validateAnnouncement, announcementError, textElement, announcementImage } from '../../firebase/announcements.js';
 
+function adminNotice(node, text, tone = 'pending') {
+    node.className = 'admin_notice notice-' + tone;
+    node.textContent = text;
+}
+
+
 const list = document.getElementById('announcementsList');
 const feedback = document.getElementById('announcementFeedback');
 const formFeedback = document.getElementById('announcementFormFeedback');
@@ -28,24 +34,32 @@ inputs.forEach(input => input.addEventListener('change', () => {
     const selected = input.files[0];
     if (!selected) return;
     try { validateAnnouncement('Preview', 'Preview', selected); }
-    catch (error) { formFeedback.textContent = error.message; input.value = ''; return; }
+    catch (error) { adminNotice(formFeedback, error.message, 'error'); input.value = ''; return; }
     resetImage(); file = selected; previewURL = URL.createObjectURL(file);
     const image = document.createElement('img'); image.src = previewURL; image.className = 'photo_placeholder'; image.alt = 'Selected attachment';
     const remove = textElement('button', 'btn_remove_img', 'Remove image'); remove.type = 'button'; remove.onclick = () => { if (!busy) resetImage(); };
     document.getElementById('photoPreviews').append(image, remove);
 }));
-open.onclick = () => modal.classList.add('active');
+open.onclick = () => { modal.classList.add('active'); title.focus(); };
+document.getElementById('closeAnnouncementBtn').onclick = () => { if (!busy) { modal.classList.remove('active'); open.focus(); } };
 modal.onclick = event => { if (event.target === modal && !busy) modal.classList.remove('active'); };
 view.onclick = event => { if (event.target === view) view.classList.remove('active'); };
 document.getElementById('closeViewModalBtn').onclick = () => view.classList.remove('active');
 function render(items) {
     list.replaceChildren();
-    if (!items.length) list.append(textElement('p', '', 'No announcements yet.'));
+    if (!items.length) list.append(textElement('p', 'announcement_empty', 'No announcements yet. Create an announcement to share an update with residents.'));
     items.forEach(item => {
         const card = textElement('div', 'announcement_card', '');
-        const details = textElement('button', '', ''); details.type = 'button';
-        details.append(textElement('h3', '', item.title), textElement('p', '', item.content));
-        const image = announcementImage(item.announcementImageURL, 'card_img_thumb'); if (image) details.append(image);
+        const copy = textElement('div', 'announcement_copy', '');
+        const posted = item.datePosted?.toDate?.();
+        const date = posted instanceof Date && !Number.isNaN(posted.getTime())
+            ? 'Published ' + posted.toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' }) + ' (Philippine time)'
+            : 'Publication time pending';
+        copy.append(textElement('h3', '', item.title), textElement('p', 'announcement_date', date), textElement('p', 'announcement_excerpt', item.content));
+        const photo = textElement('div', 'announcement_photo', '');
+        const image = announcementImage(item.announcementImageURL, 'card_img_thumb');
+        photo.append(image || textElement('span', '', 'No image attached'));
+        const details = textElement('button', 'btn_announcement_details', 'View details'); details.type = 'button';
         details.onclick = () => {
             document.getElementById('viewTitle').textContent = item.title;
             document.getElementById('viewContent').textContent = item.content;
@@ -57,21 +71,26 @@ function render(items) {
         remove.onclick = async () => {
             if (!confirm('Delete this announcement?')) return;
             remove.disabled = true;
-            try { feedback.textContent = await removeAnnouncement(item); }
-            catch (error) { feedback.textContent = announcementError(error); remove.disabled = false; }
+            try {
+                const result = await removeAnnouncement(item);
+                adminNotice(feedback, result, result === 'Announcement deleted.' ? 'success' : 'pending');
+            }
+            catch (error) { adminNotice(feedback, announcementError(error), 'error'); remove.disabled = false; }
         };
-        card.append(details, remove); list.append(card);
+        const actions = textElement('div', 'announcement_actions', '');
+        actions.append(details, remove);
+        card.append(copy, photo, actions); list.append(card);
     });
 }
 post.onclick = async () => {
     if (busy) return;
     busy = true; post.disabled = true; title.disabled = true; content.disabled = true; inputs.forEach(input => input.disabled = true);
-    formFeedback.textContent = 'Publishing…';
+    adminNotice(formFeedback, 'Publishing…', 'pending');
     try {
         await createAnnouncement(title.value, content.value, file);
         title.value = ''; content.value = ''; resetImage(); modal.classList.remove('active');
-        feedback.textContent = 'Announcement published.'; formFeedback.textContent = '';
-    } catch (error) { formFeedback.textContent = announcementError(error); }
+        adminNotice(feedback, 'Announcement published.', 'success'); adminNotice(formFeedback, '', 'pending');
+    } catch (error) { adminNotice(formFeedback, announcementError(error), 'error'); }
     finally { busy = false; post.disabled = false; title.disabled = false; content.disabled = false; inputs.forEach(input => input.disabled = false); }
 };
 async function start() {
@@ -84,9 +103,9 @@ async function start() {
         open.disabled = false; stop?.();
         stop = await watchAnnouncements((items, metadata) => {
             render(items);
-            feedback.textContent = metadata.fromCache ? 'Connecting… displayed announcements may be out of date.' : '';
-        }, error => feedback.textContent = announcementError(error));
-    } catch (error) { feedback.textContent = announcementError(error); }
+            adminNotice(feedback, metadata.fromCache ? 'Connecting… displayed announcements may be out of date.' : '', 'pending');
+        }, error => adminNotice(feedback, announcementError(error), 'error'));
+    } catch (error) { adminNotice(feedback, announcementError(error), 'error'); }
     finally { starting = false; }
 }
 document.getElementById('announcementRetry').onclick = start;

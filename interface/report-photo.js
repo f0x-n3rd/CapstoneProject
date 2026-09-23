@@ -2,17 +2,18 @@ import { getServices } from '../firebase/client.js';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js';
 import { downloadReportPhoto, uploadReportPhoto } from '../supabase/report-storage.js';
 
-// One viewer per details panel. Bytes live only in a revocable object URL.
-export function createReportPhotoViewer(container) {
-    let key = '', generation = 0, controller, objectURL, report;
+// One viewer per details panel or report card. Bytes live only in a revocable object URL.
+export function createReportPhotoViewer(container, { preview = false } = {}) {
+    let key = '', generation = 0, controller, objectURL, report, unsubscribe, disposed = false;
     function clear() {
         ++generation; controller?.abort();
         if (objectURL) URL.revokeObjectURL(objectURL);
         objectURL = null; key = ''; report = null; container.replaceChildren();
     }
     getServices().then(({ auth }) => {
+        if (disposed) return;
         let uid = auth.currentUser?.uid;
-        onAuthStateChanged(auth, user => {
+        unsubscribe = onAuthStateChanged(auth, user => {
             if (uid !== user?.uid) clear();
             uid = user?.uid;
         });
@@ -38,13 +39,16 @@ export function createReportPhotoViewer(container) {
         } catch (error) {
             if (current !== generation || signal.aborted) return;
             message.textContent = error.status === 404 ? 'The photo has not uploaded yet.' : 'Photo could not load. Check your connection and access, then retry.';
-            const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry photo';
+            const retry = document.createElement('button'); retry.type = 'button'; retry.textContent = 'Retry photo'; retry.className = 'photo_retry_button';
             retry.addEventListener('click', () => void load(currentReport, current)); container.append(retry);
             const { auth } = await getServices().catch(() => ({ auth: null }));
             if (current !== generation || signal.aborted) return;
-            if (error.status === 404 && auth?.currentUser?.uid === currentReport.submitterID) {
-                const label = document.createElement('label'); label.textContent = 'Retry the missing photo upload: ';
-                const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/jpeg,image/png,image/webp';
+            if (!preview && error.status === 404 && auth?.currentUser?.uid === currentReport.submitterID) {
+                const label = document.createElement('label'); label.className = 'photo_retry_upload';
+                const title = document.createElement('span'); title.className = 'photo_retry_title'; title.textContent = 'Upload the missing photo';
+                const hint = document.createElement('span'); hint.className = 'photo_retry_hint'; hint.textContent = 'Your report is already saved. Choose one JPEG, PNG or WebP (up to 5 MB). Upload starts when you select a file.';
+                label.append(title, hint);
+                const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/jpeg,image/png,image/webp'; input.className = 'photo_retry_file';
                 label.append(input); container.append(label);
                 input.addEventListener('change', async () => {
                     const file = input.files?.[0]; if (!file) return;
@@ -64,7 +68,9 @@ export function createReportPhotoViewer(container) {
     }
     return {
         clear,
+        dispose() { disposed = true; unsubscribe?.(); clear(); },
         set(next) {
+            if (disposed) return;
             const nextKey = next.id + ':' + (next.supportingImageURL || '');
             if (key === nextKey) return;
             clear(); key = nextKey; report = next;
