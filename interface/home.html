@@ -47,8 +47,14 @@
                 <!-- Reports Section - mga recent reports ng user-->
                 <section class="reports_section">
                     <div class="reports_section_header">
-                        <h3 class="section_heading_r">Reports</h3>
-                        <a href="tracking_reports.html" class="reports_view_link">View reports <span aria-hidden="true">→</span></a>
+                        <h3 class="section_heading_r">Recent reports</h3>
+                        <a href="tracking_reports.html" class="reports_view_link">See all reports <span aria-hidden="true">→</span></a>
+                    </div>
+                    <p id="homeReportsNote" hidden>Showing your 5 most recent reports</p>
+                    <ul id="homeReports" aria-label="Your recent reports"></ul>
+                    <div class="status_notice">
+                        <p id="homeReportsFeedback" role="status" aria-live="polite">Loading your reports…</p>
+                        <button id="homeReportsRetry" type="button" hidden>Retry</button>
                     </div>
                 </section>
             </main>
@@ -93,6 +99,7 @@
             </nav>
         </div>
         <script type="module" src="announcements.js"></script>
+        <script type="module" src="home-reports.js"></script>
         <script src="offline.js" defer></script>
         
     <script type="module" src="../firebase/resident-session.js"></script>

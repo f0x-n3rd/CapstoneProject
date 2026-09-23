@@ -1,6 +1,6 @@
 // Increment the version when changing the offline application shell.
 const CACHE_PREFIX = 'odiongan-shell-' + encodeURIComponent(self.registration.scope);
-const CACHE_NAME = CACHE_PREFIX + '-v13';
+const CACHE_NAME = CACHE_PREFIX + '-v16';
 const IMAGE_CACHE = CACHE_PREFIX + '-public-images-v1';
 const LOCAL_FILES = [
     "../firebase/announcements.js",
@@ -18,6 +18,7 @@ const LOCAL_FILES = [
     "../interface/desktop.css",
     "../interface/form_panel.js",
     "../interface/home.html",
+    "../interface/home-reports.js",
     "../interface/hotlines.html",
     "../interface/manifest.webmanifest",
     "../interface/offline.js",
