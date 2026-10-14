@@ -194,3 +194,28 @@ body{
 .login_card { max-width:calc(100% - 32px); margin:24px 0; }
 
 .logo_box.project_logo { width:120px; height:120px; object-fit:contain; background:#fff; border:0; border-radius:0; display:block; }
+
+/* Visible before sign-in; informational rather than an error or consent gate. */
+.prototype_notice {
+    margin: 0 0 18px;
+    padding: 12px 14px;
+    border: 1px solid #edcfaa;
+    border-left: 4px solid #d58a32;
+    border-radius: 12px;
+    background: #fff8ee;
+    text-align: left;
+}
+.prototype_notice h2 {
+    margin: 0 0 6px;
+    color: #193858;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+.prototype_notice p {
+    margin: 0;
+    color: #475569;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
