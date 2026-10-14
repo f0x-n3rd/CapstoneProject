@@ -11,29 +11,29 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login As Admin</title>
+    <title>Capstone Prototype – Admin Login</title>
     <link rel="stylesheet" href="login_admin.css">
     <link rel="icon" type="image/svg+xml" href="../../interface/assets/project-icon.svg">
 </head>
 <body>
 
 <div class="login_card">
-    <img class="logo_box project_logo" src="../../interface/assets/project-icon.svg" alt="Odiongan reporting logo">
-    <p class="system_title">Odiongan Municipal Reporting</p>
+    <img class="logo_box project_logo" src="../../interface/assets/project-icon.svg" alt="Academic capstone prototype logo">
+    <p class="system_title">Odiongan Municipal Reporting App - Capstone Prototype</p>
     <p class="subtitle">Welcome Back</p>
 
     <aside class="prototype_notice" aria-labelledby="prototypeTitle">
-        <h2 id="prototypeTitle">Academic Capstone Prototype</h2>
-        <p>This system was developed for academic research and testing purposes and is not an official online service of the Municipality of Odiongan. Testers should use test information only.</p>
+        <h2 id="prototypeTitle">ACADEMIC CAPSTONE PROTOTYPE</h2>
+        <p>This website was developed by BSIT students for academic testing and evaluation. It is not an official online service of the Municipality of Odiongan and has not been formally deployed by the LGU.</p>
     </aside>
 
-    <form id="loginForm">
+<form id="loginForm">
         <div class="input_group">
             <input type="email" id="admin_email" name="admin_email" placeholder="Email@gmail.com" required>
         </div>
 
         <div class="input_group">
-            <input type="password" id="admin_password" class="password_input" placeholder="Password" required>
+            <input type="password" id="admin_password" aria-describedby="testPasswordHint" class="password_input" placeholder="Password" required>
 
             <button
                 type="button" class="toggle_password" id="togglePassword">
@@ -41,13 +41,15 @@
             </button>
        
         </div>
+    <p id="testPasswordHint" class="test_password_hint">For testing, please use a test password. Do not reuse your Google, Facebook, email, school, or other account passwords.</p>
         <button type="submit" class="signin_btn">Sign In</button>
     </form>
 
     <details class="password_reset" id="passwordReset">
         <summary>Forgot password?</summary>
         <form id="passwordResetForm">
-            <p>Enter your account email to request a password reset link.</p>
+            <h2 class="reset_heading">Capstone Prototype — Password Recovery</h2>
+            <p>Request a reset link for your academic prototype account. This is not an official Municipality of Odiongan password-recovery service.</p>
             <div class="input_group">
                 <label for="resetEmail">Email address</label>
                 <input type="email" id="resetEmail" autocomplete="email" maxlength="254" required>

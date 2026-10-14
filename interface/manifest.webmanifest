@@ -1,6 +1,6 @@
 {
-  "name": "Odiongan Municipal Reporting",
-  "short_name": "Odiongan Reports",
+  "name": "Odiongan Municipal Reporting App - Capstone Prototype",
+  "short_name": "Odiongan Report App - Prototype",
   "id": "./",
   "start_url": "./home.html",
   "scope": "./",

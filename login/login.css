@@ -14,7 +14,7 @@ body{
 }
 
 .login_card{
-    width:300px;
+    width:440px;
     background:#fff;
     border-radius:22px;
     padding:24px 18px;
@@ -219,3 +219,19 @@ body{
     line-height: 1.6;
     overflow-wrap: anywhere;
 }
+
+/* Prototype guidance follows the existing navy and amber authentication theme. */
+.system_title { line-height:1.5; overflow-wrap:anywhere; }
+.prototype_notice h2 { font-size:13px; line-height:1.5; }
+.test_password_hint {
+    margin: 10px 0 16px;
+    padding: 10px 12px;
+    border: 1px solid #d7e2ef;
+    border-radius: 10px;
+    background: #f7f9fc;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.password_reset .reset_heading { margin:0 0 8px; color:#193858; font-size:14px; line-height:1.5; }
